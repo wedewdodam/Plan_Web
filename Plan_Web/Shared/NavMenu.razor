@@ -1,0 +1,341 @@
+﻿<div class="top-row pl-4 navbar navbar-dark">
+    <a class="navbar-brand" href=""><img src="/images/sub/sub_logo.png" height="30" alt="" /></a>
+    <button class="navbar-toggler" @onclick="ToggleNavMenu">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+</div>
+
+<div class="@NavMenuCssClass" @onclick="ToggleNavMenu">
+    <ul class="nav flex-column">
+
+
+        
+
+        <li class="nav-item px-3">
+            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
+                <span class="bi bi-house-fill" aria-hidden="true"></span> &nbsp; 홈으로
+            </NavLink>
+        </li>
+
+        <li class="nav-item px-3">
+            <NavLink class="nav-link" href="" @onclick="()=>expandSubMenu= !expandSubMenu">
+                <span class="bi bi-building" aria-hidden="true"></span> &nbsp; 1. 단지정보
+            </NavLink>
+            @if (expandSubMenu)
+            {
+                <ul class="nav flex-column">
+                    <li class="nav-item px-3">
+                        <NavLink class="nav-link" href="/Apt_Infor">
+                            <span class="bi bi-house-door-fill" aria-hidden="true"></span>  &nbsp;  1-1. 공동주택정보
+                        </NavLink>
+                    </li>
+                    <li class="nav-item px-3">
+                        <NavLink class="nav-link" href="/Apt_Infor/Apt_Details">
+                            <span class="bi bi-alarm" aria-hidden="true"></span> &nbsp; 1-2. 동현황 정보
+                        </NavLink>
+                    </li>
+                    <li class="nav-item px-3">
+                        <NavLink class="nav-link" href="/Apt_Infor/Bylaw">
+                            <span class="bi bi-hourglass-split" aria-hidden="true"></span> &nbsp; 1-3. 규약 및 법령 정보
+                        </NavLink>
+                    </li>
+                    <li class="nav-item px-3">
+                        <NavLink class="nav-link" href="/Faciliys">
+                            <span class="bi bi-screwdriver" aria-hidden="true"></span> &nbsp; 1-4. 시설물 관리
+                        </NavLink>
+                    </li>
+                </ul>
+
+            }
+        </li>
+
+        <li class="nav-item px-3">
+            <NavLink class="nav-link" href="" @onclick="()=>expandSubMenuA = !expandSubMenuA">
+                <span class="bi bi-tools" aria-hidden="true"></span> &nbsp; 2. 장기수선계획
+            </NavLink>
+            @if (expandSubMenuA)
+            {
+                <ul class="nav flex-column">
+                    <li class="nav-item px-3">
+                        <NavLink class="nav-link" href="/Repair_Plan/New">
+                            <span class="bi bi-journal-text" aria-hidden="true"></span> <span style="font-size: 0.9em"> &nbsp; 2-1. 최초 입력·수립</span>
+                        </NavLink>
+                    </li>
+                    <li class="nav-item px-3">
+                        <NavLink class="nav-link" href="/Repair_Plan/List">
+                            <span class="bi bi-journal-check" aria-hidden="true"></span><span style="font-size: 0.9em"> &nbsp; 2-2. 장기수선계획 선택</span>
+                        </NavLink>
+                    </li>
+
+                    <li class="nav-item px-3">
+                        <NavLink class="nav-link" href="/Reviews_Plan">
+                            <span class="bi bi-journal-medical" aria-hidden="true"></span><span style="font-size: 0.9em"> &nbsp; 2-3. 장기수선계획 검토</span>
+                        </NavLink>
+                    </li>
+                    <li class="nav-item px-3">
+                        <NavLink class="nav-link" href="/Repair_Plan">
+                            <span class="bi bi-journal-album" aria-hidden="true"></span><span style="font-size: 0.9em"> &nbsp; 2-4. 장기수선계획 조정</span>
+                        </NavLink>
+                    </li>
+                </ul>
+            }
+        </li>
+
+        @*<li class="nav-item px-3">
+            <NavLink class="nav-link" href="" @onclick="()=>expandSubMenuB = !expandSubMenuB">
+                <span class="oi oi-layers" aria-hidden="true"></span> 장기수선이력
+            </NavLink>
+            @if (expandSubMenuB)
+            {
+                <ul class="nav flex-column">
+                    <li class="nav-item px-3">
+                        <NavLink class="nav-link" href="/Appeal_Sort_List">
+                            <span class="oi oi-list-rich" aria-hidden="true"></span> 민원분류
+                        </NavLink>
+                    </li>
+                    <li class="nav-item px-3">
+                        <NavLink class="nav-link" href="/Admin/Contract_Sort">
+                            <span class="oi oi-list-rich" aria-hidden="true"></span> 계약분류 관리
+                        </NavLink>
+                    </li>
+                </ul>
+            }
+        </li>*@
+
+        <li class="nav-item px-3">
+            <NavLink class="nav-link" href="" @onclick="()=>expandSubMenuC = !expandSubMenuC">
+                <span class="bi bi-file-richtext-fill" aria-hidden="true"></span> &nbsp; 3. 장기수선이력
+            </NavLink>
+            @if (expandSubMenuC)
+            {
+                <ul class="nav flex-column">
+                    <li class="nav-item px-3">
+                        <NavLink class="nav-link" href="/Appeal_Sort_List">
+                            <span class="bi bi-file-text" aria-hidden="true"></span><span style="font-size: 0.8em"> &nbsp; 3-1. 장기수선이력정보</span>
+                        </NavLink>
+                    </li>
+                    <li class="nav-item px-3">
+                        <NavLink class="nav-link" href="/Admin/Contract_Sort">
+                            <span class="bi bi-journal-bookmark-fill" aria-hidden="true"></span><span style="font-size: 0.8em"> &nbsp; 3-2. 장기수선이력등록</span>
+                        </NavLink>
+                    </li>
+                    <li class="nav-item px-3">
+                        <NavLink class="nav-link" href="/Admin/Contract_Sort">
+                            <span class="bi bi-newspaper" aria-hidden="true"></span><span style="font-size: 0.8em"> &nbsp; 3-3. 보수업체관리</span>
+                        </NavLink>
+                    </li>
+                </ul>
+            }
+        </li>
+
+        <li class="nav-item px-3">
+            <NavLink class="nav-link" href="" @onclick="()=>expandSubMenuD = !expandSubMenuD">
+                <span class="bi bi-file-earmark" aria-hidden="true"></span> &nbsp; 4. 장기수선충당금
+            </NavLink>
+            @if (expandSubMenuD)
+            {
+                <ul class="nav flex-column">
+
+                    <li class="nav-item px-3">
+                        <NavLink class="nav-link" href="/Appeal_Sort_List">
+                            <span class="bi bi-ui-checks" aria-hidden="true"></span><span style="font-size: 0.8em"> &nbsp; 4-1. 장기수선충당금관리</span>
+                        </NavLink>
+                    </li>
+
+                    <li class="nav-item px-3">
+                        <NavLink class="nav-link" href="/Admin/Contract_Sort">
+                            <span class="bi bi-inboxes" aria-hidden="true"></span><span style="font-size: 0.8em"> &nbsp; 4-2. 장기수선 적립요율정보</span>
+                        </NavLink>
+                    </li>
+
+                    <li class="nav-item px-3">
+                        <NavLink class="nav-link" href="/Admin/Contract_Sort">
+                            <span class="bi bi-inboxes" aria-hidden="true"></span><span style="font-size: 0.8em"> &nbsp; 4-3. 충당금 징수관리</span>
+                        </NavLink>
+                    </li>
+                </ul>
+            }
+        </li>
+
+        <li class="nav-item px-3">
+            <NavLink class="nav-link" href="" @onclick="()=>expandSubMenuE = !expandSubMenuE">
+                <span class="bi bi-pin-angle-fill" aria-hidden="true"></span> &nbsp; 5. 현황보고서
+            </NavLink>
+            @if (expandSubMenuE)
+            {
+                <ul class="nav flex-column">
+                    <li class="nav-item px-3">
+                        <NavLink class="nav-link" href="/Appeal_Sort_List">
+                            <span class="oi oi-list-rich" aria-hidden="true"></span><span style="font-size: 0.8em"> &nbsp; 5.1 장기수선계획 총괄표</span>
+                        </NavLink>
+                    </li>
+                    <li class="nav-item px-3">
+                        <NavLink class="nav-link" href="/Admin/Contract_Sort">
+                            <span class="oi oi-list-rich" aria-hidden="true"></span> <span style="font-size: 0.8em"> &nbsp; 5.2 장기수선계획 기준표</span>
+                        </NavLink>
+                    </li>
+                    <li class="nav-item px-3">
+                        <NavLink class="nav-link" href="/Admin/Contract_Sort">
+                            <span class="oi oi-list-rich" aria-hidden="true"></span><span style="font-size: 0.8em"> &nbsp; 5.3 장기수선계획 상세표</span>
+                        </NavLink>
+                    </li>
+                    <li class="nav-item px-3">
+                        <NavLink class="nav-link" href="/Admin/Contract_Sort">
+                            <span class="oi oi-list-rich" aria-hidden="true"></span><span style="font-size: 0.8em"> &nbsp; 5.4 충당금 적립율정보</span>
+                        </NavLink>
+                    </li>
+                    <li class="nav-item px-3">
+                        <NavLink class="nav-link" href="/Admin/Contract_Sort">
+                            <span class="oi oi-list-rich" aria-hidden="true"></span><span style="font-size: 0.8em"> &nbsp; 5.5 장기수선연차별계획표</span>
+                        </NavLink>
+                    </li>
+                    <li class="nav-item px-3">
+                        <NavLink class="nav-link" href="/Admin/Contract_Sort">
+                            <span class="oi oi-list-rich" aria-hidden="true"></span><span style="font-size: 0.8em"> &nbsp; 5.7 장기수선검토보고서</span>
+                        </NavLink>
+                    </li>
+                    <li class="nav-item px-3">
+                        <NavLink class="nav-link" href="/Admin/Contract_Sort">
+                            <span class="oi oi-list-rich" aria-hidden="true"></span><span style="font-size: 0.8em"> &nbsp; 5.8 충당금 적립율정보</span>
+                        </NavLink>
+                    </li>
+                    <li class="nav-item px-3">
+                        <NavLink class="nav-link" href="/Admin/Contract_Sort">
+                            <span class="oi oi-list-rich" aria-hidden="true"></span><span style="font-size: 0.8em"> &nbsp; 5.9 충당금 사용현황표</span>
+                        </NavLink>
+                    </li>
+                    <li class="nav-item px-3">
+                        <NavLink class="nav-link" href="/Admin/Contract_Sort">
+                            <span class="oi oi-list-rich" aria-hidden="true"></span><span style="font-size: 0.8em"> &nbsp; 5.10 충당금 적립·사용현황</span>
+                        </NavLink>
+                    </li>
+                </ul>
+            }
+        </li>
+
+        <li class="nav-item px-3">
+            <NavLink class="nav-link" href="" @onclick="()=>expandSubMenuF = !expandSubMenuF">
+                <span class="bi bi-megaphone-fill" aria-hidden="true"></span> &nbsp; 6. 관리센터
+            </NavLink>
+            @if (expandSubMenuF)
+            {
+                <ul class="nav flex-column">
+
+                    <li class="nav-item px-3">
+                        <NavLink class="nav-link" href="/Appeal_Sort_List">
+                            <span class="oi oi-list-rich" aria-hidden="true"></span> 민원분류
+                        </NavLink>
+                    </li>
+
+                    <li class="nav-item px-3">
+                        <NavLink class="nav-link" href="/Admin/Contract_Sort">
+                            <span class="oi oi-list-rich" aria-hidden="true"></span> 계약분류 관리
+                        </NavLink>
+                    </li>
+                </ul>
+            }
+        </li>
+    </ul>
+</div>
+
+@code {
+    //private bool collapseNavMenu = true;
+
+    //private string NavMenuCssClass => collapseNavMenu ? "collapse" : null;
+
+    //private void ToggleNavMenu()
+    //{
+    //    collapseNavMenu = !collapseNavMenu;
+    //}
+
+    private bool collapseNavMenu = true;
+
+    private bool expandSubMenu;
+
+    private string NavMenuCssClass => collapseNavMenu ? "collapse" : null;
+
+    private bool expandMenu;
+
+    private bool collapseNavMenuA = true;
+
+    private bool expandSubMenuA;
+
+    private string NavMenuCssClassA => collapseNavMenuA ? "collapse" : null;
+
+    private bool expandMenuA;
+
+    //private bool collapseNavMenuB = true;
+
+    //private bool expandSubMenuB;
+
+    //private string NavMenuCssClassB => collapseNavMenuB ? "collapse" : null;
+
+    //private bool expandMenuB;
+
+    private bool collapseNavMenuC = true;
+
+    private bool expandSubMenuC;
+
+    private string NavMenuCssClassC => collapseNavMenuC ? "collapse" : null;
+
+    private bool expandMenuC;
+
+    private bool collapseNavMenuD = true;
+
+    private bool expandSubMenuD;
+
+    private string NavMenuCssClassD => collapseNavMenuD ? "collapse" : null;
+
+    private bool expandMenuD;
+
+    private bool collapseNavMenuE = true;
+
+    private bool expandSubMenuE;
+
+    private string NavMenuCssClassE => collapseNavMenuE ? "collapse" : null;
+
+    private bool expandMenuE;
+
+    private bool collapseNavMenuF = true;
+
+    private bool expandSubMenuF;
+
+    private string NavMenuCssClassF => collapseNavMenuF ? "collapse" : null;
+
+    private bool expandMenuF;
+
+    private void ToggleNavMenu()
+    {
+        collapseNavMenu = !collapseNavMenu;
+        expandMenu = false;
+
+        collapseNavMenuA = !collapseNavMenuA;
+        expandMenuA = false;
+
+        //collapseNavMenuB = !collapseNavMenuB;
+        //expandMenuA = false;
+
+        collapseNavMenuC = !collapseNavMenuC;
+        expandMenuA = false;
+
+        collapseNavMenuD = !collapseNavMenuD;
+        expandMenuA = false;
+
+        collapseNavMenuE = !collapseNavMenuE;
+        expandMenuA = false;
+
+        collapseNavMenuF = !collapseNavMenuF;
+        expandMenuA = false;
+    }
+
+    private void ToggleSubmenu()
+    {
+        expandMenu = !expandMenu;
+        expandMenuA = !expandMenuA;
+        //expandMenuB = !expandMenuB;
+        expandMenuC = !expandMenuC;
+        expandMenuD = !expandMenuD;
+        expandMenuE = !expandMenuE;
+        expandMenuF = !expandMenuF;
+    }
+}

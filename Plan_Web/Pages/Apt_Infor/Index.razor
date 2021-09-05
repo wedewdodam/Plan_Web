@@ -1,0 +1,578 @@
+﻿@page "/Apt_Infor"
+
+@if (bnn == null)
+{
+    <p style="text-align:center">
+        <img src="/images/loader.gif" height="100" />
+    </p>
+}
+else
+{
+    <div class="card">
+        <div class="card-header">
+            <table width="100%">
+                <tr>
+                    <td><span style="font-size: 1em"> <span class="bi-alarm"></span>&nbsp;<span>단지 개요</span></span></td>
+                    <td align="right">
+                        <button type="button" class="btn btn-outline-secondary btn-sm" @onclick="btnOpen">@strTitle</button>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <div class="card-body">
+            <table class="table" style="font-size: 0.9em; margin-bottom: 0px">
+                <tr style="border-top:solid; border-top-width:2px; border-top-color: cadetblue">
+                    <td align="center" style="background-color:whitesmoke" width="10%">
+                        시행사
+                    </td>
+                    <td width="23%">@bnn.Developer</td>
+                    <td align="center" style="background-color:whitesmoke" width="10%">
+                        시공사
+                    </td>
+                    <td width="23%">@bnn.Builder</td>
+                    <td align="center" style="background-color:whitesmoke" width="10%">
+                        지역·지구
+                    </td>
+                    <td>@bnn.District</td>
+                </tr>
+                <tr>
+                    <td align="center" style="background-color:whitesmoke">
+                        관리방식
+                    </td>
+                    <td>@bnn.Management_Way</td>
+                    <td align="center" style="background-color:whitesmoke">
+                        승강기 수
+                    </td>
+                    <td>@bnn.Elevator</td>
+                    <td align="center" style="background-color:whitesmoke">
+                        관리형식
+                    </td>
+                    <td>@bnn.Joint_Management</td>
+                </tr>
+                <tr>
+                    <td align="center" style="background-color:whitesmoke">
+                        대지면적(㎡)
+                    </td>
+                    <td>@string.Format("{0: ###,###.####}", bnn.Site_Area)<span>㎡</span></td>
+                    <td align="center" style="background-color:whitesmoke">
+                        건축면적(㎡)
+                    </td>
+                    <td>@string.Format("{0: ###,###.####}", bnn.Build_Area)<span>㎡</span></td>
+                    <td align="center" style="background-color:whitesmoke">
+                        연면적(㎡)
+                    </td>
+                    <td>@string.Format("{0: ###,###.####}", bnn.FloorTotal_Area)<span>㎡</span></td>
+                </tr>
+                <tr>
+                    <td align="center" style="background-color:whitesmoke">
+                        공급면적(㎡)
+                    </td>
+                    <td>@string.Format("{0: ###,###.####}", bnn.Supply_Area)<span>㎡</span></td>
+                    <td align="center" style="background-color:whitesmoke">
+                        용적률(%)
+                    </td>
+                    <td>@string.Format("{0: ###,###.####}", bnn.FloorArea_Ratio)<span>%</span></td>
+                    <td align="center" style="background-color:whitesmoke">
+                        건폐률(%)
+                    </td>
+                    <td>@string.Format("{0: ###,###.####}", bnn.BuildingCoverage_Ratio)<span>%</span></td>
+                </tr>
+                <tr>
+                    <td align="center" style="background-color:whitesmoke">
+                        수전용량
+                    </td>
+                    <td>@string.Format("{0: ###,###.####}", bnn.Electric_Supply_Capacity)<span>KVA</span></td>
+                    <td align="center" style="background-color:whitesmoke">
+                        저수량(톤)
+                    </td>
+                    <td>@string.Format("{0: ###,###.####}", bnn.Water_Quantity)<span>톤</span></td>
+                    <td align="center" style="background-color:whitesmoke">
+                        주차대수
+                    </td>
+                    <td>@string.Format("{0: ###,###.####}", bnn.Park_Car_Count)<span>대</span></td>
+                </tr>
+                <tr>
+                    <td align="center" style="background-color:whitesmoke">
+                        최고높이(M)
+                    </td>
+                    <td>@bnn.Heighest<span>m</span></td>
+                    <td align="center" style="background-color:whitesmoke">
+                        난방방식
+                    </td>
+                    <td>@bnn.Heating_Way</td>
+                    <td align="center" style="background-color:whitesmoke">
+                        급수방식
+                    </td>
+                    <td>@bnn.WaterSupply_Way</td>
+                </tr>
+
+                <tr style="border-bottom:solid; border-bottom-width:1px;">
+                    <td align="center" style="background-color:whitesmoke">
+                        연락처
+                    </td>
+                    <td>@bnn.Telephone</td>
+                    <td align="center" style="background-color:whitesmoke">
+                        팩스
+                    </td>
+                    <td>@bnn.Fax</td>
+                    <td align="center" style="background-color:whitesmoke">
+                        이메일
+                    </td>
+                    <td>@bnn.Email</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+    <div class="row" style="margin-top: 5px">
+        <div class="col-6 col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <table width="100%">
+                        <tr>
+                            <td><span style="font-size: 1em"> <span class="bi-alarm"></span>&nbsp;<span>부대시설 정보</span></span></td>
+                            <td align="right">
+                                <button type="button" class="btn btn-outline-secondary btn-sm" @onclick="btnAddSaveA">새로등록</button>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+
+                <div class="card-body">
+                    <table class="table table-sm" style="font-size: 0.9em; margin-bottom: 0px">
+                        <thead>
+                            <tr style="background-color:ghostwhite; border-top-style:solid; border-top-width: 2px; border-top-color: cadetblue">
+                                <th class="text-center">시설명</th>
+                                <th class="text-center">위 치</th>
+                                <th class="text-center">수 량</th>
+                                <th class="text-center">비 고</th>
+                                <th class="text-center">버 튼</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var st in annA)
+                            {
+                                <tr style="border-bottom-style:solid; border-bottom-width:1px;">
+                                    <td style="text-align:center; vertical-align:middle">@st.Facility_Name</td>
+                                    <td style="text-align:center; vertical-align:middle">@st.Facility_Position</td>
+                                    <td style="text-align:center; vertical-align:middle">@string.Format("{0: ###,###.##}", (st.Quantity))@st.Unit</td>
+                                    <td style="text-align:center; vertical-align:middle"><span title="@st.Facility_Etc">@Dul.StringLibrary.CutString(st.Facility_Etc, 12)</span></td>
+                                    <td style="text-align:center; vertical-align:middle"><button class="btn btn-link btn-sm" @onclick="() => OnEditA(st)">수정</button> <button @onclick="() => OnRemoveB(st.Aid)" class="btn btn-link btn-sm">삭제</button></td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-6 col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <table width="100%">
+                        <tr>
+                            <td><span style="font-size: 1em"> <span class="bi-alarm"></span>&nbsp;<span>복리시설 정보</span></span></td>
+                            <td align="right">
+                                <button type="button" class="btn btn-outline-secondary btn-sm" @onclick="btnAddSaveB">새로등록</button>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+
+                <div class="card-body">
+                    <table class="table table-sm" style="font-size: 0.9em; margin-bottom: 0px">
+                        <thead>
+                            <tr style="background-color:ghostwhite; border-top-style:solid; border-top-width: 2px; border-top-color: cadetblue">
+                                <th class="text-center">시설명</th>
+                                <th class="text-center">위 치</th>
+                                <th class="text-center">수 량</th>
+                                <th class="text-center">비 고</th>
+                                <th class="text-center">버 튼</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var st in annB)
+                            {
+                                <tr style="border-bottom-style:solid; border-bottom-width:1px;">
+                                    <td style="text-align:center; vertical-align:middle">@st.Facility_Name</td>
+                                    <td style="text-align:center; vertical-align:middle">@st.Facility_Position</td>
+                                    <td style="text-align:center; vertical-align:middle">@string.Format("{0: ###,###.##}", (st.Quantity))@st.Unit</td>
+                                    <td style="text-align:center; vertical-align:middle"><span title="@st.Facility_Etc">@Dul.StringLibrary.CutString(st.Facility_Etc, 12)</span></td>
+                                    <td style="text-align:center; vertical-align:middle"><button @onclick="() => OnEditB(st)" class="btn btn-link btn-sm">수정</button> <button @onclick="() => OnRemoveB(st.Aid)" class="btn btn-link btn-sm">삭제</button></td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@if (InsertViews == "B")
+{
+    <div class="modal fade show d-block" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header" style="background-color: cornflowerblue; color: white">
+                    <h5 class="modal-title"><span class="bi-house-door"></span>&nbsp;@Apt_Name 아파트 상세 정보 @strTitle</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" @onclick="btnClose">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body" style="height: 500px; overflow-y:scroll">
+                    <table class="table" style="margin-bottom: 0px">
+                        <tr>
+
+                            <td>
+                                <div class="input-group">
+                                    <div class="input-group">
+                                        <div class="input-group-prepend"><span class="input-group-text" style="font-size: 0.9em"><span class="bi-pencil-square"></span>&nbsp;시행사</span></div>
+                                        <input id="txtDeveloper" name="txtDeveloper" style="font-size: 0.9em" @bind="bnn.Developer" class="form-control" type="text" />
+                                    </div>
+                                </div>
+                            </td>
+
+                            <td>
+                                <div class="input-group">
+                                    <div class="input-group">
+                                        <div class="input-group-prepend"><span class="input-group-text" style="font-size: 0.9em"><span class="bi-pencil-square"></span>&nbsp;시공사</span></div>
+                                        <input id="txtBuilder" name="txtBuilder" style="font-size: 0.9em" @bind="bnn.Builder" class="form-control" type="text" />
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+
+                        <tr>
+
+                            <td>
+                                <div class="input-group">
+                                    <div class="input-group">
+                                        <div class="input-group-prepend"><span class="input-group-text" style="font-size: 0.9em"><span class="bi-pencil-square"></span>&nbsp;지역·지구</span></div>
+                                        <input id="txtAdress_Rest" name="txtAdress_Rest" style="font-size: 0.9em" @bind="bnn.District" class="form-control" type="text" />
+                                    </div>
+                                </div>
+                            </td>
+
+                            <td>
+                                <div class="input-group">
+                                    <div class="input-group">
+                                        <div class="input-group-prepend"><span class="input-group-text" style="font-size: 0.9em"><span class="bi-pencil-square"></span>&nbsp;관리방식</span></div>
+                                        <select id="txtManagement_Way" style="font-size: 0.9em" class="custom-select" @bind="bnn.Management_Way">
+                                            <option value="위탁관리">위탁관리</option>
+                                            <option value="자치관리">자치관리</option>
+                                            <option value="기타">기타</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>
+                                <div class="input-group">
+                                    <div class="input-group">
+                                        <div class="input-group-prepend"><span class="input-group-text" style="font-size: 0.9em"><span class="bi-pencil-square"></span>&nbsp;승강기수</span></div>
+                                        <input id="txtElevator" name="txtElevator" style="font-size: 0.9em" @bind="bnn.Elevator" class="form-control text-center" type="number" />
+                                        <div class="input-group-append">
+                                            <span class="input-group-text" style="font-size: 0.9em">대</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+
+                            <td>
+                                <div class="input-group">
+                                    <div class="input-group">
+                                        <div class="input-group-prepend"><span class="input-group-text" style="font-size: 0.9em"><span class="bi-pencil-square"></span>&nbsp;관리형식</span></div>
+                                        <select id="txtJoint_Management" style="font-size: 0.9em" class="custom-select" @bind="bnn.Joint_Management">
+                                            <option value="단독관리">단독관리</option>
+                                            <option value="공동관리">공동관리</option>
+                                            <option value="혼합관리">혼합관리</option>
+                                            <option value="기타">기타</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+
+                        <tr>
+
+                            <td>
+                                <div class="input-group">
+                                    <div class="input-group">
+                                        <div class="input-group-prepend"><span class="input-group-text" style="font-size: 0.9em"><span class="bi-pencil-square"></span>&nbsp;대지면적(㎡)</span></div>
+                                        <input id="txtSite_Area" name="txtSite_Area" style="font-size: 0.9em" @bind="bnn.Site_Area" class="form-control text-center" type="number" />
+                                        <div class="input-group-append">
+                                            <span class="input-group-text" style="font-size: 0.9em">㎡</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+
+                            <td>
+                                <div class="input-group">
+                                    <div class="input-group">
+                                        <div class="input-group-prepend"><span class="input-group-text" style="font-size: 0.9em"><span class="bi-pencil-square"></span>&nbsp;건축면적(㎡)</span></div>
+                                        <input id="txtBuild_Area" name="txtBuild_Area" style="font-size: 0.9em" @bind="bnn.Build_Area" class="form-control text-center" type="number" />
+                                        @*<InputNumber @bind-Value="bnn.Build_Area"></InputNumber>*@
+                                        <div class="input-group-append">
+                                            <span class="input-group-text" style="font-size: 0.9em">㎡</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+
+                        <tr>
+
+                            <td>
+                                <div class="input-group">
+                                    <div class="input-group">
+                                        <div class="input-group-prepend"><span class="input-group-text" style="font-size: 0.9em"><span class="bi-pencil-square"></span>&nbsp;연면적(㎡)</span></div>
+                                        <input id="txtFloorTotal_Area" name="txtBuild_Area" style="font-size: 0.9em" @bind="bnn.FloorTotal_Area" class="form-control text-center" type="number" />
+                                        @*<InputNumber @bind-Value="bnn.Build_Area"></InputNumber>*@
+                                        <div class="input-group-append">
+                                            <span class="input-group-text" style="font-size: 0.9em">㎡</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+
+                            <td>
+                                <div class="input-group">
+                                    <div class="input-group">
+                                        <div class="input-group-prepend"><span class="input-group-text" style="font-size: 0.9em"><span class="bi-pencil-square"></span>&nbsp;공급면적(㎡)</span></div>
+                                        <input id="txtSupply_Area" name="txtFloorTotal_Area" style="font-size: 0.9em" @bind="bnn.Supply_Area" class="form-control text-center" type="number" />
+                                        <div class="input-group-append">
+                                            <span class="input-group-text" style="font-size: 0.9em">㎡</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="input-group">
+                                    <div class="input-group">
+                                        <div class="input-group-prepend"><span class="input-group-text" style="font-size: 0.9em"><span class="bi-pencil-square"></span>&nbsp;용적률(%)</span></div>
+                                        <input id="txtBuildingCoverage_Ratio" name="txtBuildingCoverage_Ratio" style="font-size: 0.9em" @bind="bnn.BuildingCoverage_Ratio" class="form-control text-center" type="number" />
+                                        <div class="input-group-append">
+                                            <span class="input-group-text" style="font-size: 0.9em">%</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+
+                            <td>
+                                <div class="input-group">
+                                    <div class="input-group">
+                                        <div class="input-group-prepend"><span class="input-group-text" style="font-size: 0.9em"><span class="bi-pencil-square"></span>&nbsp;건폐률(%)</span></div>
+                                        <input id="txtFloorArea_Ratio" name="txtFloorTotal_Area" style="font-size: 0.9em" @bind="bnn.FloorArea_Ratio" class="form-control text-center" type="number" />
+                                        <div class="input-group-append">
+                                            <span class="input-group-text" style="font-size: 0.9em">%</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="input-group">
+                                    <div class="input-group">
+                                        <div class="input-group-prepend"><span class="input-group-text" style="font-size: 0.9em"><span class="bi-pencil-square"></span>&nbsp;수전용량</span></div>
+                                        <input id="txtElectric_Supply_Capacity" name="txtElectric_Supply_Capacity" style="font-size: 0.9em" @bind="bnn.Electric_Supply_Capacity" class="form-control text-center" type="number" />
+                                        <div class="input-group-append">
+                                            <span class="input-group-text" style="font-size: 0.9em">%</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+
+                            <td>
+                                <div class="input-group">
+                                    <div class="input-group">
+                                        <div class="input-group-prepend"><span class="input-group-text" style="font-size: 0.9em"><span class="bi-pencil-square"></span>&nbsp;저수량(톤)</span></div>
+                                        <input id="txtWater_Quantity" name="txtWater_Quantity" style="font-size: 0.9em" @bind="bnn.Water_Quantity" class="form-control text-center" type="number" />
+                                        <div class="input-group-append">
+                                            <span class="input-group-text" style="font-size: 0.9em">ton</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>
+                                <div class="input-group">
+                                    <div class="input-group">
+                                        <div class="input-group-prepend"><span class="input-group-text" style="font-size: 0.9em"><span class="bi-pencil-square"></span>&nbsp;수전용량</span></div>
+                                        <input id="txtPark_Car_Count" name="txtPark_Car_Count" style="font-size: 0.9em" @bind="bnn.Park_Car_Count" class="form-control text-center" type="number" />
+                                        <div class="input-group-append">
+                                            <span class="input-group-text" style="font-size: 0.9em">KVA</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+
+                            <td>
+                                <div class="input-group">
+                                    <div class="input-group">
+                                        <div class="input-group-prepend"><span class="input-group-text" style="font-size: 0.9em"><span class="bi-pencil-square"></span>&nbsp;주차대수</span></div>
+                                        <input id="txtPark_Car_Count" name="txtPark_Car_Count" style="font-size: 0.9em" @bind="bnn.Park_Car_Count" class="form-control text-center" type="number" />
+                                        <div class="input-group-append">
+                                            <span class="input-group-text" style="font-size: 0.9em">대</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>
+                                <div class="input-group">
+                                    <div class="input-group">
+                                        <div class="input-group-prepend"><span class="input-group-text" style="font-size: 0.9em"><span class="bi-pencil-square"></span>&nbsp;최고높이</span></div>
+                                        <input id="txtHeighest" name="txtHeighest" style="font-size: 0.9em" @bind="bnn.Heighest" class="form-control text-center" type="number" />
+                                        <div class="input-group-append">
+                                            <span class="input-group-text" style="font-size: 0.9em">M</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+
+                            <td>
+                                <div class="input-group">
+                                    <div class="input-group">
+                                        <div class="input-group-prepend"><span class="input-group-text" style="font-size: 0.9em"><span class="bi-pencil-square"></span>&nbsp;난방방식</span></div>
+                                        <select id="txtHeating_Way" style="font-size: 0.9em" class="custom-select" @bind="bnn.Heating_Way">
+                                            <option value="개별난방">개별난방</option>
+                                            <option value="중앙난방">중앙난방</option>
+                                            <option value="지역난방">지역난방</option>
+                                            <option value="기타">기타</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>
+                                <div class="input-group">
+                                    <div class="input-group">
+                                        <div class="input-group-prepend"><span class="input-group-text" style="font-size: 0.9em"><span class="bi-pencil-square"></span>&nbsp;급수방식</span></div>
+                                        <select id="txtWaterSupply_Way" style="font-size: 0.9em" class="custom-select" @bind="bnn.WaterSupply_Way">
+                                            <option value="부스터펌프방식">부스터펌프방식</option>
+                                            <option value="고가수조방식">고가수조방식</option>
+                                            <option value="직접급수방식">직접급수방식</option>
+                                            <option value="기타">기타</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="input-group">
+                                    <div class="input-group">
+                                        <div class="input-group-prepend"><span class="input-group-text" style="font-size: 0.9em"><span class="bi-pencil-square"></span>&nbsp;이메일</span></div>
+                                        <input id="txtEmail" name="txtEmail" style="font-size: 0.9em" @bind="bnn.Email" class="form-control" type="text" />
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>
+                                <div class="input-group">
+                                    <div class="input-group">
+                                        <div class="input-group-prepend"><span class="input-group-text" style="font-size: 0.9em"><span class="bi-pencil-square"></span>&nbsp;주차대수</span></div>
+                                        <input id="txtTelephone" name="txtTelephone" style="font-size: 0.9em" @bind="bnn.Telephone" class="form-control" type="text" />
+                                    </div>
+                                </div>
+                            </td>
+
+                            <td>
+                                <div class="input-group">
+                                    <div class="input-group">
+                                        <div class="input-group-prepend"><span class="input-group-text" style="font-size: 0.9em"><span class="bi-pencil-square"></span>&nbsp;최고높이</span></div>
+                                        <input id="txtFax" name="txtFax" style="font-size: 0.9em" @bind="bnn.Fax" class="form-control" type="text" />
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary btn-sm" @onclick="btnSave">저장</button> &nbsp; &nbsp; &nbsp;
+                    <button type="button" class="btn btn-secondary btn-sm" @onclick="btnClose">닫기</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-backdrop show"></div>
+}
+
+@if (InsertViewsA == "B")
+{
+    <div class="modal fade show d-block" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-sm" role="document">
+            <div class="modal-content">
+                <div class="modal-header" style="background-color: cornflowerblue; color: white">
+                    <span class="modal-title"><span class="bi-house-door"></span>&nbsp;@strTitleA</span>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" @onclick="btnCloseA">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="input-group">
+                        <div class="input-group">
+                            <div class="input-group-prepend"><span class="input-group-text" style="font-size: 0.9em"><span class="bi-pencil-square"></span>&nbsp;시설명</span></div>
+                            <input id="txtFacility_Name" name="txtFacility_Name" style="font-size: 0.9em" @bind="FnnA.Facility_Name" class="form-control" type="text" />
+                        </div>
+                    </div>
+                    <br />
+                    <div class="input-group">
+                        <div class="input-group">
+                            <div class="input-group-prepend"><span class="input-group-text" style="font-size: 0.9em"><span class="bi-pencil-square"></span>&nbsp;위치</span></div>
+                            <input id="txtFacility_Position" name="txtFacility_Position" style="font-size: 0.9em" @bind="FnnA.Facility_Position" class="form-control" type="text" />
+                        </div>
+                    </div>
+                    <br />
+                    <div class="input-group">
+                        <div class="input-group">
+                            <div class="input-group-prepend"><span class="input-group-text" style="font-size: 0.9em"><span class="bi-pencil-square"></span>&nbsp;수량</span></div>
+                            <input id="txtQuantity" name="txtQuantity" style="font-size: 0.9em" @bind="FnnA.Quantity" class="form-control" type="number" />
+                            <div class="input-group-append">
+                                <select id="txUnit" style="font-size: 0.9em" class="custom-select" @bind="FnnA.Unit">
+                                    <option Value="㎡">㎡</option>
+                                    <option Value="m">m</option>
+                                    <option Value="㎥">㎥</option>
+                                    <option Value="t">톤(t)</option>
+                                    <option Value="KVA">KVA</option>
+                                    <option Value="KW/h">KW/h</option>
+                                    <option Value="개">개</option>
+                                    <option Value="개소">개소</option>
+                                    <option Value="조">조</option>
+                                    <option Value="대">대</option>
+                                    <option Value="통">통</option>
+                                    <option Value="set">세트</option>
+                                    <option Value="식">식</option>
+                                    <option Value="묶음">묶음</option>
+                                    <option Value="Etc">기타</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+                    <div class="input-group">
+                        <textarea id="txtFacility_Etc" rows="4" class="form-control" @bind="FnnA.Facility_Etc" placeholder="상세 설명 입력"></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary btn-sm" @onclick="btnSaveA">저장</button> &nbsp; &nbsp; &nbsp;
+                    <button type="button" class="btn btn-secondary btn-sm" @onclick="btnCloseA">닫기</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-backdrop show"></div>
+}
