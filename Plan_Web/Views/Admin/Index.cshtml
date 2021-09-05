@@ -1,0 +1,62 @@
+﻿@{
+    ViewData["Title"] = "wedew";
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+</head>
+<body>
+
+    <div class="row">
+        <div class="container">
+
+            <div class="card">
+                <div class="card-header" style="vertical-align:middle">
+                    <i class="bi bi-shield-lock"></i> 대한주택관리협회 장기수선 운영시스템 로그인
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+
+                            <div class="card">
+                                <div class="card-header">
+                                    로그인
+                                </div>
+                                <div class="card-body">
+                                    <form action="/Admin/Index" method="post">
+                                        <div class="input-group">
+                                            <div class="input-group-append">
+                                                <span class="input-group-text"><i class="bi bi-person-fill"></i>&nbsp; 아이디</span>
+                                            </div>
+                                            <input id="mem_id" name="mem_id" type="text" class="form-control" />
+                                        </div>
+                                        <br />
+                                        <div class="input-group">
+                                            <div class="input-group-append">
+                                                <span class="input-group-text">&nbsp;<i class="bi bi-eye-slash-fill"></i>&nbsp; 암 &nbsp; 호</span>
+                                            </div>
+                                            <input id="mem_pw" name="mem_pw" type="password" class="form-control" />
+                                        </div>
+                                        <br />
+                                        <input type="submit" class="btn btn-success btn-block" value="로그인" />
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class=" card">
+                                <div class="card-body">
+                                    <img src="/images/bg_Main1.gif" width="460" alt="" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

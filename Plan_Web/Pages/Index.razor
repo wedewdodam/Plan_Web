@@ -1,0 +1,63 @@
+﻿@page "/"
+
+<img src="/images/sub/sub_main_visual.png" class="img-thumbnail" alt="" />
+
+<div class="row" style="margin-top: 10px">
+    <div class="col-md-4">
+        <table class="table table-borderless table-sm">
+            <thead>
+                <tr style="border-bottom-style:solid; border-bottom-width: 2px; border-bottom-color: cornflowerblue">
+                    <td><img src="/images/sub/board_tit_bullet.png" alt="" />&nbsp;<span style="font-size: 1em; font-weight: bold">공지사항</span></td>
+                    <td class="text-right"><a @onclick="OnUrlA"><img src="/images/sub/board_more_btn.png" alt="" /></a></td>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var st in annA)
+                {
+                    <tr style="border-bottom-style: solid; border-bottom-width: 1px; border-bottom-color: gainsboro">
+                        <td style="font-size: 0.9em">@Dul.StringLibrary.CutString(st.Title, 24) <span class="bi-envelope-fill"></span>(@st.CommentCount)</td>
+                        <td class="text-right" style="font-size: 0.9em; color:darkgray">@st.PostDate.ToShortDateString()</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    <div class="col-md-4">
+        <table class="table table-borderless table-sm">
+            <thead>
+                <tr style="border-bottom-style:solid; border-bottom-width: 2px; border-bottom-color: cornflowerblue">
+                    <td><img src="/images/sub/board_tit_bullet.png" alt="" />&nbsp;<span style="font-size: 1em; font-weight: bold">공지사항</span></td>
+                    <td class="text-right"><a @onclick="OnUrlA"><img src="/images/sub/board_more_btn.png" alt="" /></a></td>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var st in annA)
+                {
+                    <tr style="border-bottom-style: solid; border-bottom-width: 1px; border-bottom-color: gainsboro">
+                        <td style="font-size: 0.9em">@Dul.StringLibrary.CutString(st.Title, 24) <span class="bi-envelope-fill"></span>(@st.CommentCount)</td>
+                        <td class="text-right" style="font-size: 0.9em; color:darkgray">@st.PostDate.ToShortDateString()</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    <div class="col-md-4">
+        <table class="table table-borderless table-sm">
+            <thead>
+                <tr style="border-bottom-style:solid; border-bottom-width: 2px; border-bottom-color: cornflowerblue">
+                    <td><img src="/images/sub/board_tit_bullet.png" alt="" />&nbsp;<span style="font-size: 1em; font-weight: bold">공지사항</span></td>
+                    <td class="text-right"><a @onclick="OnUrlA"><img src="/images/sub/board_more_btn.png" alt="" /></a></td>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var st in annA)
+                {
+                    <tr style="border-bottom-style:solid; border-bottom-width: 1px; border-bottom-color: gainsboro">
+                        <td style="font-size: 0.9em">@Dul.StringLibrary.CutString(st.Title, 24) <span class="bi-envelope-fill"></span>(@st.CommentCount)</td>
+                        <td class="text-right" style="font-size: 0.9em; color:darkgray">@st.PostDate.ToShortDateString()</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

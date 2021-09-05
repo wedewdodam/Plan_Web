@@ -1,0 +1,179 @@
+﻿@page "/Apt_Infor/Bylaw"
+
+<div class="card">
+    <div class="card-header">
+        <table width="100%">
+            <tr>
+                <td><span style="font-size: 1em"> <span class="bi-alarm"></span>&nbsp;<span>단지 개요</span></span></td>
+                <td align="right">
+                    <button type="button" class="btn btn-primary btn-sm" @onclick="btnOpenA"><span class="bi-pencil-square"> &nbsp; 규약 새로 등록</span></button>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div class="card-body">
+        @if (annA == null)
+        {
+            <p style="text-align:center">
+                <img src="/images/loader.gif" height="100" />
+            </p>
+        }
+        else if (annA.Count < 1)
+        {
+            <p style="text-align:center">
+                <h6>입력된 데이터가 없습니다.</h6>
+            </p>
+        }
+        else
+        {
+
+            <table class="table table-sm" style="font-size: 0.9em; margin-bottom: 0px">
+                <thead>
+                    <tr style="background-color:ghostwhite; border-top-style:solid; border-top-width: 2px; border-top-color: cadetblue">
+                        <th class="text-center">개정차수</th>
+                        <th class="text-center">제안자</th>
+                        <th class="text-center">시행일자</th>
+                        <th class="text-center">승인율</th>
+                        <th class="text-center">제안이유</th>
+                        <th class="text-center">개정설명</th>
+                        <th class="text-center">버 튼</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var st in annA)
+                    {
+                        <tr style="border-bottom-style:solid; border-bottom-width:1px;">
+                            <td style="text-align:center; vertical-align:middle"><span>제</span>@st.Bylaw_Revision_Num<span>차</span></td>
+                            <td style="text-align:center; vertical-align:middle">@st.Proposer</td>
+                            <td style="text-align:center; vertical-align:middle">@st.Bylaw_Revision_Date.ToShortDateString()</td>
+                            <td style="text-align:center; vertical-align:middle">@st.Approval_Rate<span>%</span></td>
+                            <td style="text-align:center; vertical-align:middle"><span title="@st.Bylaw_Law_Basis">@Dul.StringLibrary.CutString(st.Bylaw_Law_Basis, 24)</span></td>
+                            <td style="text-align:center; vertical-align:middle"><span title="@st.Bylaw_Etc">@Dul.StringLibrary.CutString(st.Bylaw_Etc, 24)</span></td>
+                            <td style="text-align:center; vertical-align:middle"><button class="btn btn-link btn-sm" @onclick="() => OnEditA(st)">수정</button> <button @onclick="() => OnRemoveA(st.Bylaw_Code)" class="btn btn-link btn-sm">삭제</button></td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+
+        }
+    </div>
+</div>
+
+@if (InsertViewsA == "B")
+{
+    <div class="modal fade show d-block" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header" style="background-color: cornflowerblue; color: white">
+                    <h5 class="modal-title"><span class="bi-house-door"></span>&nbsp;@strTitleA</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" @onclick="btnCloseA">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body" style="height: 500px; overflow-y:scroll">
+                    <table class="table" style="margin-bottom: 0px; font-size: 0.9em">
+                        <tr>
+                            <td width="50%">
+                                <div class="input-group">
+                                    <div class="input-group-prepend"><span class="input-group-text" style="font-size: 0.9em"><span class="bi-pencil-square"></span>&nbsp;개정차수</span></div>
+                                    <select id="Bylaw_Revision_Num" style="font-size: 0.9em" class="custom-select" @bind="ann.Bylaw_Revision_Num">
+                                        <option value="Z">::차수선택::</option>
+                                        <option value="1">1</option>
+                                        <option value="2">2</option>
+                                        <option value="3">3</option>
+                                        <option value="4">4</option>
+                                        <option value="5">5</option>
+                                        <option value="6">6</option>
+                                        <option value="7">7</option>
+                                        <option value="8">8</option>
+                                        <option value="9">9</option>
+                                        <option value="10">10</option>
+                                        <option value="11">11</option>
+                                        <option value="12">12</option>
+                                        <option value="13">13</option>
+                                        <option value="14">14</option>
+                                        <option value="15">15</option>
+                                        <option value="16">16</option>
+                                        <option value="17">17</option>
+                                        <option value="18">18</option>
+                                        <option value="19">19</option>
+                                        <option value="20">20</option>
+                                        <option value="21">21</option>
+                                        <option value="22">22</option>
+                                        <option value="23">23</option>
+                                        <option value="24">24</option>
+                                        <option value="25">25</option>
+                                        <option value="26">26</option>
+                                        <option value="27">27</option>
+                                        <option value="28">28</option>
+                                        <option value="29">29</option>
+                                        <option value="30">30</option>
+                                    </select>
+                                    <div class="input-group-append">
+                                        <span class="input-group-text" style="font-size: 0.9em">차</span>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>
+                                <div class="input-group">
+                                    <div class="input-group-prepend"><span class="input-group-text" style="font-size: 0.9em"><span class="bi-pencil-square"></span>&nbsp;제안자</span></div>
+                                    <select id="Proposer" style="font-size: 0.9em" class="custom-select" @bind="ann.Proposer">
+                                        <option value="Z">::제안자선택::</option>
+                                        <option value="입주자대표회의">입주자대표회의</option>
+                                        <option value="임차인대표회의">임차인대표회의</option>
+                                        <option value="입주자등 1/10 이상">입주자등 1/10 이상</option>
+                                        <option value="사업주체">사업주체</option>
+                                        <option value="임대사업자">임대사업자</option>
+                                        <option value="입대의">입대의</option>
+                                        <option value="기타">기타</option>
+                                    </select>
+                                </div>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>
+                                <div class="input-group">
+                                    <div class="input-group-prepend"><span class="input-group-text" style="font-size: 0.9em"><span class="bi-pencil-square"></span>&nbsp;시행일자</span></div>
+                                    <input id="Bylaw_Revision_Date" name="Bylaw_Revision_Date" style="font-size: 0.9em" @bind="@ann.Bylaw_Revision_Date" class="form-control" type="date" />
+                                </div>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>
+                                <div class="input-group">
+                                    <div class="input-group-prepend"><span class="input-group-text" style="font-size: 0.9em"><span class="bi-pencil-square"></span>&nbsp;동의률</span></div>
+                                    <input id="Length" name="Length" style="font-size: 0.9em" @bind="@ann.Approval_Rate" class="form-control" type="number" max="100" min="50" />
+                                    <div class="input-group-append">
+                                        <span class="input-group-text" style="font-size: 0.9em">%</span>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>
+                                <textarea id="Bylaw_Law_Basis" @bind="ann.Bylaw_Law_Basis" rows="3" placeholder="개정 이유를 입력하세요." class="form-control" style="font-size: 0.9em"></textarea>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>
+                                <textarea id="Bylaw_Etc" @bind="ann.Bylaw_Etc" rows="3" placeholder="개정관련하여 설명할 내용을 입력하세요." class="form-control" style="font-size: 0.9em"></textarea>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary btn-sm" @onclick="btnSaveA">저장</button> &nbsp; &nbsp; &nbsp;
+                    <button type="button" class="btn btn-secondary btn-sm" @onclick="btnCloseA">닫기</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-backdrop show"></div>
+}

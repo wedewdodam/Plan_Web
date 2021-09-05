@@ -1,0 +1,70 @@
+﻿<AuthorizeView>
+    <Authorized>
+        <table width="100%" style="font-size: 1em">
+            <tr>
+                <td style="vertical-align:middle">
+                    <span style="font-size: 1.1em"> <b>공동주택명 : </b>&nbsp;<span style="color: darkcyan">@Apt_Name</span></span>
+                </td>
+                <td style="vertical-align:middle">
+                    <b>주소 : </b>&nbsp;  @Adress
+                </td>
+                <td style="vertical-align:middle">
+                    <b>사용검사일 : </b>&nbsp;  @BuildDate.ToLongDateString()
+                </td>
+                <td style="vertical-align:middle" class="text-right">
+                    <a href="#">@context.User.Identity.Name 님!</a>
+                </td>
+                <td style="vertical-align:middle" class="text-right">
+                    <form method="post" action="/Logs/LogOut">
+                        <button type="submit" class="btn btn-link">로그아웃</button>
+                    </form>
+                </td>
+            </tr>
+        </table>
+
+        @*<a href="Identity/Account/Manage">Hello, @context.User.Identity.Name!</a>
+            <form method="post" action="Identity/Account/LogOut">
+                <button type="submit" class="nav-link btn btn-link">Log out</button>
+            </form>*@
+    </Authorized>
+    <NotAuthorized>
+        <p style="font-size: 1em; text-align:center">
+            로그인되지 않았습니다. ............
+            <a class="btn btn-link btn-sm" href="/Logs/Index">로그인</a>
+        </p>
+        @*<a href="Identity/Account/Register">Register</a>
+            <a href="Identity/Account/Login">Log in</a>*@
+    </NotAuthorized>
+</AuthorizeView>
+
+
+@code {
+    //private WeatherForecast[] forecasts;
+    public string Apt_Code { get; set; }
+    public string Apt_Name { get; set; }
+    public string User_Code { get; set; }
+    public DateTime BuildDate { get; set; }
+    public string Adress { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await AuthenticationStateRef;
+
+        if (authState.User.Identity.IsAuthenticated)
+        {
+            //forecasts = await ForecastService.GetForecastAsync(DateTime.Now);
+
+            //로그인 정보
+
+            Apt_Code = authState.User.Claims.FirstOrDefault(c => c.Type == "AptCode")?.Value;
+            User_Code = authState.User.Claims.FirstOrDefault(c => c.Type == "UserCode")?.Value;
+            Apt_Name = authState.User.Claims.FirstOrDefault(c => c.Type == "AptName")?.Value;
+            BuildDate = Convert.ToDateTime(authState.User.Claims.FirstOrDefault(c => c.Type == "BuildDate")?.Value);
+            Adress = authState.User.Claims.FirstOrDefault(c => c.Type == "Adress")?.Value;
+
+        }
+    }
+
+    [CascadingParameter]
+    public Task<AuthenticationState> AuthenticationStateRef { get; set; }
+}

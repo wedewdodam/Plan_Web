@@ -1,0 +1,1433 @@
+﻿@page "/Repair_Cost/New/{Aid}"
+
+<table width="100%" style="margin-bottom: 10px">
+    <tr>
+        <td style="width: 15%"> <button class="btn btn-success btn-block" @onclick="OnPlanUrl"><img src="/images/sub/icon_step01_on.png" height="25" alt="" /> <span style="font-weight: bold"> 수선계획 총론 수립</span></button></td>
+        <td class="text-center"> <img src="/images/sub/icon_arrow.png" height="30" alt="" /> </td>
+        <td style="width: 15%"> <button class="btn btn-success btn-block" @onclick="OnArticleUrl"><img src="/images/sub/icon_step02_on.png" height="25" alt="" /> <span style="font-weight: bold"> 수선항목 수립</span></button></td>
+        <td class="text-center"> <img src="/images/sub/icon_arrow.png" height="30" alt="" /> </td>
+        <td style="width: 15%"> <button class="btn btn-success btn-block" @onclick="OnCycleUrl"><img src="/images/sub/icon_step03_on.png" height="25" alt="" /> <span style="font-weight: bold"> 수선주기 수립</span></button></td>
+        <td class="text-center"> <img src="/images/sub/icon_arrow.png" height="30" alt="" /> </td>
+        <td style="width: 15%"> <button class="btn btn-success btn-block" @onclick="OnCostUrl"><img src="/images/sub/icon_step03_on.png" height="25" alt="" /> <span style="font-weight: bold"> 수선금액 수립</span></button></td>
+        <td class="text-center"> <img src="/images/sub/icon_arrow.png" height="30" alt="" /> </td>
+        <td style="width: 15%"> <button class="btn btn-success btn-block" @onclick="OnCompleteUrl"><img src="/images/sub/icon_step04_on.png" height="25" alt="" /> <span style="font-weight: bold"> 수립완료</span></button></td>
+    </tr>
+</table>
+
+<div class="card">
+    <div class="card-header">
+        <table width="100%">
+            <tr>
+                <td>
+                    <span style="font-size: 1em"> <span class="bi-house-fill"></span>&nbsp;<span>장기수선계획 수선금액 조정 </span></span>
+                </td>
+                <td>
+                </td>
+                <td>
+                </td>
+                <td align="right">
+                    <button type="button" class="btn btn-outline-secondary btn-sm" @onclick="btnOpen">수선금액 등록</button>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div class="card-body">
+        <img src="/images/sub/board_tit_bullet.png" alt="" /> <span style="font-size: 0.9em; font-weight: bold; color: Highlight">1. 건물 외부</span> &nbsp;&nbsp;&nbsp; <span style="font-size: 0.9em">개수 : @cnnA.Count <span>개</span></span><br />
+        <table class="table table-sm" style="font-size: 0.9em">
+            <thead>
+                <tr style="background-color: ghostwhite">
+                    <th class="text-center">수선항목 분류</th>
+                    <th class="text-center">수 선 항 목</th>
+                    <th class="text-center">수량</th>
+                    <th class="text-center">전체수선금액</th>
+                    <th class="text-center">수선율</th>
+                    <th class="text-center">부분수선금액</th>
+                    <th class="text-center">계획기간 총액</th>
+                    <th class="text-center">버 튼</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var st in cnnA)
+                {
+                    <tr>
+                        <td style="vertical-align: middle" class="text-center" @onclick="() => OnByDetailA(st)">
+                            <span title="중분류">@st.Sort_B_Name</span> <span class="bi-chevron-double-right"></span><span title="소분류">@st.Sort_C_Name</span>
+                        </td>
+                        <td style="vertical-align: middle" class="text-center" @onclick="() => OnByDetailA(st)">
+                            <span title="수선항목 명칭">@st.Repair_Article_Name</span>
+                        </td>
+                        <td style="vertical-align: middle" class="text-center" @onclick="() => OnByDetailA(st)">
+                            @if (st.Amount == 0)
+                            {
+                                <span>0</span><span>@st.Unit</span>
+                            }
+                            else
+                            {
+                                <span title="개략 수량">@string.Format("{0: ###,###.#}", st.Repair_Amount)<span>@st.Unit</span></span>
+                            }
+
+                        </td>
+                        <td style="vertical-align: middle" class="text-center" @onclick="() => OnByDetailA(st)">
+                            @if (st.Repair_All_Cost == 0)
+                            {
+                                <span>0</span><span>원</span>
+                            }
+                            else
+                            {
+                                <span title="전체 수선 금액">@string.Format("{0: ###,###.#}", st.Repair_All_Cost)<span>원</span></span>
+                            }
+
+                        </td>
+                        <td style="vertical-align: middle" class="text-center" @onclick="() => OnByDetailA(st)">
+                            <span title="부분 수선율">@st.Repair_Rate<span>%</span></span>
+                        </td>
+                        <td style="vertical-align: middle" class="text-center" @onclick="() => OnByDetailA(st)">
+                            @if (st.Repair_Part_Cost == 0)
+                            {
+                                <span>0</span><span>원</span>
+                            }
+                            else
+                            {
+                                <span title="부분 수선 금액">@string.Format("{0: ###,###.#}", st.Repair_Part_Cost)<span>원</span></span>
+                            }
+
+                        </td>
+                        <td style="vertical-align: middle" class="text-center" @onclick="() => OnByDetailA(st)">
+                            <span title="해당 수선항목의 계획기간 수선비 총액">@string.Format("{0: ###,###.#}", ((st.Repair_Part_Cost * st.Part_Cycle_Num) + (st.Repair_All_Cost * st.All_Cycle_Num)))<span>원</span></span>
+                        </td>
+
+                        <td style="vertical-align: middle" class="text-center">
+                            <button @onclick="() => OnByEditA(st)" class="btn btn-link btn-sm">수정</button> <button @onclick="() => OnRemoveA(st)" class="btn btn-link btn-sm">삭제</button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+        <img src="/images/sub/board_tit_bullet.png" alt="" /> <span style="font-size: 0.9em; font-weight: bold; color: Highlight">2. 건물내부</span> &nbsp;&nbsp;&nbsp; <span style="font-size: 0.9em">개수 : @cnnB.Count <span>개</span></span><br />
+        <table class="table table-sm" style="font-size: 0.9em">
+            <thead>
+                <tr style="background-color: ghostwhite">
+                    <th class="text-center">수선항목 분류</th>
+                    <th class="text-center">수 선 항 목</th>
+                    <th class="text-center">수량</th>
+                    <th class="text-center">전체수선금액</th>
+                    <th class="text-center">수선율</th>
+                    <th class="text-center">부분수선금액</th>
+                    <th class="text-center">계획기간 총액</th>
+                    <th class="text-center">버 튼</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var st in cnnB)
+                {
+                    <tr>
+                        <td style="vertical-align: middle" class="text-center" @onclick="() => OnByDetailA(st)">
+                            <span title="중분류">@st.Sort_B_Name</span> <span class="bi-chevron-double-right"></span><span title="소분류">@st.Sort_C_Name</span>
+                        </td>
+                        <td style="vertical-align: middle" class="text-center" @onclick="() => OnByDetailA(st)">
+                            <span title="수선항목 명칭">@st.Repair_Article_Name</span>
+                        </td>
+                        <td style="vertical-align: middle" class="text-center" @onclick="() => OnByDetailA(st)">
+                            @if (st.Amount == 0)
+                            {
+                                <span>0</span><span>@st.Unit</span>
+                            }
+                            else
+                            {
+                                <span title="개략 수량">@string.Format("{0: ###,###.#}", st.Repair_Amount)<span>@st.Unit</span></span>
+                            }
+
+                        </td>
+                        <td style="vertical-align: middle" class="text-center" @onclick="() => OnByDetailA(st)">
+                            @if (st.Repair_All_Cost == 0)
+                            {
+                                <span>0</span><span>원</span>
+                            }
+                            else
+                            {
+                                <span title="전체 수선 금액">@string.Format("{0: ###,###.#}", st.Repair_All_Cost)<span>원</span></span>
+                            }
+
+                        </td>
+                        <td style="vertical-align: middle" class="text-center" @onclick="() => OnByDetailA(st)">
+                            <span title="부분 수선율">@st.Repair_Rate<span>%</span></span>
+                        </td>
+                        <td style="vertical-align: middle" class="text-center" @onclick="() => OnByDetailA(st)">
+                            @if (st.Repair_Part_Cost == 0)
+                            {
+                                <span>0</span><span>원</span>
+                            }
+                            else
+                            {
+                                <span title="부분 수선 금액">@string.Format("{0: ###,###.#}", st.Repair_Part_Cost)<span>원</span></span>
+                            }
+
+                        </td>
+                        <td style="vertical-align: middle" class="text-center" @onclick="() => OnByDetailA(st)">
+                            <span title="해당 수선항목의 계획기간 수선비 총액">@string.Format("{0: ###,###.#}", ((st.Repair_Part_Cost * st.Part_Cycle_Num) + (st.Repair_All_Cost * st.All_Cycle_Num)))<span>원</span></span>
+                        </td>
+
+                        <td style="vertical-align: middle" class="text-center">
+                            <button @onclick="() => OnByEditA(st)" class="btn btn-link btn-sm">수정</button> <button @onclick="() => OnRemoveA(st)" class="btn btn-link btn-sm">삭제</button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+        <img src="/images/sub/board_tit_bullet.png" alt="" /> <span style="font-size: 0.9em; font-weight: bold; color: Highlight">3. 전기·소화·승강기 및 지능형 홈네트워크 설비</span> &nbsp;&nbsp;&nbsp; <span style="font-size: 0.9em">개수 : @cnnC.Count <span>개</span></span><br />
+        <table class="table table-sm" style="font-size: 0.9em">
+            <thead>
+                <tr style="background-color: ghostwhite">
+                    <th class="text-center">수선항목 분류</th>
+                    <th class="text-center">수 선 항 목</th>
+                    <th class="text-center">수량</th>
+                    <th class="text-center">전체수선금액</th>
+                    <th class="text-center">수선율</th>
+                    <th class="text-center">부분수선금액</th>
+                    <th class="text-center">계획기간 총액</th>
+                    <th class="text-center">버 튼</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var st in cnnC)
+                {
+                    <tr>
+                        <td style="vertical-align: middle" class="text-center" @onclick="() => OnByDetailA(st)">
+                            <span title="중분류">@st.Sort_B_Name</span> <span class="bi-chevron-double-right"></span><span title="소분류">@st.Sort_C_Name</span>
+                        </td>
+                        <td style="vertical-align: middle" class="text-center" @onclick="() => OnByDetailA(st)">
+                            <span title="수선항목 명칭">@st.Repair_Article_Name</span>
+                        </td>
+                        <td style="vertical-align: middle" class="text-center" @onclick="() => OnByDetailA(st)">
+                            @if (st.Amount == 0)
+                            {
+                                <span>0</span><span>@st.Unit</span>
+                            }
+                            else
+                            {
+                                <span title="개략 수량">@string.Format("{0: ###,###.#}", st.Repair_Amount)<span>@st.Unit</span></span>
+                            }
+
+                        </td>
+                        <td style="vertical-align: middle" class="text-center" @onclick="() => OnByDetailA(st)">
+                            @if (st.Repair_All_Cost == 0)
+                            {
+                                <span>0</span><span>원</span>
+                            }
+                            else
+                            {
+                                <span title="전체 수선 금액">@string.Format("{0: ###,###.#}", st.Repair_All_Cost)<span>원</span></span>
+                            }
+
+                        </td>
+                        <td style="vertical-align: middle" class="text-center" @onclick="() => OnByDetailA(st)">
+                            <span title="부분 수선율">@st.Repair_Rate<span>%</span></span>
+                        </td>
+                        <td style="vertical-align: middle" class="text-center" @onclick="() => OnByDetailA(st)">
+                            @if (st.Repair_Part_Cost == 0)
+                            {
+                                <span>0</span><span>원</span>
+                            }
+                            else
+                            {
+                                <span title="부분 수선 금액">@string.Format("{0: ###,###.#}", st.Repair_Part_Cost)<span>원</span></span>
+                            }
+
+                        </td>
+                        <td style="vertical-align: middle" class="text-center" @onclick="() => OnByDetailA(st)">
+                            <span title="해당 수선항목의 계획기간 수선비 총액">@string.Format("{0: ###,###.#}", ((st.Repair_Part_Cost * st.Part_Cycle_Num) + (st.Repair_All_Cost * st.All_Cycle_Num)))<span>원</span></span>
+                        </td>
+
+                        <td style="vertical-align: middle" class="text-center">
+                            <button @onclick="() => OnByEditA(st)" class="btn btn-link btn-sm">수정</button> <button @onclick="() => OnRemoveA(st)" class="btn btn-link btn-sm">삭제</button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+        <img src="/images/sub/board_tit_bullet.png" alt="" /> <span style="font-size: 0.9em; font-weight: bold; color: Highlight">4. 급수·배수 및 환기설비</span> &nbsp;&nbsp;&nbsp; <span style="font-size: 0.9em">개수 : @cnnD.Count <span>개</span></span><br />
+        <table class="table table-sm" style="font-size: 0.9em">
+            <thead>
+                <tr style="background-color: ghostwhite">
+                    <th class="text-center">수선항목 분류</th>
+                    <th class="text-center">수 선 항 목</th>
+                    <th class="text-center">수량</th>
+                    <th class="text-center">전체수선금액</th>
+                    <th class="text-center">수선율</th>
+                    <th class="text-center">부분수선금액</th>
+                    <th class="text-center">계획기간 총액</th>
+                    <th class="text-center">버 튼</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var st in cnnD)
+                {
+                    <tr>
+                        <td style="vertical-align: middle" class="text-center" @onclick="() => OnByDetailA(st)">
+                            <span title="중분류">@st.Sort_B_Name</span> <span class="bi-chevron-double-right"></span><span title="소분류">@st.Sort_C_Name</span>
+                        </td>
+                        <td style="vertical-align: middle" class="text-center" @onclick="() => OnByDetailA(st)">
+                            <span title="수선항목 명칭">@st.Repair_Article_Name</span>
+                        </td>
+                        <td style="vertical-align: middle" class="text-center" @onclick="() => OnByDetailA(st)">
+                            @if (st.Amount == 0)
+                            {
+                                <span>0</span><span>@st.Unit</span>
+                            }
+                            else
+                            {
+                                <span title="개략 수량">@string.Format("{0: ###,###.#}", st.Repair_Amount)<span>@st.Unit</span></span>
+                            }
+
+                        </td>
+                        <td style="vertical-align: middle" class="text-center" @onclick="() => OnByDetailA(st)">
+                            @if (st.Repair_All_Cost == 0)
+                            {
+                                <span>0</span><span>원</span>
+                            }
+                            else
+                            {
+                                <span title="전체 수선 금액">@string.Format("{0: ###,###.#}", st.Repair_All_Cost)<span>원</span></span>
+                            }
+
+                        </td>
+                        <td style="vertical-align: middle" class="text-center" @onclick="() => OnByDetailA(st)">
+                            <span title="부분 수선율">@st.Repair_Rate<span>%</span></span>
+                        </td>
+                        <td style="vertical-align: middle" class="text-center" @onclick="() => OnByDetailA(st)">
+                            @if (st.Repair_Part_Cost == 0)
+                            {
+                                <span>0</span><span>원</span>
+                            }
+                            else
+                            {
+                                <span title="부분 수선 금액">@string.Format("{0: ###,###.#}", st.Repair_Part_Cost)<span>원</span></span>
+                            }
+
+                        </td>
+                        <td style="vertical-align: middle" class="text-center" @onclick="() => OnByDetailA(st)">
+                            <span title="해당 수선항목의 계획기간 수선비 총액">@string.Format("{0: ###,###.#}", ((st.Repair_Part_Cost * st.Part_Cycle_Num) + (st.Repair_All_Cost * st.All_Cycle_Num)))<span>원</span></span>
+                        </td>
+
+                        <td style="vertical-align: middle" class="text-center">
+                            <button @onclick="() => OnByEditA(st)" class="btn btn-link btn-sm">수정</button> <button @onclick="() => OnRemoveA(st)" class="btn btn-link btn-sm">삭제</button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+        <img src="/images/sub/board_tit_bullet.png" alt="" /> <span style="font-size: 0.9em; font-weight: bold; color: Highlight">5. 난방 및 급탕설비</span> &nbsp;&nbsp;&nbsp; <span style="font-size: 0.9em">개수 : @cnnE.Count <span>개</span></span><br />
+        <table class="table table-sm" style="font-size: 0.9em">
+            <thead>
+                <tr style="background-color: ghostwhite">
+                    <th class="text-center">수선항목 분류</th>
+                    <th class="text-center">수 선 항 목</th>
+                    <th class="text-center">수량</th>
+                    <th class="text-center">전체수선금액</th>
+                    <th class="text-center">수선율</th>
+                    <th class="text-center">부분수선금액</th>
+                    <th class="text-center">계획기간 총액</th>
+                    <th class="text-center">버 튼</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var st in cnnE)
+                {
+                    <tr>
+                        <td style="vertical-align: middle" class="text-center" @onclick="() => OnByDetailA(st)">
+                            <span title="중분류">@st.Sort_B_Name</span> <span class="bi-chevron-double-right"></span><span title="소분류">@st.Sort_C_Name</span>
+                        </td>
+                        <td style="vertical-align: middle" class="text-center" @onclick="() => OnByDetailA(st)">
+                            <span title="수선항목 명칭">@st.Repair_Article_Name</span>
+                        </td>
+                        <td style="vertical-align: middle" class="text-center" @onclick="() => OnByDetailA(st)">
+                            @if (st.Amount == 0)
+                            {
+                                <span>0</span><span>@st.Unit</span>
+                            }
+                            else
+                            {
+                                <span title="개략 수량">@string.Format("{0: ###,###.#}", st.Repair_Amount)<span>@st.Unit</span></span>
+                            }
+
+                        </td>
+                        <td style="vertical-align: middle" class="text-center" @onclick="() => OnByDetailA(st)">
+                            @if (st.Repair_All_Cost == 0)
+                            {
+                                <span>0</span><span>원</span>
+                            }
+                            else
+                            {
+                                <span title="전체 수선 금액">@string.Format("{0: ###,###.#}", st.Repair_All_Cost)<span>원</span></span>
+                            }
+
+                        </td>
+                        <td style="vertical-align: middle" class="text-center" @onclick="() => OnByDetailA(st)">
+                            <span title="부분 수선율">@st.Repair_Rate<span>%</span></span>
+                        </td>
+                        <td style="vertical-align: middle" class="text-center" @onclick="() => OnByDetailA(st)">
+                            @if (st.Repair_Part_Cost == 0)
+                            {
+                                <span>0</span><span>원</span>
+                            }
+                            else
+                            {
+                                <span title="부분 수선 금액">@string.Format("{0: ###,###.#}", st.Repair_Part_Cost)<span>원</span></span>
+                            }
+
+                        </td>
+                        <td style="vertical-align: middle" class="text-center" @onclick="() => OnByDetailA(st)">
+                            <span title="해당 수선항목의 계획기간 수선비 총액">@string.Format("{0: ###,###.#}", ((st.Repair_Part_Cost * st.Part_Cycle_Num) + (st.Repair_All_Cost * st.All_Cycle_Num)))<span>원</span></span>
+                        </td>
+
+                        <td style="vertical-align: middle" class="text-center">
+                            <button @onclick="() => OnByEditA(st)" class="btn btn-link btn-sm">수정</button> <button @onclick="() => OnRemoveA(st)" class="btn btn-link btn-sm">삭제</button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+        <img src="/images/sub/board_tit_bullet.png" alt="" /> <span style="font-size: 0.9em; font-weight: bold; color: Highlight">6. 옥외 복리시설 및 옥외 부대시설</span> &nbsp;&nbsp;&nbsp; <span style="font-size: 0.9em">개수 : @cnnF.Count <span>개</span></span><br />
+        <table class="table table-sm" style="font-size: 0.9em">
+            <thead>
+                <tr style="background-color: ghostwhite">
+                    <th class="text-center">수선항목 분류</th>
+                    <th class="text-center">수 선 항 목</th>
+                    <th class="text-center">수량</th>
+                    <th class="text-center">전체수선금액</th>
+                    <th class="text-center">수선율</th>
+                    <th class="text-center">부분수선금액</th>
+                    <th class="text-center">계획기간 총액</th>
+                    <th class="text-center">버 튼</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var st in cnnF)
+                {
+                    <tr>
+                        <td style="vertical-align: middle" class="text-center" @onclick="() => OnByDetailA(st)">
+                            <span title="중분류">@st.Sort_B_Name</span> <span class="bi-chevron-double-right"></span><span title="소분류">@st.Sort_C_Name</span>
+                        </td>
+                        <td style="vertical-align: middle" class="text-center" @onclick="() => OnByDetailA(st)">
+                            <span title="수선항목 명칭">@st.Repair_Article_Name</span>
+                        </td>
+                        <td style="vertical-align: middle" class="text-center" @onclick="() => OnByDetailA(st)">
+                            @if (st.Amount == 0)
+                            {
+                                <span>0</span><span>@st.Unit</span>
+                            }
+                            else
+                            {
+                                <span title="개략 수량">@string.Format("{0: ###,###.#}", st.Repair_Amount)<span>@st.Unit</span></span>
+                            }
+
+                        </td>
+                        <td style="vertical-align: middle" class="text-center" @onclick="() => OnByDetailA(st)">
+                            @if (st.Repair_All_Cost == 0)
+                            {
+                                <span>0</span><span>원</span>
+                            }
+                            else
+                            {
+                                <span title="전체 수선 금액">@string.Format("{0: ###,###.#}", st.Repair_All_Cost)<span>원</span></span>
+                            }
+
+                        </td>
+                        <td style="vertical-align: middle" class="text-center" @onclick="() => OnByDetailA(st)">
+                            <span title="부분 수선율">@st.Repair_Rate<span>%</span></span>
+                        </td>
+                        <td style="vertical-align: middle" class="text-center" @onclick="() => OnByDetailA(st)">
+                            @if (st.Repair_Part_Cost == 0)
+                            {
+                                <span>0</span><span>원</span>
+                            }
+                            else
+                            {
+                                <span title="부분 수선 금액">@string.Format("{0: ###,###.#}", st.Repair_Part_Cost)<span>원</span></span>
+                            }
+
+                        </td>
+                        <td style="vertical-align: middle" class="text-center" @onclick="() => OnByDetailA(st)">
+                            <span title="해당 수선항목의 계획기간 수선비 총액">@string.Format("{0: ###,###.#}", ((st.Repair_Part_Cost * st.Part_Cycle_Num) + (st.Repair_All_Cost * st.All_Cycle_Num)))<span>원</span></span>
+                        </td>
+
+                        <td style="vertical-align: middle" class="text-center">
+                            <button @onclick="() => OnByEditA(st)" class="btn btn-link btn-sm">수정</button> <button @onclick="() => OnRemoveA(st)" class="btn btn-link btn-sm">삭제</button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+    </div>
+</div>
+<br />
+
+@*수선금액 입력 모달*@
+@if (InsertViews == "B")
+{
+    <div class="modal fade show d-block" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-xl" role="document">
+            <div class="modal-content">
+                <div class="modal-header" style="background-color: cornflowerblue; color: white; height: 50px; vertical-align: middle">
+                    <h6 class="modal-title"><span class="bi-house-door"></span>&nbsp;수선금액 등록</h6>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" @onclick="btnClose">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+
+                    <table width="100%" style="margin-bottom: 5px">
+                        <tr>
+                            <td width="33%">
+                            </td>
+                            <td width="33%">
+                                <div class="input-group">
+                                    <div class="input-group-prepend"><span class="input-group-text" style="font-size: 0.9em"><span class="bi-pencil-square"></span>&nbsp;대분류</span></div>
+                                    <select id="Sort_A_Code" class="custom-select" value="@strSortA" style="font-size: 0.9em" @onchange="onSortA" required>
+                                        <option value="">=대분류 선택=</option>
+                                        @foreach (var it in fnnA)
+                                        {
+                                            <option value="@it.Aid">@it.Sort_Name</option>
+                                        }
+                                    </select>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="input-group">
+                                    <div class="input-group-prepend"><span class="input-group-text" style="font-size: 0.9em"><span class="bi-pencil-square"></span>&nbsp;중분류</span></div>
+                                    <select id="Sort_A_Code" class="custom-select" value="@strSortB" style="font-size: 0.9em" @onchange="onSortB" required>
+                                        <option value="">=중분류 선택=</option>
+                                        @foreach (var it in fnnB)
+                                        {
+                                            <option value="@it.Aid">@it.Sort_Name</option>
+                                        }
+                                    </select>
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+                    <table width="100%">
+                        <tr>
+                            <td width="28%" style="vertical-align: text-top">
+                                <div style="height: 530px; overflow-y:scroll; overflow-x:hidden; vertical-align: text-top">
+                                    <table class="table table-sm" style="font-size: 0.9em">
+                                        <thead>
+                                            <tr style="background-color: ghostwhite">
+                                                @*<th class="text-center">완료</th>*@
+                                                <th class="text-center">수선항목</th>
+                                                <th class="text-center">선택</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach (var it in rae)
+                                            {
+                                                <tr>
+
+                                                    <td class="text-center" style="vertical-align:middle">
+                                                        <span title="@it.Sort_A_Name - @it.Sort_B_Name - @it.Sort_C_Name - @it.Repair_Article_Name">@it.Repair_Article_Name</span>
+                                                    </td>
+                                                    <td class="text-center" style="vertical-align:middle; width:80px">
+                                                        @if (it.Cost_Count > 0)
+                                                        {
+                                                            <span style="color: red">완료</span>
+                                                        }
+                                                        else
+                                                        {
+                                                            <button @onclick="() => OnBySelectAsync(it)" class="btn btn-link btn-sm">선택</button>
+                                                        }
+                                                    </td>
+                                                </tr>
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </td>
+
+                            <td style="vertical-align:top">
+                                <table class="table" style="font-size: 0.9em; margin-bottom: 0px">
+                                    <tr>
+                                        @*<td></td>*@
+                                        <td style="vertical-align:middle">
+                                            <span style="font-weight: bold">분류</span> : <span title="@dnn.Sort_A_Name">@dnn.Sort_A_Name</span> <span class="bi-chevron-double-right"></span> @dnn.Sort_B_Name <span class="bi-chevron-double-right"></span> @dnn.Sort_C_Name <br />
+                                            <span style="font-weight: bold">수선항목</span> : <span style="color: blue"> @art.Repair_Article_Name</span> <br />
+                                            <span style="font-weight: bold">전체수선예정년도</span> : @art.Repair_Plan_Year_All<span>년</span> &nbsp;&nbsp;&nbsp; <span style="font-weight: bold">부분수선예정년도</span> : @art.Repair_Plan_Year_Part<span>년</span>
+                                            <br />
+                                            <span style="font-weight: bold">전체수선주기</span> : @art.Set_Repair_Cycle_All<span>년</span>  &nbsp;&nbsp;&nbsp; <span style="font-weight: bold">부분수선주기</span> : @art.Set_Repair_Cycle_Part<span>년</span> &nbsp;&nbsp;&nbsp; <span style="font-weight: bold">부분수선율</span> : @art.Repair_Rate<span>%</span>
+                                        </td>
+                                        <td class="text-right" style="width: 220px; vertical-align:middle">
+                                            <div class="input-group">
+                                                <div class="input-group-prepend"><span class="input-group-text" style="font-size: 0.9em"><span class="bi-calculator"></span>&nbsp;단가기준</span></div>
+                                                <select id="strCostA" class="custom-select" value="@strCostA" style="font-size: 0.9em" @onchange="onCostA">
+                                                    <option value="D">=기준 선택=</option>
+                                                    <option value="C">실행금액</option>
+                                                    <option value="A">일위단가</option>
+                                                </select>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </table>
+
+                                @if (CostViewsA == "C")
+                                {
+                                    <table class="table" style="font-size: 0.9em">
+
+                                        <tr style="background-color: ghostwhite">
+                                            <th class="text-center">
+                                                수 량
+                                            </th>
+                                            <th class="text-center" width="150px">
+                                                단 위
+                                            </th>
+                                            <th class="text-center">
+                                                단가(원)
+                                            </th>
+
+                                        </tr>
+                                        <tr>
+                                            <td style="vertical-align:middle">
+                                                <div class="input-group">
+                                                    <div class="input-group-prepend"><span class="input-group-text" style="font-size: 0.9em" title="수선항목 조정 시에 입력된 수량을 표시하고 있습니다."><span class="bi-pencil-square"></span>&nbsp;기준수량 ?</span></div>
+                                                    <input id="Repair_Amount" name="Repair_Amount" style="font-size: 0.9em; text-align: right" class="form-control" type="number" @bind="dnn.Repair_Amount" readonly="readonly" />
+                                                </div>
+                                            </td>
+                                            <td class="text-center" style="vertical-align:middle">@art.Unit</td>
+                                            <td class="text-center" style="vertical-align:middle">
+                                                <div class="input-group">
+                                                    <div class="input-group-prepend"><span class="input-group-text" style="font-size: 0.9em" title="전체 수선금액을 기준수량으로 산출한 단가입니다."><span class="bi-pencil-square"></span>&nbsp;기준단가 ?</span></div>
+                                                    <input id="intPrice" name="intPrice" style="font-size: 0.9em; text-align: right" class="form-control" type="number" value="@intPrice" readonly="readonly" />
+                                                </div>
+                                            </td>
+
+                                        </tr>
+                                        <tr style="background-color: ghostwhite">
+                                            <th class="text-center">
+                                                전체 수선금액(원)
+                                            </th>
+                                            <th class="text-center">
+                                                부분 수선율(%)
+                                            </th>
+                                            <th class="text-center">
+                                                부분 수선금액(원)
+                                            </th>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <div class="input-group">
+
+                                                    <input id="Repair_Amount" name="Repair_Amount" title="전체수선금액을 입력 후 엔터를 치세요." style="font-size: 0.9em; text-align: right" class="form-control" type="number" value="@dnn.Repair_All_Cost" @onchange="OnAllCostInput" />
+                                                    <div class="input-group-append"><span class="input-group-text" style="font-size: 0.9em; text-align: right">원</span></div>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="input-group">
+
+                                                    <input id="Repair_Amount" name="Repair_Amount" style="font-size: 0.9em; text-align: right" class="form-control" type="number" value="@dnn.Repair_Rate" readonly="readonly" />
+                                                    <div class="input-group-append"><span class="input-group-text" style="font-size: 0.9em">%</span></div>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="input-group">
+
+                                                    <input id="Repair_Amount" name="Repair_Amount" style="font-size: 0.9em; text-align:right" class="form-control" type="number" value="@dnn.Repair_Part_Cost" readonly="readonly" />
+                                                    <div class="input-group-append"><span class="input-group-text" style="font-size: 0.9em">원</span></div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="3">
+                                                <div class="input-group">
+                                                    <div class="input-group-prepend"><span class="input-group-text" style="font-size: 0.9em"><span class="bi-pencil-square"></span>&nbsp; 참고 사항</span></div>
+                                                    <textarea id="Cost_Etc" name="Cost_Etc" title="최대 4,000자 이내 입력 가능" placeholder="공사를 실행한 단가를 기준으로 수선금액을 선출함" rows="6" style="font-size: 0.9em; min-width: 200px" @bind="@dnn.Cost_Etc" class="form-control" type="text" />
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                }
+                                else if (CostViewsA == "A")
+                                {
+                                    <table class="table" style="font-size: 0.9em">
+
+                                        <tr style="background-color: ghostwhite">
+                                            <th class="text-center">
+                                                수 량
+                                            </th>
+                                            <th class="text-center">
+                                                단 위
+                                            </th>
+                                            <th class="text-center">
+                                                단가(원)
+                                            </th>
+
+                                        </tr>
+                                        <tr>
+                                            <td style="vertical-align:middle">
+                                                <div class="input-group">
+                                                    <div class="input-group-prepend"><span class="input-group-text" style="font-size: 0.9em"><span class="bi-pencil-square"></span>&nbsp;수량</span></div>
+                                                    <input id="Repair_Amount" name="Repair_Amount" style="font-size: 0.9em; width: 150px" class="form-control" type="number" @bind="dnn.Repair_Amount" readonly="readonly" />
+                                                </div>
+                                            </td>
+                                            <td class="text-center" style="vertical-align:middle">@art.Unit</td>
+                                            <td class="text-center" style="vertical-align:middle">
+                                                <div class="input-group">
+                                                    <div class="input-group-prepend"><span class="input-group-text" style="font-size: 0.9em"><span class="bi-pencil-square"></span>&nbsp;단가</span></div>
+                                                    <input id="intPrice" name="intPrice" style="font-size: 0.9em;" class="form-control" type="number" value="@intPrice" readonly="readonly" />
+                                                </div>
+                                            </td>
+
+                                        </tr>
+                                        <tr style="background-color: whitesmoke">
+                                            <th class="text-center">
+                                                전체수선금액(원)
+                                            </th>
+                                            <th class="text-center">
+                                                수선율(%)
+                                            </th>
+                                            <th class="text-center">
+                                                부분수선금액(원)
+                                            </th>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <div class="input-group">
+                                                    <div class="input-group-prepend"><span class="input-group-text" style="font-size: 0.9em"><span class="bi-pencil-square"></span>&nbsp;금액</span></div>
+                                                    <input id="Repair_Amount" name="Repair_Amount" style="font-size: 0.9em;" class="form-control" type="number" value="@dnn.Repair_All_Cost" readonly="readonly" />
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="input-group">
+
+                                                    <input id="Repair_Amount" name="Repair_Amount" style="font-size: 0.9em;" class="form-control" type="number" value="@dnn.Repair_Rate" readonly="readonly" /><div class="input-group-append"><span class="input-group-text" style="font-size: 0.9em">%</span></div>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="input-group">
+                                                    <div class="input-group-prepend"><span class="input-group-text" style="font-size: 0.9em"><span class="bi-pencil-square"></span>&nbsp;금액</span></div>
+                                                    <input id="Repair_Amount" name="Repair_Amount" style="font-size: 0.9em; width: 150px" class="form-control" type="number" value="@dnn.Repair_Part_Cost" readonly="readonly" />
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="3">
+                                                <div class="input-group">
+                                                    <div class="input-group-prepend"><span class="input-group-text" style="font-size: 0.9em"><span class="bi-pencil-square"></span>&nbsp; 참고 사항</span></div>
+                                                    <textarea id="Cost_Etc" name="Cost_Etc" title="최대 2,000자 이내 입력 가능" placeholder="공사를 실행한 단가를 기준으로 수선금액을 선출함" rows="8" style="font-size: 0.9em; min-width: 200px" @bind="@dnn.Cost_Etc" class="form-control" type="text" />
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </table>
+
+
+                                }
+                                else
+                                {
+                                    <div class="card card-body">
+                                        <div>
+                                            <span style="font-size: 1em; font-weight: bold; color: red">
+                                                <img src="" alt="" /> 아직 단가기준을 선택하지 않았습니다.
+                                            </span>
+
+                                        </div>
+                                        <br />
+                                        <div style="font-size: 0.9em">
+                                            <p>
+                                                『단가기준』에서 「기준 선택」에서 〖실행금액〗을 선택하면 실재로 공사 또는 보수를 실행했던 사례를 기준으로 공사 또는 보수가 가능할 것으로 예상되는 금액을 전문가의 자문을 통하여 산출한 금액으로 수선금액을 입력할 수 있습니다.
+                                            </p>
+
+                                            <p>
+
+                                                『단가기준』에서 「기준 선택」에서 〖일위단가〗를 선택하면 주택관리사협회에서 신뢰할 수 있는 기관으로부터 제공된 단가 정보를 통하여 해당되는 수량을 파악하여 수선금액을 금액을 산출하여 입력할 수 있습니다.
+                                            </p>
+                                        </div>
+                                    </div>
+
+                                }
+
+
+
+
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary btn-sm" @onclick="btnSave"><span class="bi-save-fill">&nbsp;저장</span></button> &nbsp; &nbsp; &nbsp;
+                    <button type="button" class="btn btn-secondary btn-sm" @onclick="btnClose"><span class="bi-x-square">&nbsp;닫기</span></button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-backdrop show"></div>
+}
+
+
+@*수선금액 입력 모달*@
+@if (InsertViewsA == "B")
+{
+    <div class="modal fade show d-block" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header" style="background-color: cornflowerblue; color: white; height: 50px; vertical-align: middle">
+                    <h6 class="modal-title"><span class="bi-house-door"></span>&nbsp;수선금액 수정</h6>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" @onclick="btnClose">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+
+                    <table width="100%" style="margin-bottom: 5px">
+                        <tr>
+                            <td style="vertical-align:middle">
+                                <div class="input-group">
+                                    <div class="input-group-prepend"><span class="input-group-text" style="font-size: 0.9em"><span class="bi-pencil-square"></span>&nbsp;대분류</span></div>
+                                    <input id="Sort_A_Name" name="Sort_A_Name" style="font-size: 0.9em;" class="form-control" type="text" @bind="@dnn.Sort_A_Name" readonly="readonly" />
+                                </div>
+                            </td>
+                            <td style="vertical-align:middle">
+                                <div class="input-group">
+                                    <div class="input-group-prepend"><span class="input-group-text" style="font-size: 0.9em"><span class="bi-pencil-square"></span>&nbsp;중분류</span></div>
+                                    <input id="Sort_B_Name" name="Sort_B_Name" style="font-size: 0.9em;" class="form-control" type="text" @bind="@dnn.Sort_B_Name" readonly="readonly" />
+                                </div>
+                            </td>
+                            <td style="vertical-align:middle">
+                                <div class="input-group">
+                                    <div class="input-group-prepend"><span class="input-group-text" style="font-size: 0.9em"><span class="bi-pencil-square"></span>&nbsp;소분류</span></div>
+                                    <input id="Sort_C_Name" name="Sort_C_Name" style="font-size: 0.9em;" class="form-control" type="text" @bind="@dnn.Sort_C_Name" readonly="readonly" />
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+
+
+                    <table class="table" style="font-size: 0.9em; margin-bottom: 0px">
+                        <tr>
+                            @*<td></td>*@
+                            <td style="vertical-align:middle">
+
+                                <span style="font-weight: bold">수선항목</span> : <span style="color: blue"> @art.Repair_Article_Name</span> <br />
+                                <span style="font-weight: bold">전체수선예정년도</span> : @art.Repair_Plan_Year_All<span>년</span> &nbsp;&nbsp;&nbsp; <span style="font-weight: bold">부분수선예정년도</span> : @art.Repair_Plan_Year_Part<span>년</span>
+                                <br />
+                                <span style="font-weight: bold">전체수선주기</span> : @art.Set_Repair_Cycle_All<span>년</span>  &nbsp;&nbsp;&nbsp; <span style="font-weight: bold">부분수선주기</span> : @art.Set_Repair_Cycle_Part<span>년</span> &nbsp;&nbsp;&nbsp; <span style="font-weight: bold">부분수선율</span> : @art.Repair_Rate<span>%</span>
+                            </td>
+                            <td class="text-right" style="width: 220px; vertical-align:middle">
+                                <div class="input-group">
+                                    <div class="input-group-prepend"><span class="input-group-text" style="font-size: 0.9em"><span class="bi-calculator"></span>&nbsp;단가기준</span></div>
+                                    <select id="strCostA" class="custom-select" value="@strCostA" style="font-size: 0.9em" @onchange="onCostA">
+                                        <option value="D">=기준 선택=</option>
+                                        <option value="C">실행금액</option>
+                                        <option value="A">일위단가</option>
+                                    </select>
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+
+                    @if (CostViewsA == "C")
+                    {
+                        <table class="table" style="font-size: 0.9em">
+
+                            <tr style="background-color: ghostwhite">
+                                <th class="text-center">
+                                    수 량
+                                </th>
+                                <th class="text-center" width="150px">
+                                    단 위
+                                </th>
+                                <th class="text-center">
+                                    단가(원)
+                                </th>
+
+                            </tr>
+                            <tr>
+                                <td style="vertical-align:middle">
+                                    <div class="input-group">
+                                        <div class="input-group-prepend"><span class="input-group-text" style="font-size: 0.9em" title="수선항목 조정 시에 입력된 수량을 표시하고 있습니다."><span class="bi-pencil-square"></span>&nbsp;기준수량 ?</span></div>
+                                        <input id="Repair_Amount" name="Repair_Amount" style="font-size: 0.9em; text-align: right" class="form-control" type="number" @bind="dnn.Repair_Amount" readonly="readonly" />
+                                    </div>
+                                </td>
+                                <td class="text-center" style="vertical-align:middle">@art.Unit</td>
+                                <td class="text-center" style="vertical-align:middle">
+                                    <div class="input-group">
+                                        <div class="input-group-prepend"><span class="input-group-text" style="font-size: 0.9em" title="전체 수선금액을 기준수량으로 산출한 단가입니다."><span class="bi-pencil-square"></span>&nbsp;기준단가 ?</span></div>
+                                        <input id="intPrice" name="intPrice" style="font-size: 0.9em; text-align: right" class="form-control" type="number" value="@intPrice" readonly="readonly" />
+                                    </div>
+                                </td>
+
+                            </tr>
+                            <tr style="background-color: ghostwhite">
+                                <th class="text-center">
+                                    전체 수선금액(원)
+                                </th>
+                                <th class="text-center">
+                                    부분 수선율(%)
+                                </th>
+                                <th class="text-center">
+                                    부분 수선금액(원)
+                                </th>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div class="input-group">
+
+                                        <input id="Repair_Amount" name="Repair_Amount" title="전체수선금액을 입력 후 엔터를 치세요." style="font-size: 0.9em; text-align: right" class="form-control" type="number" value="@dnn.Repair_All_Cost" @onchange="OnAllCostInput" />
+                                        <div class="input-group-append"><span class="input-group-text" style="font-size: 0.9em; text-align: right">원</span></div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="input-group">
+
+                                        <input id="Repair_Amount" name="Repair_Amount" style="font-size: 0.9em; text-align: right" class="form-control" type="number" value="@dnn.Repair_Rate" readonly="readonly" />
+                                        <div class="input-group-append"><span class="input-group-text" style="font-size: 0.9em">%</span></div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="input-group">
+
+                                        <input id="Repair_Amount" name="Repair_Amount" style="font-size: 0.9em; text-align:right" class="form-control" type="number" value="@dnn.Repair_Part_Cost" readonly="readonly" />
+                                        <div class="input-group-append"><span class="input-group-text" style="font-size: 0.9em">원</span></div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="3">
+                                    <div class="input-group">
+                                        <div class="input-group-prepend"><span class="input-group-text" style="font-size: 0.9em"><span class="bi-pencil-square"></span>&nbsp; 참고 사항</span></div>
+                                        <textarea id="Cost_Etc" name="Cost_Etc" title="최대 4,000자 이내 입력 가능" placeholder="공사를 실행한 단가를 기준으로 수선금액을 선출함" rows="6" style="font-size: 0.9em; min-width: 200px" @bind="@dnn.Cost_Etc" class="form-control" type="text" />
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                    }
+                    else if (CostViewsA == "A")
+                    {
+                        <table class="table" style="font-size: 0.9em">
+
+                            <tr style="background-color: ghostwhite">
+                                <th class="text-center">
+                                    수 량
+                                </th>
+                                <th class="text-center">
+                                    단 위
+                                </th>
+                                <th class="text-center">
+                                    단가(원)
+                                </th>
+
+                            </tr>
+                            <tr>
+                                <td style="vertical-align:middle">
+                                    <div class="input-group">
+                                        <div class="input-group-prepend"><span class="input-group-text" style="font-size: 0.9em"><span class="bi-pencil-square"></span>&nbsp;수량</span></div>
+                                        <input id="Repair_Amount" name="Repair_Amount" style="font-size: 0.9em; width: 150px" class="form-control" type="number" @bind="dnn.Repair_Amount" readonly="readonly" />
+                                    </div>
+                                </td>
+                                <td class="text-center" style="vertical-align:middle">@art.Unit</td>
+                                <td class="text-center" style="vertical-align:middle">
+                                    <div class="input-group">
+                                        <div class="input-group-prepend"><span class="input-group-text" style="font-size: 0.9em"><span class="bi-pencil-square"></span>&nbsp;단가</span></div>
+                                        <input id="intPrice" name="intPrice" style="font-size: 0.9em;" class="form-control" type="number" value="@intPrice" readonly="readonly" />
+                                    </div>
+                                </td>
+
+                            </tr>
+                            <tr style="background-color: whitesmoke">
+                                <th class="text-center">
+                                    전체수선금액(원)
+                                </th>
+                                <th class="text-center">
+                                    수선율(%)
+                                </th>
+                                <th class="text-center">
+                                    부분수선금액(원)
+                                </th>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend"><span class="input-group-text" style="font-size: 0.9em"><span class="bi-pencil-square"></span>&nbsp;금액</span></div>
+                                        <input id="Repair_Amount" name="Repair_Amount" style="font-size: 0.9em;" class="form-control" type="number" value="@dnn.Repair_All_Cost" readonly="readonly" />
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="input-group">
+
+                                        <input id="Repair_Amount" name="Repair_Amount" style="font-size: 0.9em;" class="form-control" type="number" value="@dnn.Repair_Rate" readonly="readonly" /><div class="input-group-append"><span class="input-group-text" style="font-size: 0.9em">%</span></div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend"><span class="input-group-text" style="font-size: 0.9em"><span class="bi-pencil-square"></span>&nbsp;금액</span></div>
+                                        <input id="Repair_Amount" name="Repair_Amount" style="font-size: 0.9em; width: 150px" class="form-control" type="number" value="@dnn.Repair_Part_Cost" readonly="readonly" />
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="3">
+                                    <div class="input-group">
+                                        <div class="input-group-prepend"><span class="input-group-text" style="font-size: 0.9em"><span class="bi-pencil-square"></span>&nbsp; 참고 사항</span></div>
+                                        <textarea id="Cost_Etc" name="Cost_Etc" title="최대 2,000자 이내 입력 가능" placeholder="공사를 실행한 단가를 기준으로 수선금액을 선출함" rows="8" style="font-size: 0.9em; min-width: 200px" @bind="@dnn.Cost_Etc" class="form-control" type="text" />
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+
+
+                    }
+                    else
+                    {
+                        <div class="card card-body">
+                            <div>
+                                <span style="font-size: 1em; font-weight: bold; color: red">
+                                    <img src="" alt="" /> 아직 단가기준을 선택하지 않았습니다.
+                                </span>
+
+                            </div>
+                            <br />
+                            <div style="font-size: 0.9em">
+                                <p>
+                                    『단가기준』에서 「기준 선택」에서 〖실행금액〗을 선택하면 실재로 공사 또는 보수를 실행했던 사례를 기준으로 공사 또는 보수가 가능할 것으로 예상되는 금액을 전문가의 자문을 통하여 산출한 금액으로 수선금액을 입력할 수 있습니다.
+                                </p>
+
+                                <p>
+
+                                    『단가기준』에서 「기준 선택」에서 〖일위단가〗를 선택하면 주택관리사협회에서 신뢰할 수 있는 기관으로부터 제공된 단가 정보를 통하여 해당되는 수량을 파악하여 수선금액을 금액을 산출하여 입력할 수 있습니다.
+                                </p>
+                            </div>
+                        </div>
+
+                    }
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary btn-sm" @onclick="btnSave"><span class="bi-save-fill">&nbsp;저장</span></button> &nbsp; &nbsp; &nbsp;
+                    <button type="button" class="btn btn-secondary btn-sm" @onclick="btnCloseB"><span class="bi-x-square">&nbsp;닫기</span></button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-backdrop show"></div>
+}
+
+@*일위단가 입력 모달*@
+@if (CostViewsB == "B")
+{
+
+    <div class="modal fade show d-block" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header" style="background-color: cornflowerblue; color: white; height: 50px; vertical-align: middle">
+                    <h6 class="modal-title"><span class="bi-house-door"></span>&nbsp;수선금액 일위단가 입력</h6>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" @onclick="btnCloseA">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+
+                    <div class="card card-body">
+                        <table width="100%" style="font-size: 0.9em">
+                            <tr>
+                                @*<td></td>*@
+                                <td style="vertical-align:middle">
+                                    <span style="font-weight: bold">분류</span> : <span title="@dnn.Sort_A_Name">@dnn.Sort_A_Name</span> <span class="bi-chevron-double-right"></span> @dnn.Sort_B_Name <span class="bi-chevron-double-right"></span> @dnn.Sort_C_Name <span class="bi-chevron-double-right"></span><span style="font-weight: bold">수선항목</span> : <span style="color: blue"> @art.Repair_Article_Name</span> <br />
+                                    <span style="font-weight: bold">전체수선예정</span> : @art.Repair_Plan_Year_All<span>년</span> &nbsp;&nbsp; <span style="font-weight: bold">부분수선예정</span> : @art.Repair_Plan_Year_Part<span>년</span> &nbsp;&nbsp;
+                                    <span style="font-weight: bold">전체수선주기</span> : @art.Set_Repair_Cycle_All<span>년</span>  &nbsp;&nbsp; <span style="font-weight: bold">부분수선주기</span> : @art.Set_Repair_Cycle_Part<span>년</span> &nbsp;&nbsp; <span style="font-weight: bold">부분수선율</span> : @art.Repair_Rate<span>%</span>
+                                </td>
+                            </tr>
+                        </table>
+                        <table class="table table-sm" style="font-size: 0.9em; margin-bottom: 5px">
+
+                            <tr style="background-color: whitesmoke; border-top: outset">
+                                <th style="vertical-align: middle; width: 25%; text-align:center">단가품목선택<span style="color:red">*</span></th>
+                                <th style="vertical-align: middle; text-align: center">선택된 품목</th>
+                                <th style="vertical-align: middle; text-align: center; width: 150px">추가단가<span class="bi-question-circle-fill" title="주택관리협회에서 제공하는 단가를 사용하지 않고, 직접 수집한 단가를 사용하려는 경우 선택. \n 이 경우에는 단가 폼목을 수집한 이름을 입력하고 수량을 입력하여야 함. \n 추가 단가는 간접비를 포함하여 입력하여야 합니다. 전체 수선금액에는 자동으로 간접비 계산을 하지 않고 단순히 합산 함으로 주의하여 반드기 간접비 포함한 단가를 입력하기 바람."></span></th>
+                            </tr>
+                            <tr>
+                                <td style="vertical-align: middle">
+                                    <select id="strProduct" class="custom-select" value="@strProduct" style="font-size: 0.9em" @onchange="onPrice" required>
+                                        <option value="">=단가항목 선택=</option>
+                                        @if (intCostBeing > 0)
+                                        {
+                                            @foreach (var it in rpk)
+                                            {
+                                                <option value=@it.Price_Code>@it.Product_name</option>
+                                            }
+                                        }
+
+                                    </select>
+                                </td>
+                                <th style="vertical-align: middle">
+                                    @if (strAddPrice == "A")
+                                    {
+                                        @pse.Product_name
+                                    }
+                                    else
+                                    {
+                                        <input id="Product_name" name="Product_name" style="font-size: 0.9em; text-align: center" class="form-control" type="text" @bind="@pse.Product_name" placeholder="추가 단가 품목명을 입력하세요." />
+                                    }
+
+                                </th>
+                                <td>
+                                    @if (strAddPrice == "A")
+                                    {
+                                        <button type="button" class="btn btn-success btn-sm" @onclick="btnAddPriceOpen"><span class="bi-basket2">&nbsp;추가단가 열기</span></button>
+                                    }
+                                    else
+                                    {
+                                        <button type="button" class="btn btn-secondary btn-sm" @onclick="btnAddPriceClose"><span class="bi-x-circle-fill">&nbsp;추가단가 닫기</span></button>
+                                    }
+
+                                </td>
+                            </tr>
+                        </table>
+                        <table class="table table-sm" style="font-size: 0.9em; margin-bottom: 5px">
+                            <tr style="background-color: whitesmoke; border-top: outset">
+                                <th style="vertical-align: middle; text-align:center">수량<span style="color:red">*</span></th>
+                                <th style="vertical-align: middle; text-align: center">단위</th>
+                                <th style="vertical-align: middle; text-align: center">기준단가</th>
+                                <th style="vertical-align: middle; text-align: center">단지단가(원)</th>
+                                <th style="vertical-align: middle; text-align: center">기준일</th>
+                                <th style="vertical-align: middle; text-align: center">수선금액</th>
+                            </tr>
+                            <tr>
+                                <td style="vertical-align: middle; text-align: center; width: 120px">
+                                    <input id="intPrice" name="intPrice" style="font-size: 0.9em; text-align: right" class="form-control" type="number" value="@pse.Repair_Amount" @onchange="OnPriceAmount" />
+                                </td>
+                                <td style="vertical-align: middle; text-align: center">
+                                    @if (strAddPrice == "A")
+                                    {
+                                        @pse.Unit_cd
+                                    }
+                                    else
+                                    {
+                                        <select id="txUnit" style="font-size: 0.9em" class="custom-select" @bind="pse.Unit_cd">
+                                            <option Value="">::선택::</option>
+                                            <option Value="㎡">㎡</option>
+                                            <option Value="m">m</option>
+                                            <option Value="㎥">㎥</option>
+                                            <option Value="t">톤(t)</option>
+                                            <option Value="KVA">KVA</option>
+                                            <option Value="KW/h">KW/h</option>
+                                            <option Value="개">개</option>
+                                            <option Value="개소">개소</option>
+                                            <option Value="조">조</option>
+                                            <option Value="대">대</option>
+                                            <option Value="통">통</option>
+                                            <option Value="set">세트</option>
+                                            <option Value="식">식</option>
+                                            <option Value="묶음">묶음</option>
+                                            <option Value="Etc">기타</option>
+                                        </select>
+                                    }
+                                </td>
+                                <td style="vertical-align: middle; text-align: center">@string.Format("{0: ###,###.#}", pse.Select_Price)<span>원</span></td>
+                                <td style="vertical-align: middle; text-align: center; width: 120px">
+                                    <input id="intPrice" name="intPrice" style="font-size: 0.9em; text-align: right" class="form-control" type="number" value="@Personal_Price" @onchange="OnPersonalPrice" />
+                                </td>
+                                <td style="vertical-align: middle; text-align: center">@pse.Regist_dt.ToShortDateString()</td>
+                                <td style="vertical-align: middle; text-align: center; width: 200px">@string.Format("{0: ###,###.#}", pse.Repair_Cost)<span>원</span></td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="card card-body" style="margin-top: 5px">
+                        <table class="table table-sm" style="font-size: 0.9em; margin-bottom: 5px">
+                            <thead>
+                                <tr style="background-color: whitesmoke; border-top:outset">
+
+                                    <th class="text-center" style="width: 30%">
+                                        수선항목
+                                    </th>
+                                    <th class="text-center">
+                                        수량
+                                    </th>
+                                    <th class="text-center">
+                                        전체수선금액
+                                    </th>
+                                    <th class="text-center">
+                                        수선율
+                                    </th>
+                                    <th class="text-center">
+                                        부분수선금액
+                                    </th>
+
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="text-center" style="vertical-align: middle;">
+                                        @art.Repair_Article_Name
+                                    </td>
+                                    <td class="text-center" style="vertical-align: middle">
+                                        @string.Format("{0: ###,###.#}", enn.Repair_Amount)@art.Unit
+                                    </td>
+                                    <td class="text-center" style="vertical-align: middle">
+                                        @string.Format("{0: ###,###.#}", enn.Repair_All_Cost)<span>원</span>
+                                    </td>
+                                    <td class="text-center" style="vertical-align: middle">
+                                        @enn.Repair_Rate<span>%</span>
+                                    </td>
+                                    <td class="text-center" style="vertical-align: middle">
+                                        @if (enn.Repair_Part_Cost > 0)
+                                        {
+                                            @string.Format("{0: ###,###.#}", enn.Repair_Part_Cost)<span>원</span>
+                                        }
+                                        else
+                                        {
+                                            <span>0원</span>;
+                                        }
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="text-center" style="vertical-align: middle; background-color: whitesmoke">
+                                        <span style="font-weight:bold">비고</span>
+                                    </td>
+
+                                    <td class="text-center" style="vertical-align: middle" colspan="4">
+                                        @enn.Cost_Etc
+                                    </td>
+
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div style="height: 150px; overflow-y: scroll">
+                            <table class="table table-sm" style="font-size: 0.9em; margin-bottom: 5px">
+                                <thead>
+                                    <tr style="background-color: whitesmoke; border-top:outset">
+                                        <th class="text-center" style="width: 30%">
+                                            단가 품목
+                                        </th>
+                                        <th class="text-center">
+                                            수량
+                                        </th>
+                                        <th class="text-center">
+                                            단가
+                                        </th>
+                                        <th class="text-center">
+                                            수선금액
+                                        </th>
+                                        <th class="text-center">
+                                            기준일
+                                        </th>
+                                        <th class="text-center">
+                                            버튼
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @if (pseList.Count > 0)
+                                    {
+                                        @foreach (var it in pseList)
+                                        {
+                                            <tr>
+                                                <td class="text-center" style="vertical-align: middle">
+                                                    @it.Goods_Name
+                                                </td>
+                                                <td class="text-center" style="vertical-align: middle">
+                                                    @string.Format("{0: ###,###.#}", it.Repair_Amount)@it.Unit_cd
+                                                </td>
+                                                <td class="text-center" style="vertical-align: middle">
+                                                    @string.Format("{0: ###,###.#}", it.Select_Price)<span>원</span>
+                                                </td>
+                                                <td class="text-center" style="vertical-align: middle">
+                                                    @string.Format("{0: ###,###.#}", it.Repair_Cost)<span>원</span>
+                                                </td>
+                                                <td class="text-center" style="vertical-align: middle">
+                                                    @it.Regist_dt.ToShortDateString()
+                                                </td>
+                                                <td class="text-center" style="vertical-align: middle">
+                                                    <button type="button" class="btn btn-link btn-sm" @onclick="() => btnEditA(it)">수정</button>
+                                                    <button type="button" class="btn btn-link btn-sm" @onclick="() => OnByRemoveA(it)">삭제</button>
+                                                </td>
+                                            </tr>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <tr>
+                                            <td colspan="6" class="text-center">
+                                                <span style="color: red; font-size: 1em">입력된 정보가 없습니다.</span>
+                                            </td>
+                                        </tr>
+                                    }
+
+
+
+                                </tbody>
+                            </table>
+                        </div>
+
+                    </div>
+
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary btn-sm" @onclick="btnSaveA"><span class="bi-save-fill">&nbsp;단가 저장</span></button> &nbsp; &nbsp; &nbsp;
+                    @*<button type="button" class="btn btn-danger btn-sm" @onclick="btnSaveAll"><span class="bi-save-fill">&nbsp;완료 저장</span></button>
+                        &nbsp; &nbsp; &nbsp;*@
+                    <button type="button" class="btn btn-secondary btn-sm" @onclick="btnCloseA"><span class="bi-x-square">&nbsp;저장하지 않고 닫기</span></button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-backdrop show"></div>
+}
+
+@*수선금액 입력 모달*@
+@if (DetailViews == "B")
+{
+    <div class="modal fade show d-block" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header" style="background-color: cornflowerblue; color: white; height: 50px; vertical-align: middle">
+                    <h6 class="modal-title"><span class="bi-house-door"></span>&nbsp;수선금액 상세</h6>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" @onclick="btnCloseD">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+
+
+
+                    <table class="table" style="font-size: 0.9em; margin-bottom: 0px">
+                        <tr>
+                            @*<td></td>*@
+                            <td style="vertical-align:middle">
+                                <span style="font-weight: bold">분류</span> : @jace.Sort_A_Name <span class="bi-chevron-double-right"></span> @jace.Sort_B_Name <span class="bi-chevron-double-right"></span> @jace.Sort_C_Name <span class="bi-chevron-double-right"></span><br />
+                                <span style="font-weight: bold">수선항목</span> : <span style="color: blue"> @jace.Repair_Article_Name</span> <br />
+                                <span style="font-weight: bold">전체수선예정년도</span> : @jace.Repair_Plan_Year_All<span>년</span> &nbsp;&nbsp;&nbsp; <span style="font-weight: bold">부분수선예정년도</span> : @jace.Repair_Plan_Year_Part<span>년</span> &nbsp;&nbsp;&nbsp;
+                                <br />
+                                <span style="font-weight: bold">전체수선주기</span> : @jace.Set_Repair_Cycle_All<span>년</span>  &nbsp;&nbsp;&nbsp; <span style="font-weight: bold">부분수선주기</span> : @jace.Set_Repair_Cycle_Part<span>년</span> &nbsp;&nbsp;&nbsp; <span style="font-weight: bold">부분수선율</span> : @jace.Set_Repair_Rate<span>%</span>
+                            </td>
+
+                        </tr>
+                    </table>
+
+                    <table class="table table-sm" style="font-size: 0.9em">
+
+                        <tr style="background-color: ghostwhite">
+                            <th class="text-center">
+                                수 량
+                            </th>
+                            <th class="text-center" width="150px">
+                                단 위
+                            </th>
+                            <th class="text-center">
+                                단가(원)
+                            </th>
+
+                        </tr>
+                        <tr>
+                            <td style="vertical-align:middle; text-align:center">
+                                @string.Format("{0: ###,###.#}", jace.Repair_Amount)<span>원</span>
+
+                            </td>
+                            <td class="text-center" style="vertical-align:middle">@jace.Unit</td>
+                            <td class="text-center" style="vertical-align:middle">
+                                @string.Format("{0: ###,###.#}", intPrice)<span>원</span>
+
+                            </td>
+
+                        </tr>
+                        <tr style="background-color: ghostwhite">
+                            <th class="text-center">
+                                전체 수선금액(원)
+                            </th>
+                            <th class="text-center">
+                                부분 수선율(%)
+                            </th>
+                            <th class="text-center">
+                                부분 수선금액(원)
+                            </th>
+                        </tr>
+                        <tr>
+                            <td class="text-center">
+                                @string.Format("{0: ###,###.#}", jace.Repair_All_Cost)<span>원</span>
+                            </td>
+                            <td class="text-center">
+                                @jace.Repair_Rate<span>%</span>
+                            </td>
+                            <td class="text-center">
+                                @string.Format("{0: ###,###.#}", jace.Repair_Part_Cost)<span>원</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="3">
+                                <div class="input-group">
+                                    <div class="input-group-prepend"><span class="input-group-text" style="font-size: 0.9em"><span class="bi-pencil-square"></span>&nbsp; 참고 사항</span></div>
+                                    <textarea id="Cost_Etc" name="Cost_Etc" title="최대 4,000자 이내 입력 가능" placeholder="공사를 실행한 단가를 기준으로 수선금액을 선출함" rows="4" style="font-size: 0.9em; min-width: 200px" @bind="@jace.Cost_Etc" class="form-control" type="text" readonly="readonly" />
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+                    <table class="table table-sm" style="font-size: 0.9em; margin-bottom: 5px">
+                        <thead>
+                            <tr style="background-color: whitesmoke; border-top:outset">
+                                <th class="text-center" style="width: 40%">
+                                    단가 품목
+                                </th>
+                                <th class="text-center">
+                                    수량
+                                </th>
+                                <th class="text-center">
+                                    단가
+                                </th>
+                                <th class="text-center">
+                                    수선금액
+                                </th>
+                                <th class="text-center">
+                                    기준일
+                                </th>
+
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (pseList.Count > 0)
+                            {
+                                @foreach (var it in pseList)
+                                {
+                                    <tr>
+                                        <td class="text-center" style="vertical-align: middle">
+                                            @it.Goods_Name
+                                        </td>
+                                        <td class="text-center" style="vertical-align: middle">
+                                            @string.Format("{0: ###,###.#}", it.Repair_Amount)@it.Unit_cd
+                                        </td>
+                                        <td class="text-center" style="vertical-align: middle">
+                                            @string.Format("{0: ###,###.#}", it.Select_Price)<span>원</span>
+                                        </td>
+                                        <td class="text-center" style="vertical-align: middle">
+                                            @string.Format("{0: ###,###.#}", it.Repair_Cost)<span>원</span>
+                                        </td>
+                                        <td class="text-center" style="vertical-align: middle">
+                                            @it.Regist_dt.ToShortDateString()
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td colspan="6" class="text-center">
+                                        <span style="color: red; font-size: 1em">입력된 일위단가 정보가 없습니다.</span>
+                                    </td>
+                                </tr>
+                            }
+
+
+
+                        </tbody>
+                    </table>
+                </div>
+                <div class="modal-footer">
+
+                    <button type="button" class="btn btn-secondary btn-sm" @onclick="btnCloseD"><span class="bi-x-square">&nbsp;닫기</span></button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-backdrop show"></div>
+}

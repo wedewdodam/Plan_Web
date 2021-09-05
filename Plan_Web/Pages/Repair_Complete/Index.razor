@@ -1,0 +1,213 @@
+﻿@page "/Repair_Complete/{Aid}"
+
+<table width="100%" style="margin-bottom: 10px">
+    <tr>
+        <td style="width: 15%"> <button class="btn btn-primary btn-block" @onclick="OnPlanUrl"><img src="/images/sub/icon_step01_on.png" height="25" alt="" /> <span style="font-weight: bold"> 수선계획 총론 조정</span></button></td>
+        <td class="text-center"> <img src="/images/sub/icon_arrow.png" height="30" alt="" /> </td>
+        <td style="width: 15%"> <button class="btn btn-primary btn-block" @onclick="OnArticleUrl"><img src="/images/sub/icon_step02_on.png" height="25" alt="" /> <span style="font-weight: bold"> 수선항목 조정</span></button></td>
+        <td class="text-center"> <img src="/images/sub/icon_arrow.png" height="30" alt="" /> </td>
+        <td style="width: 15%"> <button class="btn btn-primary btn-block" @onclick="OnCycleUrl"><img src="/images/sub/icon_step03_on.png" height="25" alt="" /> <span style="font-weight: bold"> 수선주기 조정</span></button></td>
+        <td class="text-center"> <img src="/images/sub/icon_arrow.png" height="30" alt="" /> </td>
+        <td style="width: 15%"> <button class="btn btn-primary btn-block" @onclick="OnCostUrl"><img src="/images/sub/icon_step03_on.png" height="25" alt="" /> <span style="font-weight: bold"> 수선금액 조정</span></button></td>
+        <td class="text-center"> <img src="/images/sub/icon_arrow.png" height="30" alt="" /> </td>
+        <td style="width: 15%"> <button class="btn btn-primary btn-block" @onclick="OnCompleteUrl"><img src="/images/sub/icon_step04_on.png" height="25" alt="" /> <span style="font-weight: bold"> 조정완료</span></button></td>
+    </tr>
+</table>
+
+<div class="card">
+    <div class="card-header">
+        <table width="100%">
+            <tr>
+                <td>
+                    <span style="font-size: 1em"> <span class="bi-house-fill"></span>&nbsp;<span>장기수선계획 완료 정보</span></span>
+                </td>
+                <td>
+                </td>
+                <td>
+                </td>
+                <td align="right">
+                    @*<button type="button" class="btn btn-success btn-sm" @onclick="btnOpen"><span class="bi-box-arrow-right">&nbsp;수선금액 등록</span></button>*@
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div class="card-body">
+
+        <table class="table" style="font-size: 0.9em">
+            <thead>
+                <tr style="background-color:gainsboro; border-top:groove">
+                    <th class="text-center">
+                        총론 / 계획기간 설정
+                    </th>
+                    <th class="text-center">
+                        수선 항목 설정 작업
+                    </th>
+                    <th class="text-center">
+                        수선 주기 설정 작업
+                    </th>
+                    <th class="text-center">
+                        수선 금액 설정 작업
+                    </th>
+                    <th class="text-center">
+                        충당금 초기화·적립율
+                    </th>
+                    <th class="text-center">
+                        충당금 부과·징수
+                    </th>
+                    <th class="text-center">
+                        충당금 사용 및 적립 현황
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="text-center">
+                        @if (ppn.Plan_Complete == "A")
+                        {
+                            <button type="button" class="btn btn-outline-danger btn-sm" @onclick="btnCompleteA"><span class="bi-box-arrow-right">&nbsp;진행중</span></button>
+                        }
+                        else if (ppn.Plan_Complete == "B")
+                        {
+                            <button type="button" class="btn btn-success btn-sm" @onclick="btnComplete_A"><span class="bi-box-arrow-right">&nbsp;완 료</span></button>
+                        }
+                    </td>
+                    <td class="text-center">
+                        @if (ppn.Article_Complete == "A")
+                        {
+                            <button type="button" class="btn btn-outline-danger btn-sm" @onclick="btnCompleteB"><span class="bi-box-arrow-right">&nbsp;진행중</span></button>
+                        }
+                        else if (ppn.Article_Complete == "B")
+                        {
+                            <button type="button" class="btn btn-success btn-sm" @onclick="btnComplete_B"><span class="bi-box-arrow-right">&nbsp;완 료</span></button>
+                        }
+                    </td>
+                    <td class="text-center">
+                        @if (ppn.Cycle_Complete == "A")
+                        {
+                            <button type="button" class="btn btn-outline-danger btn-sm" @onclick="btnCompleteC"><span class="bi-box-arrow-right">&nbsp;진행중</span></button>
+                        }
+                        else if (ppn.Cycle_Complete == "B")
+                        {
+                            <button type="button" class="btn btn-success btn-sm" @onclick="btnComplete_C"><span class="bi-box-arrow-right">&nbsp;완 료</span></button>
+                        }
+                    </td>
+                    <td class="text-center">
+                        @if (ppn.Cost_Complete == "A")
+                        {
+                            <button type="button" class="btn btn-outline-danger btn-sm" @onclick="btnCompleteD"><span class="bi-box-arrow-right">&nbsp;진행중</span></button>
+                        }
+                        else if (ppn.Cost_Complete == "B")
+                        {
+                            <button type="button" class="btn btn-success btn-sm" @onclick="btnComplete_D"><span class="bi-box-arrow-right">&nbsp;완 료</span></button>
+                        }
+                    </td>
+                    <td class="text-center">
+                        @if (rpn.Complete == "A")
+                        {
+                            <button type="button" class="btn btn-outline-danger btn-sm" @onclick="btnCompleteE"><span class="bi-box-arrow-right">&nbsp;미완료</span></button>
+                        }
+                        else if (rpn.Complete == "B")
+                        {
+                            <button type="button" class="btn btn-success btn-sm" @onclick="btnComplete_E"><span class="bi-box-arrow-right">&nbsp;완 료</span></button>
+                        }
+                    </td>
+                    <td class="text-center">
+                        @if (rpn.Complete == "A")
+                        {
+                            <button type="button" class="btn btn-outline-danger btn-sm" @onclick="btnCompleteF"><span class="bi-box-arrow-right">&nbsp;미완료</span></button>
+                        }
+                        else if (rpn.Complete == "B")
+                        {
+                            <button type="button" class="btn btn-success btn-sm" @onclick="btnComplete_F"><span class="bi-box-arrow-right">&nbsp;완 료</span></button>
+                        }
+                    </td>
+                    <td class="text-center">
+                        @if (rpn.Complete == "A")
+                        {
+                            <button type="button" class="btn btn-outline-danger btn-sm" @onclick="btnCompleteG"><span class="bi-box-arrow-right">&nbsp;미완료</span></button>
+                        }
+                        else if (rpn.Complete == "B")
+                        {
+                            <button type="button" class="btn btn-success btn-sm" @onclick="btnComplete_G"><span class="bi-box-arrow-right">&nbsp;완 료</span></button>
+                        }
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="text-center">
+                        @if (rpn.Complete == "A")
+                        {
+                            <span>완료일 : 미완료</span>
+                        }
+                        else if (rpn.Complete == "B")
+                        {
+                            <span>완료일 : </span>@rpn.Adjustment_Date.ToShortDateString();
+                        }
+                    </td>
+                    <td class="text-center">
+                        @if (rpn.Complete == "A")
+                        {
+                            <span>완료일 : 미완료</span>
+                        }
+                        else if (rpn.Complete == "B")
+                        {
+                            <span>완료일 : </span>@rpn.Adjustment_Date.ToShortDateString();
+                        }
+                    </td>
+                    <td class="text-center">
+                        @if (rpn.Complete == "A")
+                        {
+                            <span>완료일 : 미완료</span>
+                        }
+                        else if (rpn.Complete == "B")
+                        {
+                            <span>완료일 : </span>@rpn.Adjustment_Date.ToShortDateString();
+                        }
+                    </td>
+                    <td class="text-center">
+                        @if (rpn.Complete == "A")
+                        {
+                            <span>완료일 : 미완료</span>
+                        }
+                        else if (rpn.Complete == "B")
+                        {
+                            <span>완료일 : </span>@rpn.Adjustment_Date.ToShortDateString();
+                        }
+                    </td>
+                    <td class="text-center">
+                        @if (rpn.Complete == "A")
+                        {
+                            <span>완료일 : 미완료</span>
+                        }
+                        else if (rpn.Complete == "B")
+                        {
+                            <span>완료일 : </span>@rpn.Adjustment_Date.ToShortDateString();
+                        }
+                    </td>
+                    <td class="text-center">
+                        @if (rpn.Complete == "A")
+                        {
+                            <span>완료일 : 미완료</span>
+                        }
+                        else if (rpn.Complete == "B")
+                        {
+                            <span>완료일 : </span>@rpn.Adjustment_Date.ToShortDateString();
+                        }
+                    </td>
+                    <td class="text-center">
+                        @if (rpn.Complete == "A")
+                        {
+                            <span>완료일 : 미완료</span>
+                        }
+                        else if (rpn.Complete == "B")
+                        {
+                            <span>완료일 : </span>@rpn.Adjustment_Date.ToShortDateString();
+                        }
+                    </td>
+                </tr>
+            </tbody>
+
+        </table>
+    </div>
+</div>
+

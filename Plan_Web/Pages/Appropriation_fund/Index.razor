@@ -1,0 +1,107 @@
+﻿@page "/Appropriation_fund/"
+@inject Blazored.LocalStorage.ILocalStorageService session
+
+<div class="card">
+    <div class="card-header">
+        <table style="width: 100%; font-size: 1.1em">
+            <tr>
+                <td>
+                    <img src="/images/01_01_img.jpg" alt="" height="30" /> <span>장기수선충당금 관리</span> @*@strCode*@
+                </td>
+                <td class="text-right">
+                    <button type="button" class="btn btn-success btn-sm" @onclick="btnFundOpen"><span class="bi-box-arrow-in-right"></span> &nbsp; 장기수선충당금 초기화 열기</button> &nbsp; &nbsp;
+                    <button type="button" class="btn btn-success btn-sm" @onclick="btnRateOpen"><span class="bi-box-arrow-in-right"></span> &nbsp; 장기수선충당금 요율 열기</button>
+                </td>
+            </tr>
+        </table>
+
+    </div>
+    <div class="card-body">
+        <div style="font-size: 1em; font-weight: bold"> <span class="bi-clipboard-data"></span> 장기수선충당금 적립 및 사용 현황 &nbsp; &nbsp;&nbsp; &nbsp; <span style="color: red; font-size: 0.9em"> 초기화 잔액, 사용액 기준년도 : </span> </div>
+        <table class="table table-bordered" style="font-size: 0.9em">
+            <thead>
+                <tr style="background-color: whitesmoke">
+                    <th class="text-center">
+                        수선비 총액
+                    </th>
+                    <th class="text-center">
+                        초기화 부과총액
+                    </th>
+                    <th class="text-center">
+                        초기화 사용액
+                    </th>
+                    <th class="text-center">
+                        초기화 잔액
+                    </th>
+                    <th class="text-center">
+                        년간 부과 총액(현재)
+                    </th>
+                    <th class="text-center">
+                        사용 총액(현재)
+                    </th>
+                    <th class="text-center">
+                        월간 부과액(현)
+                    </th>
+                    <th class="text-center">
+                        ㎡당 부과액(현)
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="text-center">
+                        <span>원</span>
+                    </td>
+                    <td class="text-center">
+                        <span>원</span>
+                    </td>
+                    <td class="text-center">
+                        <span>원</span>
+                    </td>
+                    <td class="text-center">
+                        <span>원</span>
+                    </td>
+                    <td class="text-center">
+                        <span>원</span>
+                    </td>
+                    <td class="text-center">
+                        <span>원</span>
+                    </td>
+                    <td class="text-center">
+                        <span>원</span>
+                    </td>
+                    <td class="text-center">
+                        <span>원</span>
+                    </td>
+                </tr>
+            </tbody>
+
+        </table>
+
+        
+            <table width="100%">
+                <tr>
+                    <td style="font-size: 1em; font-weight: bold; width: 320px; vertical-align: middle">
+                        <span class="bi-clipboard-data"></span> 관리규약 상의 적립률 현황 정보
+                    </td>
+                    <td width="120px">
+                        <select id="Select1" style="font-size: 0.9em" class="custom-select" @bind="bnn.Bylaw_Code">
+                            @foreach (var st in bylawList)
+                            {
+                                <option value="@st.Bylaw_Code">@st.Bylaw_Revision_Date.ToShortDateString()</option>
+                            }
+
+
+                        </select>
+                    </td>
+                    <td>
+
+                    </td>
+                </tr>
+            </table>
+            
+            
+        
+
+    </div>
+</div>

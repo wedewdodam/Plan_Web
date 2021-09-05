@@ -1,0 +1,1349 @@
+﻿@page "/Repair_Article/{Aid}"
+
+
+<table width="100%" style="margin-bottom: 10px">
+    <tr>
+        <td style="width: 15%"> <button class="btn btn-primary btn-block" @onclick="OnPlanUrl"><img src="/images/sub/icon_step01_on.png" height="25" alt="" /> <span style="font-weight: bold"> 수선계획 총론 조정</span></button></td>
+        <td class="text-center"> <img src="/images/sub/icon_arrow.png" height="30" alt="" /> </td>
+        <td style="width: 15%"> <button class="btn btn-primary btn-block" @onclick="OnArticleUrl"><img src="/images/sub/icon_step02_on.png" height="25" alt="" /> <span style="font-weight: bold"> 수선항목 조정</span></button></td>
+        <td class="text-center"> <img src="/images/sub/icon_arrow.png" height="30" alt="" /> </td>
+        <td style="width: 15%"> <button class="btn btn-primary btn-block" @onclick="OnCycleUrl"><img src="/images/sub/icon_step03_on.png" height="25" alt="" /> <span style="font-weight: bold"> 수선주기 조정</span></button></td>
+        <td class="text-center"> <img src="/images/sub/icon_arrow.png" height="30" alt="" /> </td>
+        <td style="width: 15%"> <button class="btn btn-primary btn-block" @onclick="OnCostUrl"><img src="/images/sub/icon_step03_on.png" height="25" alt="" /> <span style="font-weight: bold"> 수선금액 조정</span></button></td>
+        <td class="text-center"> <img src="/images/sub/icon_arrow.png" height="30" alt="" /> </td>
+        <td style="width: 15%"> <button class="btn btn-primary btn-block" @onclick="OnCompleteUrl"><img src="/images/sub/icon_step04_on.png" height="25" alt="" /> <span style="font-weight: bold"> 조정완료</span></button></td>
+    </tr>
+</table>
+
+<div class="card" style="margin-bottom: 10px">
+    <div class="card-header">
+        <table width="100%">
+            <tr>
+                <td>
+                    <span style="font-size: 1em"> <span class="bi-house-fill"></span>&nbsp;<span>장기수선계획 수선항목 조정 <span class="bi"> </span></span></span>
+                </td>
+                <td>
+                </td>
+                <td align="right">
+                    <button type="button" class="btn btn-outline-secondary btn-sm" @onclick="btnOpen">수선항목 등록</button>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div class="card-body">
+        <img src="/images/sub/board_tit_bullet.png" alt="" /> <span style="font-size: 0.9em; font-weight: bold; color: Highlight">1. 건물외부</span> &nbsp;&nbsp;&nbsp; <span style="font-size: 0.9em">개수 : @annA.Count <span>개</span></span><br />
+        <table class="table table-sm" style="font-size: 0.9em; margin-bottom: 0px">
+            <thead>
+                <tr style="border-top-color:black; border-top-width: 2px; border-top-style:solid; background-color: gainsboro">
+                    <th style="vertical-align: middle" class="text-center">
+                        공사종별
+                    </th>
+                    <th class="text-center">
+                        수선항목
+                    </th>
+                    <th class="text-center">
+                        최종수선(전체/부분)
+                    </th>
+                    <th class="text-center">
+                        주기(전체/부분)·수선율
+                    </th>
+                    <th class="text-center">
+                        수 량
+                    </th>
+                    <th class="text-center" width="120">
+                        버 튼
+                    </th>
+                </tr>
+            </thead>
+
+            <tbody>
+                @foreach (var st in annA)
+                {
+                    <tr>
+                        <td style="vertical-align: middle" class="text-center" @onclick="() => OnByDetailA(st)">
+                            <span title="중분류">@st.Sort_B_Name</span>  <span class="bi-chevron-double-right"></span> <span title="소분류">@st.Sort_C_Name</span>
+                        </td>
+                        <td style="vertical-align: middle" class="text-center" @onclick="() => OnByDetailA(st)">
+                            <span title="@st.Repair_Article_Etc">@st.Repair_Article_Name</span>
+                        </td>
+                        <td style="vertical-align: middle" class="text-center" @onclick="() => OnByDetailA(st)">
+                            @st.Installation.Year <span class="bi-chevron-double-right"></span> @st.Installation_Part.Year
+                        </td>
+                        <td style="vertical-align: middle" class="text-center" @onclick="() => OnByDetailA(st)">
+                            @st.All_Cycle<span>년</span> / @st.Part_Cycle<span>년</span> <span class="bi-chevron-double-right"></span> @st.Repair_Rate<span>%</span>
+                        </td>
+                        <td style="vertical-align: middle" class="text-center" @onclick="() => OnByDetailA(st)">
+                            @string.Format("{0: ###,###.#}", st.Amount)@st.Unit
+                        </td>
+                        <td class="text-center">
+                            <button @onclick="() => OnByEditA(st)" class="btn btn-link btn-sm">수정</button> <button @onclick="() => OnRemoveA(st.Aid)" class="btn btn-link btn-sm">삭제</button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+        <img src="/images/sub/board_tit_bullet.png" alt="" /> <span style="font-size: 0.9em; font-weight: bold; color: Highlight">2. 건물내부</span> &nbsp;&nbsp;&nbsp; <span style="font-size: 0.9em">개수 : @annB.Count <span>개</span></span><br />
+        <table class="table table-sm" style="font-size: 0.9em; margin-bottom: 0px">
+            <thead>
+                <tr style="border-top-color:black; border-top-width: 2px; border-top-style:solid; background-color: gainsboro">
+                    <th style="vertical-align: middle" class="text-center">
+                        공사종별
+                    </th>
+                    <th class="text-center">
+                        수선항목
+                    </th>
+                    <th class="text-center">
+                        최종수선(전체/부분)
+                    </th>
+                    <th class="text-center">
+                        주기(전체/부분)·수선율
+                    </th>
+                    <th class="text-center">
+                        수 량
+                    </th>
+                    <th class="text-center" width="120">
+                        버 튼
+                    </th>
+                </tr>
+            </thead>
+
+            <tbody>
+                @foreach (var st in annB)
+                {
+                    <tr>
+                        <td style="vertical-align: middle" class="text-center" @onclick="() => OnByDetailA(st)">
+                            @st.Sort_B_Name <span class="bi-chevron-double-right"></span> @st.Sort_C_Name
+                        </td>
+                        <td style="vertical-align: middle" class="text-center" @onclick="() => OnByDetailA(st)">
+                            <span title="@st.Repair_Article_Etc">@st.Repair_Article_Name</span>
+                        </td>
+                        <td style="vertical-align: middle" class="text-center" @onclick="() => OnByDetailA(st)">
+                            @st.Installation.Year <span class="bi-chevron-double-right"></span> @st.Installation_Part.Year
+                        </td>
+                        <td style="vertical-align: middle" class="text-center" @onclick="() => OnByDetailA(st)">
+                            @st.All_Cycle<span>년</span> / @st.Part_Cycle<span>년</span> <span class="bi-chevron-double-right"></span> @st.Repair_Rate<span>%</span>
+                        </td>
+                        <td style="vertical-align: middle" class="text-center" @onclick="() => OnByDetailA(st)">
+                            @string.Format("{0: ###,###.#}", st.Amount)@st.Unit
+                        </td>
+                        <td class="text-center">
+                            <button @onclick="() => OnByEditA(st)" class="btn btn-link btn-sm">수정</button> <button @onclick="() => OnRemoveA(st.Aid)" class="btn btn-link btn-sm">삭제</button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+        <img src="/images/sub/board_tit_bullet.png" alt="" /> <span style="font-size: 0.9em; font-weight: bold; color: Highlight">3. 전기·소화·승강기 및 지능형 홈네트워크 설비</span> &nbsp;&nbsp;&nbsp; <span style="font-size: 0.9em">개수 : @annC.Count <span>개</span></span><br />
+        <table class="table table-sm" style="font-size: 0.9em; margin-bottom: 0px">
+            <thead>
+                <tr style="border-top-color:black; border-top-width: 2px; border-top-style:solid; background-color: gainsboro">
+                    <th style="vertical-align: middle" class="text-center">
+                        공사종별
+                    </th>
+                    <th class="text-center">
+                        수선항목
+                    </th>
+                    <th class="text-center">
+                        최종수선(전체/부분)
+                    </th>
+                    <th class="text-center">
+                        주기(전체/부분)·수선율
+                    </th>
+                    <th class="text-center">
+                        수 량
+                    </th>
+                    <th class="text-center" width="120">
+                        버 튼
+                    </th>
+                </tr>
+            </thead>
+
+            <tbody>
+                @foreach (var st in annC)
+                {
+                    <tr>
+                        <td style="vertical-align: middle" class="text-center" @onclick="() => OnByDetailA(st)">
+                            @st.Sort_B_Name <span class="bi-chevron-double-right"></span> @st.Sort_C_Name
+                        </td>
+                        <td style="vertical-align: middle" class="text-center" @onclick="() => OnByDetailA(st)">
+                            <span title="@st.Repair_Article_Etc">@st.Repair_Article_Name</span>
+                        </td>
+                        <td style="vertical-align: middle" class="text-center" @onclick="() => OnByDetailA(st)">
+                            @st.Installation.Year <span class="bi-chevron-double-right"></span> @st.Installation_Part.Year
+                        </td>
+                        <td style="vertical-align: middle" class="text-center" @onclick="() => OnByDetailA(st)">
+                            @st.All_Cycle<span>년</span> / @st.Part_Cycle<span>년</span> <span class="bi-chevron-double-right"></span> @st.Repair_Rate<span>%</span>
+                        </td>
+                        <td style="vertical-align: middle" class="text-center" @onclick="() => OnByDetailA(st)">
+                            @string.Format("{0: ###,###.#}", st.Amount)@st.Unit
+                        </td>
+                        <td class="text-center">
+                            <button @onclick="() => OnByEditA(st)" class="btn btn-link btn-sm">수정</button> <button @onclick="() => OnRemoveA(st.Aid)" class="btn btn-link btn-sm">삭제</button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+        <img src="/images/sub/board_tit_bullet.png" alt="" /> <span style="font-size: 0.9em; font-weight: bold; color: Highlight">4. 급수·배수 및 환기설비</span> &nbsp;&nbsp;&nbsp; <span style="font-size: 0.9em">개수 : @annD.Count <span>개</span></span><br />
+        <table class="table table-sm" style="font-size: 0.9em; margin-bottom: 0px">
+            <thead>
+                <tr style="border-top-color:black; border-top-width: 2px; border-top-style:solid; background-color: gainsboro">
+                    <th style="vertical-align: middle" class="text-center">
+                        공사종별
+                    </th>
+                    <th class="text-center">
+                        수선항목
+                    </th>
+                    <th class="text-center">
+                        최종수선(전체/부분)
+                    </th>
+                    <th class="text-center">
+                        주기(전체/부분)·수선율
+                    </th>
+                    <th class="text-center">
+                        수 량
+                    </th>
+                    <th class="text-center" width="120">
+                        버 튼
+                    </th>
+                </tr>
+            </thead>
+
+            <tbody>
+                @foreach (var st in annD)
+                {
+                    <tr>
+                        <td style="vertical-align: middle" class="text-center" @onclick="() => OnByDetailA(st)">
+                            @st.Sort_B_Name <span class="bi-chevron-double-right"></span> @st.Sort_C_Name
+                        </td>
+                        <td style="vertical-align: middle" class="text-center" @onclick="() => OnByDetailA(st)">
+                            <span title="@st.Repair_Article_Etc">@st.Repair_Article_Name</span>
+                        </td>
+                        <td style="vertical-align: middle" class="text-center" @onclick="() => OnByDetailA(st)">
+                            @st.Installation.Year <span class="bi-chevron-double-right"></span> @st.Installation_Part.Year
+                        </td>
+                        <td style="vertical-align: middle" class="text-center" @onclick="() => OnByDetailA(st)">
+                            @st.All_Cycle<span>년</span> / @st.Part_Cycle<span>년</span> <span class="bi-chevron-double-right"></span> @st.Repair_Rate<span>%</span>
+                        </td>
+                        <td style="vertical-align: middle" class="text-center" @onclick="() => OnByDetailA(st)">
+                            @string.Format("{0: ###,###.#}", st.Amount)@st.Unit
+                        </td>
+                        <td class="text-center">
+                            <button @onclick="() => OnByEditA(st)" class="btn btn-link btn-sm">수정</button> <button @onclick="() => OnRemoveA(st.Aid)" class="btn btn-link btn-sm">삭제</button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+        <img src="/images/sub/board_tit_bullet.png" alt="" /> <span style="font-size: 0.9em; font-weight: bold; color: Highlight">5. 난방 및 급탕설비</span> &nbsp;&nbsp;&nbsp; <span style="font-size: 0.9em">개수 : @annE.Count <span>개</span></span><br />
+        <table class="table table-sm" style="font-size: 0.9em; margin-bottom: 0px">
+            <thead>
+                <tr style="border-top-color:black; border-top-width: 2px; border-top-style:solid; background-color: gainsboro">
+                    <th style="vertical-align: middle" class="text-center">
+                        공사종별
+                    </th>
+                    <th class="text-center">
+                        수선항목
+                    </th>
+                    <th class="text-center">
+                        최종수선(전체/부분)
+                    </th>
+                    <th class="text-center">
+                        주기(전체/부분)·수선율
+                    </th>
+                    <th class="text-center">
+                        수 량
+                    </th>
+                    <th class="text-center" width="120">
+                        버 튼
+                    </th>
+                </tr>
+            </thead>
+
+            <tbody>
+                @foreach (var st in annE)
+                {
+                    <tr>
+                        <td style="vertical-align: middle" class="text-center" @onclick="() => OnByDetailA(st)">
+                            @st.Sort_B_Name <span class="bi-chevron-double-right"></span> @st.Sort_C_Name
+                        </td>
+                        <td style="vertical-align: middle" class="text-center" @onclick="() => OnByDetailA(st)">
+                            <span title="@st.Repair_Article_Etc">@st.Repair_Article_Name</span>
+                        </td>
+                        <td style="vertical-align: middle" class="text-center" @onclick="() => OnByDetailA(st)">
+                            @st.Installation.Year <span class="bi-chevron-double-right"></span> @st.Installation_Part.Year
+                        </td>
+                        <td style="vertical-align: middle" class="text-center" @onclick="() => OnByDetailA(st)">
+                            @st.All_Cycle<span>년</span> / @st.Part_Cycle<span>년</span> <span class="bi-chevron-double-right"></span> @st.Repair_Rate<span>%</span>
+                        </td>
+                        <td style="vertical-align: middle" class="text-center" @onclick="() => OnByDetailA(st)">
+                            @string.Format("{0: ###,###.#}", st.Amount)@st.Unit
+                        </td>
+                        <td class="text-center">
+                            <button @onclick="() => OnByEditA(st)" class="btn btn-link btn-sm">수정</button> <button @onclick="() => OnRemoveA(st.Aid)" class="btn btn-link btn-sm">삭제</button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+        <img src="/images/sub/board_tit_bullet.png" alt="" /> <span style="font-size: 0.9em; font-weight: bold; color: Highlight">6. 옥외 복리시설 및 옥외 부대시설</span> &nbsp;&nbsp;&nbsp; <span style="font-size: 0.9em">개수 : @annF.Count <span>개</span></span><br />
+        <table class="table table-sm" style="font-size: 0.9em; margin-bottom: 0px">
+            <thead>
+                <tr style="border-top-color:black; border-top-width: 2px; border-top-style:solid; background-color: gainsboro">
+                    <th style="vertical-align: middle" class="text-center">
+                        공사종별
+                    </th>
+                    <th class="text-center">
+                        수선항목
+                    </th>
+                    <th class="text-center">
+                        최종수선(전체/부분)
+                    </th>
+                    <th class="text-center">
+                        주기(전체/부분)·수선율
+                    </th>
+                    <th class="text-center">
+                        수 량
+                    </th>
+                    <th class="text-center" width="120">
+                        버 튼
+                    </th>
+                </tr>
+            </thead>
+
+            <tbody>
+                @foreach (var st in annF)
+                {
+                    <tr>
+                        <td style="vertical-align: middle" class="text-center" @onclick="() => OnByDetailA(st)">
+                            @st.Sort_B_Name <span class="bi-chevron-double-right"></span> @st.Sort_C_Name
+                        </td>
+                        <td style="vertical-align: middle" class="text-center" @onclick="() => OnByDetailA(st)">
+                            <span title="@st.Repair_Article_Etc">@st.Repair_Article_Name</span>
+                        </td>
+                        <td style="vertical-align: middle" class="text-center" @onclick="() => OnByDetailA(st)">
+                            @st.Installation.Year <span class="bi-chevron-double-right"></span> @st.Installation_Part.Year
+                        </td>
+                        <td style="vertical-align: middle" class="text-center" @onclick="() => OnByDetailA(st)">
+                            @st.All_Cycle<span>년</span> / @st.Part_Cycle<span>년</span> <span class="bi-chevron-double-right"></span> @st.Repair_Rate<span>%</span>
+                        </td>
+                        <td style="vertical-align: middle" class="text-center" @onclick="() => OnByDetailA(st)">
+                            @string.Format("{0: ###,###.#}", st.Amount)@st.Unit
+                        </td>
+                        <td class="text-center">
+                            <button @onclick="() => OnByEditA(st)" class="btn btn-link btn-sm">수정</button> <button @onclick="() => OnRemoveA(st.Aid)" class="btn btn-link btn-sm">삭제</button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+    </div>
+</div>
+
+@*수선항목 수정*@
+@if (InsertViewsA == "B")
+{
+    <div class="modal fade show d-block" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header" style="background-color: cornflowerblue; color: white">
+                    <h5 class="modal-title"><span class="bi-house-door"></span>&nbsp;@strTitle</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" @onclick="btnClose">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <table class="table" style="margin-bottom: 0px; font-size: 0.9em; vertical-align: text-top">
+                        <tr>
+                            <td class="text-center" style="vertical-align: middle; width: 20%">수선항목<span style="color: red" class="bi-star"></span></td>
+                            <td align="center" style="vertical-align: middle;">
+                                <table width="100%" class="table-borderless table-sm">
+                                    <tr>
+                                        <td>
+                                            <div class="input-group">
+                                                <div class="input-group-prepend"><span class="input-group-text" style="font-size: 0.9em"><span class="bi-pencil-square"></span>&nbsp;수선항목</span></div>
+                                                <input id="Repair_Article_Name" name="Repair_Article_Name" style="font-size: 0.9em; width: 250px" value="@bnn.Repair_Article_Name" class="form-control" type="text" @onchange="OnArticleName" />
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <button class="btn btn-info btn-sm">시설물 정보</button>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td class="text-center" style="vertical-align: middle">공사 범위, 방법, 정의<span style="color: red" class="bi-star"></span></td>
+                            <td>
+                                <textarea id="Repair_Article_Etc" name="Repair_Article_Etc" title="최대 4,000자 이내 입력 가능" placeholder="공사 범위, 공사방법, 공사정의, 기타 입력하는 곳" rows="3" style="font-size: 0.9em" @bind="bnn.Repair_Article_Etc" class="form-control" type="text" />
+
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td class="text-center" style="vertical-align: middle">수선주기/수선율<span style="color: red" class="bi-star"></span></td>
+                            <td>
+                                <table width="100%" class="table-borderless table-sm">
+                                    <tr>
+                                        <td>
+                                            <div class="input-group">
+                                                <div class="input-group-prepend"><span class="input-group-text" style="font-size: 0.9em"><span class="bi-pencil-square"></span>&nbsp;전체</span></div>
+                                                <input id="All_Cycle" name="All_Cycle" style="font-size: 0.9em;" @bind="bnn.All_Cycle" class="form-control" type="text" />
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="input-group">
+                                                <div class="input-group-prepend"><span class="input-group-text" style="font-size: 0.9em"><span class="bi-pencil-square"></span>&nbsp;부분</span></div>
+                                                <input id="Part_Cycle" name="Part_Cycle" style="font-size: 0.9em;" @bind="bnn.Part_Cycle" class="form-control" type="text" />
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="input-group">
+                                                <div class="input-group-prepend"><span class="input-group-text" style="font-size: 0.9em"><span class="bi-pencil-square"></span>&nbsp;수선율</span></div>
+                                                <input id="Repair_Rate" name="Repair_Rate" style="font-size: 0.9em" @bind="bnn.Repair_Rate" class="form-control" type="text" />
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </table>
+
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td class="text-center" style="vertical-align: middle; width: 10%">수량/용량/면적<span style="color: red" class="bi-star"></span></td>
+                            <td align="center" style="vertical-align: middle;">
+                                <div class="input-group">
+                                    <div class="input-group-prepend"><span class="input-group-text" style="font-size: 0.9em"><span class="bi-pencil-square"></span>&nbsp;수량 또는 면적</span></div>
+                                    <input id="Repair_Article_Name" name="Repair_Article_Name" style="font-size: 0.9em; max-width: 250px" @bind="bnn.Amount" class="form-control" type="number" />
+                                    <div class="input-group-append">
+                                        <select id="txUnit" style="font-size: 0.9em" class="custom-select" @bind="bnn.Unit">
+                                            <option Value="Z">::단위선택::</option>
+                                            <option Value="㎡">㎡</option>
+                                            <option Value="m">m</option>
+                                            <option Value="㎥">㎥</option>
+                                            <option Value="t">톤(t)</option>
+                                            <option Value="KVA">KVA</option>
+                                            <option Value="KW/h">KW/h</option>
+                                            <option Value="개">개</option>
+                                            <option Value="개소">개소</option>
+                                            <option Value="조">조</option>
+                                            <option Value="대">대</option>
+                                            <option Value="통">통</option>
+                                            <option Value="set">세트</option>
+                                            <option Value="식">식</option>
+                                            <option Value="묶음">묶음</option>
+                                            <option Value="Etc">기타</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="text-center" style="vertical-align: middle">최종수선년도 <span style="color: red" class="bi-star"></span></td>
+                            <td>
+                                <table width="100%" class="table-borderless table-sm">
+                                    <tr>
+                                        <td style="vertical-align:middle; width: 50%">
+                                            @if (bnn.All_Cycle > 0)
+                                            {
+                                                <div class="input-group">
+                                                    <div class="input-group-prepend"><span class="input-group-text" style="font-size: 0.9em"><span class="bi-pencil-square"></span>&nbsp;전체수선년도</span></div>
+                                                    <select id="SmallSum_Unit" class="custom-select text-center" style="font-size: 0.9em; width: 100px" value="@strInsYearA" @onchange="OnYearA" required>
+                                                        <option value="">=기간선택=</option>
+                                                        <option value="1981">1981</option>
+                                                        <option value="1982">1982</option>
+                                                        <option value="1983">1983</option>
+                                                        <option value="1984">1984</option>
+                                                        <option value="1985">1985</option>
+                                                        <option value="1986">1986</option>
+                                                        <option value="1987">1987</option>
+                                                        <option value="1988">1988</option>
+                                                        <option value="1989">1989</option>
+                                                        <option value="1990">1990</option>
+                                                        <option value="1991">1991</option>
+                                                        <option value="1992">1992</option>
+                                                        <option value="1993">1993</option>
+                                                        <option value="1994">1994</option>
+                                                        <option value="1995">1995</option>
+                                                        <option value="1996">1996</option>
+                                                        <option value="1997">1997</option>
+                                                        <option value="1998">1998</option>
+                                                        <option value="1999">1999</option>
+                                                        <option value="2000">2000</option>
+                                                        <option value="2001">2001</option>
+                                                        <option value="2002">2002</option>
+                                                        <option value="2003">2003</option>
+                                                        <option value="2004">2004</option>
+                                                        <option value="2005">2005</option>
+                                                        <option value="2006">2006</option>
+                                                        <option value="2007">2007</option>
+                                                        <option value="2008">2008</option>
+                                                        <option value="2009">2009</option>
+                                                        <option value="2010">2010</option>
+                                                        <option value="2011">2011</option>
+                                                        <option value="2012">2012</option>
+                                                        <option value="2013">2013</option>
+                                                        <option value="2014">2014</option>
+                                                        <option value="2015">2015</option>
+                                                        <option value="2016">2016</option>
+                                                        <option value="2017">2017</option>
+                                                        <option value="2018">2018</option>
+                                                        <option value="2019">2019</option>
+                                                        <option value="2020">2020</option>
+                                                        <option value="2021">2021</option>
+                                                        <option value="2022">2022</option>
+                                                        <option value="2023">2023</option>
+                                                        <option value="2024">2024</option>
+                                                        <option value="2025">2025</option>
+                                                        <option value="2026">2026</option>
+                                                        <option value="2027">2027</option>
+                                                        <option value="2028">2028</option>
+                                                        <option value="2029">2029</option>
+                                                        <option value="2030">2030</option>
+                                                        <option value="2031">2031</option>
+                                                        <option value="2032">2032</option>
+                                                        <option value="2033">2033</option>
+                                                        <option value="2034">2034</option>
+                                                        <option value="2035">2035</option>
+                                                        <option value="2036">2036</option>
+                                                        <option value="2037">2037</option>
+                                                        <option value="2038">2038</option>
+                                                        <option value="2039">2039</option>
+                                                        <option value="2040">2040</option>
+                                                        <option value="2041">2041</option>
+                                                        <option value="2042">2042</option>
+                                                        <option value="2043">2043</option>
+                                                        <option value="2044">2044</option>
+                                                        <option value="2045">2045</option>
+                                                        <option value="2046">2046</option>
+                                                        <option value="2047">2047</option>
+                                                        <option value="2048">2048</option>
+                                                        <option value="2049">2049</option>
+                                                        <option value="2050">2050</option>
+                                                        <option value="2051">2051</option>
+                                                        <option value="2052">2052</option>
+                                                        <option value="2053">2053</option>
+                                                        <option value="2054">2054</option>
+                                                        <option value="2055">2055</option>
+                                                        <option value="2056">2056</option>
+                                                        <option value="2057">2057</option>
+                                                        <option value="2058">2058</option>
+                                                        <option value="2059">2059</option>
+                                                        <option value="2060">2060</option>
+                                                        <option value="2061">2061</option>
+                                                        <option value="2062">2062</option>
+                                                        <option value="2063">2063</option>
+                                                        <option value="2064">2064</option>
+                                                        <option value="2065">2065</option>
+                                                        <option value="2066">2066</option>
+                                                        <option value="2067">2067</option>
+                                                        <option value="2068">2068</option>
+                                                        <option value="2069">2069</option>
+                                                        <option value="2070">2070</option>
+                                                        <option value="2071">2071</option>
+                                                        <option value="2072">2072</option>
+                                                        <option value="2073">2073</option>
+                                                        <option value="2074">2074</option>
+                                                        <option value="2075">2075</option>
+                                                        <option value="2076">2076</option>
+                                                        <option value="2077">2077</option>
+                                                        <option value="2078">2078</option>
+                                                        <option value="2079">2079</option>
+                                                        <option value="2080">2080</option>
+                                                        <option value="2081">2081</option>
+                                                        <option value="2082">2082</option>
+                                                        <option value="2083">2083</option>
+                                                        <option value="2084">2084</option>
+                                                        <option value="2085">2085</option>
+                                                        <option value="2086">2086</option>
+                                                        <option value="2087">2087</option>
+                                                        <option value="2088">2088</option>
+                                                        <option value="2089">2089</option>
+                                                        <option value="2090">2090</option>
+                                                        <option value="2091">2091</option>
+                                                        <option value="2092">2092</option>
+                                                        <option value="2093">2093</option>
+                                                        <option value="2094">2094</option>
+                                                        <option value="2095">2095</option>
+                                                        <option value="2096">2096</option>
+                                                        <option value="2097">2097</option>
+                                                        <option value="2098">2098</option>
+                                                        <option value="2099">2099</option>
+                                                        <option value="2100">2100</option>
+                                                        <option value="2101">2101</option>
+                                                        <option value="2102">2102</option>
+                                                        <option value="2103">2103</option>
+                                                        <option value="2104">2104</option>
+                                                        <option value="2105">2105</option>
+                                                        <option value="2106">2106</option>
+                                                        <option value="2107">2107</option>
+                                                        <option value="2108">2108</option>
+                                                        <option value="2109">2109</option>
+                                                        <option value="2110">2110</option>
+                                                        <option value="2111">2111</option>
+                                                        <option value="2112">2112</option>
+                                                        <option value="2113">2113</option>
+                                                        <option value="2114">2114</option>
+                                                        <option value="2115">2115</option>
+                                                        <option value="2116">2116</option>
+                                                        <option value="2117">2117</option>
+                                                        <option value="2118">2118</option>
+                                                        <option value="2119">2119</option>
+                                                        <option value="2120">2120</option>
+                                                    </select>
+                                                </div>
+                                            }
+                                            else
+                                            {
+                                                <span style="color: red">전체수선 없음</span>
+                                            }
+                                        </td>
+                                        <td style="vertical-align:middle; width: 50%">
+                                            @if (bnn.Part_Cycle > 0)
+                                            {
+                                                <div class="input-group">
+                                                    <div class="input-group-prepend"><span class="input-group-text" style="font-size: 0.9em"><span class="bi-pencil-square"></span>&nbsp;부분수선년도</span></div>
+                                                    <select id="SmallSum_Unit" class="custom-select text-center" style="font-size: 0.9em; width: 100px" value="@strInsYearB" @onchange="OnYearB" required>
+                                                        <option value="">=기간선택=</option>
+                                                        <option value="1981">1981</option>
+                                                        <option value="1982">1982</option>
+                                                        <option value="1983">1983</option>
+                                                        <option value="1984">1984</option>
+                                                        <option value="1985">1985</option>
+                                                        <option value="1986">1986</option>
+                                                        <option value="1987">1987</option>
+                                                        <option value="1988">1988</option>
+                                                        <option value="1989">1989</option>
+                                                        <option value="1990">1990</option>
+                                                        <option value="1991">1991</option>
+                                                        <option value="1992">1992</option>
+                                                        <option value="1993">1993</option>
+                                                        <option value="1994">1994</option>
+                                                        <option value="1995">1995</option>
+                                                        <option value="1996">1996</option>
+                                                        <option value="1997">1997</option>
+                                                        <option value="1998">1998</option>
+                                                        <option value="1999">1999</option>
+                                                        <option value="2000">2000</option>
+                                                        <option value="2001">2001</option>
+                                                        <option value="2002">2002</option>
+                                                        <option value="2003">2003</option>
+                                                        <option value="2004">2004</option>
+                                                        <option value="2005">2005</option>
+                                                        <option value="2006">2006</option>
+                                                        <option value="2007">2007</option>
+                                                        <option value="2008">2008</option>
+                                                        <option value="2009">2009</option>
+                                                        <option value="2010">2010</option>
+                                                        <option value="2011">2011</option>
+                                                        <option value="2012">2012</option>
+                                                        <option value="2013">2013</option>
+                                                        <option value="2014">2014</option>
+                                                        <option value="2015">2015</option>
+                                                        <option value="2016">2016</option>
+                                                        <option value="2017">2017</option>
+                                                        <option value="2018">2018</option>
+                                                        <option value="2019">2019</option>
+                                                        <option value="2020">2020</option>
+                                                        <option value="2021">2021</option>
+                                                        <option value="2022">2022</option>
+                                                        <option value="2023">2023</option>
+                                                        <option value="2024">2024</option>
+                                                        <option value="2025">2025</option>
+                                                        <option value="2026">2026</option>
+                                                        <option value="2027">2027</option>
+                                                        <option value="2028">2028</option>
+                                                        <option value="2029">2029</option>
+                                                        <option value="2030">2030</option>
+                                                        <option value="2031">2031</option>
+                                                        <option value="2032">2032</option>
+                                                        <option value="2033">2033</option>
+                                                        <option value="2034">2034</option>
+                                                        <option value="2035">2035</option>
+                                                        <option value="2036">2036</option>
+                                                        <option value="2037">2037</option>
+                                                        <option value="2038">2038</option>
+                                                        <option value="2039">2039</option>
+                                                        <option value="2040">2040</option>
+                                                        <option value="2041">2041</option>
+                                                        <option value="2042">2042</option>
+                                                        <option value="2043">2043</option>
+                                                        <option value="2044">2044</option>
+                                                        <option value="2045">2045</option>
+                                                        <option value="2046">2046</option>
+                                                        <option value="2047">2047</option>
+                                                        <option value="2048">2048</option>
+                                                        <option value="2049">2049</option>
+                                                        <option value="2050">2050</option>
+                                                        <option value="2051">2051</option>
+                                                        <option value="2052">2052</option>
+                                                        <option value="2053">2053</option>
+                                                        <option value="2054">2054</option>
+                                                        <option value="2055">2055</option>
+                                                        <option value="2056">2056</option>
+                                                        <option value="2057">2057</option>
+                                                        <option value="2058">2058</option>
+                                                        <option value="2059">2059</option>
+                                                        <option value="2060">2060</option>
+                                                        <option value="2061">2061</option>
+                                                        <option value="2062">2062</option>
+                                                        <option value="2063">2063</option>
+                                                        <option value="2064">2064</option>
+                                                        <option value="2065">2065</option>
+                                                        <option value="2066">2066</option>
+                                                        <option value="2067">2067</option>
+                                                        <option value="2068">2068</option>
+                                                        <option value="2069">2069</option>
+                                                        <option value="2070">2070</option>
+                                                        <option value="2071">2071</option>
+                                                        <option value="2072">2072</option>
+                                                        <option value="2073">2073</option>
+                                                        <option value="2074">2074</option>
+                                                        <option value="2075">2075</option>
+                                                        <option value="2076">2076</option>
+                                                        <option value="2077">2077</option>
+                                                        <option value="2078">2078</option>
+                                                        <option value="2079">2079</option>
+                                                        <option value="2080">2080</option>
+                                                        <option value="2081">2081</option>
+                                                        <option value="2082">2082</option>
+                                                        <option value="2083">2083</option>
+                                                        <option value="2084">2084</option>
+                                                        <option value="2085">2085</option>
+                                                        <option value="2086">2086</option>
+                                                        <option value="2087">2087</option>
+                                                        <option value="2088">2088</option>
+                                                        <option value="2089">2089</option>
+                                                        <option value="2090">2090</option>
+                                                        <option value="2091">2091</option>
+                                                        <option value="2092">2092</option>
+                                                        <option value="2093">2093</option>
+                                                        <option value="2094">2094</option>
+                                                        <option value="2095">2095</option>
+                                                        <option value="2096">2096</option>
+                                                        <option value="2097">2097</option>
+                                                        <option value="2098">2098</option>
+                                                        <option value="2099">2099</option>
+                                                        <option value="2100">2100</option>
+                                                        <option value="2101">2101</option>
+                                                        <option value="2102">2102</option>
+                                                        <option value="2103">2103</option>
+                                                        <option value="2104">2104</option>
+                                                        <option value="2105">2105</option>
+                                                        <option value="2106">2106</option>
+                                                        <option value="2107">2107</option>
+                                                        <option value="2108">2108</option>
+                                                        <option value="2109">2109</option>
+                                                        <option value="2110">2110</option>
+                                                        <option value="2111">2111</option>
+                                                        <option value="2112">2112</option>
+                                                        <option value="2113">2113</option>
+                                                        <option value="2114">2114</option>
+                                                        <option value="2115">2115</option>
+                                                        <option value="2116">2116</option>
+                                                        <option value="2117">2117</option>
+                                                        <option value="2118">2118</option>
+                                                        <option value="2119">2119</option>
+                                                        <option value="2120">2120</option>
+                                                    </select>
+                                                </div>
+                                            }
+                                            else
+                                            {
+                                                <span style="color: red">부분수선 없음</span>
+                                            }
+                                        </td>
+
+                                    </tr>
+                                </table>
+
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="text-center" style="vertical-align: middle">검토 내용 <span style="color: red" class="bi-star"></span></td>
+                            <td>
+                                @if (ReviewCount > 0)
+                                {
+                                    <table class="table-borderless table-sm" width="100%">
+                                        <tr>
+                                            <td width="50%" style="vertical-align:middle">
+                                                <span style="font-weight: bold">수선항목 검토</span> : @rce.Repair_Article_Review
+                                            </td>
+                                            <td width="50%" style="vertical-align:middle">
+                                                <span style="font-weight: bold">수선주기 검토</span> : @rce.Repair_Cycle_Review
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="vertical-align:middle">
+                                                <span style="font-weight: bold">수선수선율 검토</span> : @rce.Repair_Part_Rate_Review
+                                            </td>
+                                            <td style="vertical-align:middle">
+                                                <span style="font-weight: bold">수선금액 검토</span> : @rce.Repair_Cost_Review
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="2" style="vertical-align:middle">
+                                                <span style="font-weight: bold">비 고</span> : @rce.Review_Content
+                                            </td>
+                                        </tr>
+                                    </table>
+                                }
+                                else
+                                {
+                                    <span style="color: red"> 검토내용 없음</span>
+                                }
+                            </td>
+                        </tr>
+                    </table>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary btn-sm" @onclick="btnSave">저장</button> &nbsp; &nbsp; &nbsp;
+                    <button type="button" class="btn btn-secondary btn-sm" @onclick="btnClose">닫기</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-backdrop show"></div>
+}
+
+@*수선항목 입력*@
+@if (InsertViews == "B")
+{
+    <div class="modal fade show d-block" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-xl" role="document">
+            <div class="modal-content">
+                <div class="modal-header" style="background-color: cornflowerblue; color: white">
+                    <h5 class="modal-title"><span class="bi-house-door"></span>&nbsp;@strTitle</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" @onclick="btnClose">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+
+                    <table width="100%" style="margin-bottom: 5px">
+                        <tr>
+                            <td></td>
+                            <td width="30%">
+                                <div class="input-group">
+                                    <div class="input-group-prepend"><span class="input-group-text" style="font-size: 0.9em"><span class="bi-pencil-square"></span>&nbsp;대분류선택</span></div>
+                                    <select id="Sort_A_Code" class="custom-select" value="@strSortA" style="font-size: 0.9em" @onchange="onSortA" required>
+                                        <option value="Z">=대분류 선택=</option>
+                                        @foreach (var it in fnnA)
+                                        {
+                                            <option value="@it.Aid">@it.Sort_Name</option>
+                                        }
+                                    </select>
+                                </div>
+                            </td>
+                            <td width="30%">
+                                <div class="input-group">
+                                    <div class="input-group-prepend"><span class="input-group-text" style="font-size: 0.9em"><span class="bi-pencil-square"></span>&nbsp;조정년도</span></div>
+                                    <select id="Sort_A_Code" class="custom-select" value="@strSortB" style="font-size: 0.9em" @onchange="onSortB" required>
+                                        <option value="Z">=중분류 선택=</option>
+                                        @foreach (var it in fnnB)
+                                        {
+                                            <option value="@it.Aid">@it.Sort_Name</option>
+                                        }
+                                    </select>
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+                    <table width="100%">
+                        <tr>
+                            <td width="35%" style="vertical-align: text-top">
+                                <div style="height: 400px; overflow-y:scroll; overflow-x:hidden; vertical-align: text-top">
+                                    <table class="table table-sm" style="font-size: 0.9em">
+                                        <thead>
+                                            <tr style="background-color: ghostwhite">
+                                                @*<th class="text-center">완료</th>*@
+                                                <th class="text-center">수선항목</th>
+                                                <th class="text-center">선택</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach (var it in fnn)
+                                            {
+                                                <tr>
+
+                                                    <td class="text-center" style="vertical-align:middle">
+                                                        <span title="@it.Sort_Name"> @Dul.StringLibrary.CutString(it.Sort_Name, 20)</span>
+                                                    </td>
+                                                    <td class="text-center" style="vertical-align:middle">
+                                                        @if (it.Ar > 0)
+                                                        {
+                                                            <button @onclick="() => OnByArticleId(it)" class="btn btn-link btn-sm" title="추가하여 수선항목 설정"><span style="color:red">추가</span></button>
+                                                        }
+                                                        else
+                                                        {
+                                                            <button @onclick="() => OnByArticleId(it)" class="btn btn-link btn-sm">선택</button>
+                                                        }
+                                                    </td>
+                                                </tr>
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </td>
+                            <td valign="top">
+                                <table class="table" style="margin-bottom: 0px; font-size: 0.9em; vertical-align: text-top">
+                                    <tr>
+                                        <td class="text-center" style="vertical-align: middle; width: 20%">수선항목<span style="color: red" class="bi-star"></span></td>
+                                        <td align="center" style="vertical-align: middle;">
+                                            <table width="100%" class="table-borderless table-sm">
+                                                <tr>
+                                                    <td>
+                                                        <div class="input-group">
+                                                            <div class="input-group-prepend"><span class="input-group-text" style="font-size: 0.9em"><span class="bi-pencil-square"></span>&nbsp;수선항목</span></div>
+                                                            <input id="Repair_Article_Name" name="Repair_Article_Name" style="font-size: 0.9em; width: 250px" @bind="bnn.Repair_Article_Name" class="form-control" type="text" @ref="myDiv" />
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <button class="btn btn-info btn-sm">시설물 정보</button>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td class="text-center" style="vertical-align: middle">공사 범위, 방법, 정의<span style="color: red" class="bi-star"></span></td>
+                                        <td>
+
+                                            <textarea id="Repair_Article_Etc" name="Repair_Article_Etc" title="최대 4,000자 이내 입력 가능" placeholder="공사 범위, 공사방법, 공사정의, 기타 입력하는 곳" rows="3" style="font-size: 0.9em" @bind="bnn.Repair_Article_Etc" class="form-control" type="text" />
+
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td class="text-center" style="vertical-align: middle">수선주기/수선율<span style="color: red" class="bi-star"></span></td>
+                                        <td>
+                                            <table width="100%" class="table-borderless table-sm">
+                                                <tr>
+                                                    <td>
+                                                        <div class="input-group">
+                                                            <div class="input-group-prepend"><span class="input-group-text" style="font-size: 0.9em"><span class="bi-pencil-square"></span>&nbsp;전체</span></div>
+                                                            <input id="All_Cycle" name="All_Cycle" style="font-size: 0.9em;" @bind="bnn.All_Cycle" class="form-control" type="text" />
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="input-group">
+                                                            <div class="input-group-prepend"><span class="input-group-text" style="font-size: 0.9em"><span class="bi-pencil-square"></span>&nbsp;부분</span></div>
+                                                            <input id="Part_Cycle" name="Part_Cycle" style="font-size: 0.9em;" @bind="bnn.Part_Cycle" class="form-control" type="text" />
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="input-group">
+                                                            <div class="input-group-prepend"><span class="input-group-text" style="font-size: 0.9em"><span class="bi-pencil-square"></span>&nbsp;수선율</span></div>
+                                                            <input id="Repair_Rate" name="Repair_Rate" style="font-size: 0.9em" @bind="bnn.Repair_Rate" class="form-control" type="text" />
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            </table>
+
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td class="text-center" style="vertical-align: middle; width: 10%">수량/용량/면적<span style="color: red" class="bi-star"></span></td>
+                                        <td align="center" style="vertical-align: middle;">
+                                            <div class="input-group">
+                                                <div class="input-group-prepend"><span class="input-group-text" style="font-size: 0.9em"><span class="bi-pencil-square"></span>&nbsp;수량 또는 면적</span></div>
+                                                <input id="Repair_Article_Name" name="Repair_Article_Name" style="font-size: 0.9em; max-width: 250px" @bind="bnn.Amount" class="form-control" type="number" />
+                                                <div class="input-group-append">
+                                                    <select id="txUnit" style="font-size: 0.9em" class="custom-select" @bind="bnn.Unit">
+                                                        <option Value="">::단위선택::</option>
+                                                        <option Value="㎡">㎡</option>
+                                                        <option Value="m">m</option>
+                                                        <option Value="㎥">㎥</option>
+                                                        <option Value="t">톤(t)</option>
+                                                        <option Value="KVA">KVA</option>
+                                                        <option Value="KW/h">KW/h</option>
+                                                        <option Value="개">개</option>
+                                                        <option Value="개소">개소</option>
+                                                        <option Value="조">조</option>
+                                                        <option Value="대">대</option>
+                                                        <option Value="통">통</option>
+                                                        <option Value="set">세트</option>
+                                                        <option Value="식">식</option>
+                                                        <option Value="묶음">묶음</option>
+                                                        <option Value="Etc">기타</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-center" style="vertical-align: middle">최종수선년도 <span style="color: red" class="bi-star"></span></td>
+                                        <td>
+                                            <table width="100%" class="table-borderless table-sm">
+                                                <tr>
+                                                    <td style="vertical-align:middle; width: 50%">
+                                                        @if (bnn.All_Cycle > 0)
+                                                        {
+                                                            <div class="input-group">
+                                                                <div class="input-group-prepend"><span class="input-group-text" style="font-size: 0.9em"><span class="bi-pencil-square"></span>&nbsp;전체수선년도</span></div>
+                                                                <select id="SmallSum_Unit" class="custom-select text-center" style="font-size: 0.9em; width: 100px" value="@strInsYearA" @onchange="OnYearA" required>
+                                                                    <option value="">=기간선택=</option>
+                                                                    <option value="1981">1981</option>
+                                                                    <option value="1982">1982</option>
+                                                                    <option value="1983">1983</option>
+                                                                    <option value="1984">1984</option>
+                                                                    <option value="1985">1985</option>
+                                                                    <option value="1986">1986</option>
+                                                                    <option value="1987">1987</option>
+                                                                    <option value="1988">1988</option>
+                                                                    <option value="1989">1989</option>
+                                                                    <option value="1990">1990</option>
+                                                                    <option value="1991">1991</option>
+                                                                    <option value="1992">1992</option>
+                                                                    <option value="1993">1993</option>
+                                                                    <option value="1994">1994</option>
+                                                                    <option value="1995">1995</option>
+                                                                    <option value="1996">1996</option>
+                                                                    <option value="1997">1997</option>
+                                                                    <option value="1998">1998</option>
+                                                                    <option value="1999">1999</option>
+                                                                    <option value="2000">2000</option>
+                                                                    <option value="2001">2001</option>
+                                                                    <option value="2002">2002</option>
+                                                                    <option value="2003">2003</option>
+                                                                    <option value="2004">2004</option>
+                                                                    <option value="2005">2005</option>
+                                                                    <option value="2006">2006</option>
+                                                                    <option value="2007">2007</option>
+                                                                    <option value="2008">2008</option>
+                                                                    <option value="2009">2009</option>
+                                                                    <option value="2010">2010</option>
+                                                                    <option value="2011">2011</option>
+                                                                    <option value="2012">2012</option>
+                                                                    <option value="2013">2013</option>
+                                                                    <option value="2014">2014</option>
+                                                                    <option value="2015">2015</option>
+                                                                    <option value="2016">2016</option>
+                                                                    <option value="2017">2017</option>
+                                                                    <option value="2018">2018</option>
+                                                                    <option value="2019">2019</option>
+                                                                    <option value="2020">2020</option>
+                                                                    <option value="2021">2021</option>
+                                                                    <option value="2022">2022</option>
+                                                                    <option value="2023">2023</option>
+                                                                    <option value="2024">2024</option>
+                                                                    <option value="2025">2025</option>
+                                                                    <option value="2026">2026</option>
+                                                                    <option value="2027">2027</option>
+                                                                    <option value="2028">2028</option>
+                                                                    <option value="2029">2029</option>
+                                                                    <option value="2030">2030</option>
+                                                                    <option value="2031">2031</option>
+                                                                    <option value="2032">2032</option>
+                                                                    <option value="2033">2033</option>
+                                                                    <option value="2034">2034</option>
+                                                                    <option value="2035">2035</option>
+                                                                    <option value="2036">2036</option>
+                                                                    <option value="2037">2037</option>
+                                                                    <option value="2038">2038</option>
+                                                                    <option value="2039">2039</option>
+                                                                    <option value="2040">2040</option>
+                                                                    <option value="2041">2041</option>
+                                                                    <option value="2042">2042</option>
+                                                                    <option value="2043">2043</option>
+                                                                    <option value="2044">2044</option>
+                                                                    <option value="2045">2045</option>
+                                                                    <option value="2046">2046</option>
+                                                                    <option value="2047">2047</option>
+                                                                    <option value="2048">2048</option>
+                                                                    <option value="2049">2049</option>
+                                                                    <option value="2050">2050</option>
+                                                                    <option value="2051">2051</option>
+                                                                    <option value="2052">2052</option>
+                                                                    <option value="2053">2053</option>
+                                                                    <option value="2054">2054</option>
+                                                                    <option value="2055">2055</option>
+                                                                    <option value="2056">2056</option>
+                                                                    <option value="2057">2057</option>
+                                                                    <option value="2058">2058</option>
+                                                                    <option value="2059">2059</option>
+                                                                    <option value="2060">2060</option>
+                                                                    <option value="2061">2061</option>
+                                                                    <option value="2062">2062</option>
+                                                                    <option value="2063">2063</option>
+                                                                    <option value="2064">2064</option>
+                                                                    <option value="2065">2065</option>
+                                                                    <option value="2066">2066</option>
+                                                                    <option value="2067">2067</option>
+                                                                    <option value="2068">2068</option>
+                                                                    <option value="2069">2069</option>
+                                                                    <option value="2070">2070</option>
+                                                                    <option value="2071">2071</option>
+                                                                    <option value="2072">2072</option>
+                                                                    <option value="2073">2073</option>
+                                                                    <option value="2074">2074</option>
+                                                                    <option value="2075">2075</option>
+                                                                    <option value="2076">2076</option>
+                                                                    <option value="2077">2077</option>
+                                                                    <option value="2078">2078</option>
+                                                                    <option value="2079">2079</option>
+                                                                    <option value="2080">2080</option>
+                                                                    <option value="2081">2081</option>
+                                                                    <option value="2082">2082</option>
+                                                                    <option value="2083">2083</option>
+                                                                    <option value="2084">2084</option>
+                                                                    <option value="2085">2085</option>
+                                                                    <option value="2086">2086</option>
+                                                                    <option value="2087">2087</option>
+                                                                    <option value="2088">2088</option>
+                                                                    <option value="2089">2089</option>
+                                                                    <option value="2090">2090</option>
+                                                                    <option value="2091">2091</option>
+                                                                    <option value="2092">2092</option>
+                                                                    <option value="2093">2093</option>
+                                                                    <option value="2094">2094</option>
+                                                                    <option value="2095">2095</option>
+                                                                    <option value="2096">2096</option>
+                                                                    <option value="2097">2097</option>
+                                                                    <option value="2098">2098</option>
+                                                                    <option value="2099">2099</option>
+                                                                    <option value="2100">2100</option>
+                                                                    <option value="2101">2101</option>
+                                                                    <option value="2102">2102</option>
+                                                                    <option value="2103">2103</option>
+                                                                    <option value="2104">2104</option>
+                                                                    <option value="2105">2105</option>
+                                                                    <option value="2106">2106</option>
+                                                                    <option value="2107">2107</option>
+                                                                    <option value="2108">2108</option>
+                                                                    <option value="2109">2109</option>
+                                                                    <option value="2110">2110</option>
+                                                                    <option value="2111">2111</option>
+                                                                    <option value="2112">2112</option>
+                                                                    <option value="2113">2113</option>
+                                                                    <option value="2114">2114</option>
+                                                                    <option value="2115">2115</option>
+                                                                    <option value="2116">2116</option>
+                                                                    <option value="2117">2117</option>
+                                                                    <option value="2118">2118</option>
+                                                                    <option value="2119">2119</option>
+                                                                    <option value="2120">2120</option>
+                                                                </select>
+                                                            </div>
+                                                        }
+                                                        else
+                                                        {
+                                                            <span style="color: red">전체수선 없음</span>
+                                                        }
+                                                    </td>
+                                                    <td style="vertical-align:middle">
+                                                        @if (bnn.Part_Cycle > 0)
+                                                        {
+                                                            <div class="input-group">
+                                                                <div class="input-group-prepend"><span class="input-group-text" style="font-size: 0.9em"><span class="bi-pencil-square"></span>&nbsp;부분수선년도</span></div>
+                                                                <select id="SmallSum_Unit" class="custom-select text-center" style="font-size: 0.9em; width: 100px" value="@strInsYearB" @onchange="OnYearB" required>
+                                                                    <option value="">=기간선택=</option>
+                                                                    <option value="1981">1981</option>
+                                                                    <option value="1982">1982</option>
+                                                                    <option value="1983">1983</option>
+                                                                    <option value="1984">1984</option>
+                                                                    <option value="1985">1985</option>
+                                                                    <option value="1986">1986</option>
+                                                                    <option value="1987">1987</option>
+                                                                    <option value="1988">1988</option>
+                                                                    <option value="1989">1989</option>
+                                                                    <option value="1990">1990</option>
+                                                                    <option value="1991">1991</option>
+                                                                    <option value="1992">1992</option>
+                                                                    <option value="1993">1993</option>
+                                                                    <option value="1994">1994</option>
+                                                                    <option value="1995">1995</option>
+                                                                    <option value="1996">1996</option>
+                                                                    <option value="1997">1997</option>
+                                                                    <option value="1998">1998</option>
+                                                                    <option value="1999">1999</option>
+                                                                    <option value="2000">2000</option>
+                                                                    <option value="2001">2001</option>
+                                                                    <option value="2002">2002</option>
+                                                                    <option value="2003">2003</option>
+                                                                    <option value="2004">2004</option>
+                                                                    <option value="2005">2005</option>
+                                                                    <option value="2006">2006</option>
+                                                                    <option value="2007">2007</option>
+                                                                    <option value="2008">2008</option>
+                                                                    <option value="2009">2009</option>
+                                                                    <option value="2010">2010</option>
+                                                                    <option value="2011">2011</option>
+                                                                    <option value="2012">2012</option>
+                                                                    <option value="2013">2013</option>
+                                                                    <option value="2014">2014</option>
+                                                                    <option value="2015">2015</option>
+                                                                    <option value="2016">2016</option>
+                                                                    <option value="2017">2017</option>
+                                                                    <option value="2018">2018</option>
+                                                                    <option value="2019">2019</option>
+                                                                    <option value="2020">2020</option>
+                                                                    <option value="2021">2021</option>
+                                                                    <option value="2022">2022</option>
+                                                                    <option value="2023">2023</option>
+                                                                    <option value="2024">2024</option>
+                                                                    <option value="2025">2025</option>
+                                                                    <option value="2026">2026</option>
+                                                                    <option value="2027">2027</option>
+                                                                    <option value="2028">2028</option>
+                                                                    <option value="2029">2029</option>
+                                                                    <option value="2030">2030</option>
+                                                                    <option value="2031">2031</option>
+                                                                    <option value="2032">2032</option>
+                                                                    <option value="2033">2033</option>
+                                                                    <option value="2034">2034</option>
+                                                                    <option value="2035">2035</option>
+                                                                    <option value="2036">2036</option>
+                                                                    <option value="2037">2037</option>
+                                                                    <option value="2038">2038</option>
+                                                                    <option value="2039">2039</option>
+                                                                    <option value="2040">2040</option>
+                                                                    <option value="2041">2041</option>
+                                                                    <option value="2042">2042</option>
+                                                                    <option value="2043">2043</option>
+                                                                    <option value="2044">2044</option>
+                                                                    <option value="2045">2045</option>
+                                                                    <option value="2046">2046</option>
+                                                                    <option value="2047">2047</option>
+                                                                    <option value="2048">2048</option>
+                                                                    <option value="2049">2049</option>
+                                                                    <option value="2050">2050</option>
+                                                                    <option value="2051">2051</option>
+                                                                    <option value="2052">2052</option>
+                                                                    <option value="2053">2053</option>
+                                                                    <option value="2054">2054</option>
+                                                                    <option value="2055">2055</option>
+                                                                    <option value="2056">2056</option>
+                                                                    <option value="2057">2057</option>
+                                                                    <option value="2058">2058</option>
+                                                                    <option value="2059">2059</option>
+                                                                    <option value="2060">2060</option>
+                                                                    <option value="2061">2061</option>
+                                                                    <option value="2062">2062</option>
+                                                                    <option value="2063">2063</option>
+                                                                    <option value="2064">2064</option>
+                                                                    <option value="2065">2065</option>
+                                                                    <option value="2066">2066</option>
+                                                                    <option value="2067">2067</option>
+                                                                    <option value="2068">2068</option>
+                                                                    <option value="2069">2069</option>
+                                                                    <option value="2070">2070</option>
+                                                                    <option value="2071">2071</option>
+                                                                    <option value="2072">2072</option>
+                                                                    <option value="2073">2073</option>
+                                                                    <option value="2074">2074</option>
+                                                                    <option value="2075">2075</option>
+                                                                    <option value="2076">2076</option>
+                                                                    <option value="2077">2077</option>
+                                                                    <option value="2078">2078</option>
+                                                                    <option value="2079">2079</option>
+                                                                    <option value="2080">2080</option>
+                                                                    <option value="2081">2081</option>
+                                                                    <option value="2082">2082</option>
+                                                                    <option value="2083">2083</option>
+                                                                    <option value="2084">2084</option>
+                                                                    <option value="2085">2085</option>
+                                                                    <option value="2086">2086</option>
+                                                                    <option value="2087">2087</option>
+                                                                    <option value="2088">2088</option>
+                                                                    <option value="2089">2089</option>
+                                                                    <option value="2090">2090</option>
+                                                                    <option value="2091">2091</option>
+                                                                    <option value="2092">2092</option>
+                                                                    <option value="2093">2093</option>
+                                                                    <option value="2094">2094</option>
+                                                                    <option value="2095">2095</option>
+                                                                    <option value="2096">2096</option>
+                                                                    <option value="2097">2097</option>
+                                                                    <option value="2098">2098</option>
+                                                                    <option value="2099">2099</option>
+                                                                    <option value="2100">2100</option>
+                                                                    <option value="2101">2101</option>
+                                                                    <option value="2102">2102</option>
+                                                                    <option value="2103">2103</option>
+                                                                    <option value="2104">2104</option>
+                                                                    <option value="2105">2105</option>
+                                                                    <option value="2106">2106</option>
+                                                                    <option value="2107">2107</option>
+                                                                    <option value="2108">2108</option>
+                                                                    <option value="2109">2109</option>
+                                                                    <option value="2110">2110</option>
+                                                                    <option value="2111">2111</option>
+                                                                    <option value="2112">2112</option>
+                                                                    <option value="2113">2113</option>
+                                                                    <option value="2114">2114</option>
+                                                                    <option value="2115">2115</option>
+                                                                    <option value="2116">2116</option>
+                                                                    <option value="2117">2117</option>
+                                                                    <option value="2118">2118</option>
+                                                                    <option value="2119">2119</option>
+                                                                    <option value="2120">2120</option>
+                                                                </select>
+                                                            </div>
+                                                        }
+                                                        else
+                                                        {
+                                                            <span style="color: red">부분수선 없음</span>
+                                                        }
+
+                                                    </td>
+
+                                                </tr>
+                                            </table>
+
+                                        </td>
+                                    </tr>
+                                    @*<tr>
+                                            <td class="text-center" style="vertical-align: middle">검토 내용 <span style="color: red" class="bi-star"></span></td>
+                                            <td>
+                                                <table class="table-borderless table-sm" width="100%">
+                                                    <tr>
+                                                        <td>
+                                                            수선항목 검토 : @rce.Repair_Article_Review
+                                                        </td>
+                                                        <td>
+                                                            수선주기 검토 : @rce.Repair_Cycle_Review
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>
+                                                            수선수선율 검토 : @rce.Repair_Part_Rate_Review
+                                                        </td>
+                                                        <td>
+                                                            수선금액 검토 : @rce.Repair_Cost_Review
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>
+                                                            비 고 : @rce.Review_Content
+                                                        </td>
+                                                    </tr>
+                                                </table>
+
+
+                                            </td>
+                                        </tr>*@
+                                </table>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary btn-sm" @onclick="btnSave">저장</button> &nbsp; &nbsp; &nbsp;
+                    <button type="button" class="btn btn-secondary btn-sm" @onclick="btnClose">닫기</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-backdrop show"></div>
+}
