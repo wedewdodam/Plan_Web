@@ -22,5 +22,11 @@ namespace Plan_Lib
         Task<Bylaw_Entity> GetDetail_Bylaw(int Bylaw_Code);
 
         Task<int> Bylaw_Revision(string Apt_Code);
+
+        /// <summary>
+        /// 관리규약 상세보기 불러오기
+        /// </summary>
+        Task<Bylaw_Entity> Details_Bylaw(string Apt_Code);
+
     }
 }

@@ -710,7 +710,7 @@ namespace Plan_Blazor_Lib.Price
                 var aa = await ctx.QueryAsync<Cost_Using_Plan_Entity>("Select * From Cost_Using_Plan Where Apt_Code = @Apt_Code And Repair_Plan_Code = @Repair_Plan_Code Order By Cost_Use_Plan_Code Desc", new { Apt_Code, Repair_Plan_Code }, commandType: CommandType.Text);
                 return aa.ToList();
             }
-            //return this.dn.ctx.Query<Cost_Using_Plan_Entity>("Select * From Cost_Using_Plan Where Apt_Code = @Apt_Code And Repair_Plan_Code = @Repair_Plan_Code Order By Cost_Use_Plan_Code Desc", new { Apt_Code, Repair_Plan_Code }).ToList();
+            
         }
 
         /// <summary>
@@ -720,10 +720,23 @@ namespace Plan_Blazor_Lib.Price
         {
             using (var ctx = new SqlConnection(_db.GetConnectionString("Khmais_db_Connection")))
             {
-                var aa = await ctx.QueryAsync<Cost_Using_Plan_Entity>("Select * From Cost_Using_Plan Where Apt_Code = @Apt_Code And Repair_Plan_Code = @Repair_Plan_Code And Plan_Year = @Plan_Year Order By Cost_Use_Plan_Code Desc", new { Apt_Code, Repair_Plan_Code, Plan_Year }, commandType: CommandType.Text);
+                var aa = await ctx.QueryAsync<Cost_Using_Plan_Entity>("Select Cost_Use_Plan_Code, Apt_Code, Repair_Plan_Code, Repair_Article_Code, Plan_Year, Repair_Name, Repair_Position, Repair_Range, Repair_Cost_Sum, Repair_Detail, Design_Drawing, Repair_Method, Start_Date, End_Date, Tender_Method_Process, PostDate, PostIP, Staff_Code From Cost_Using_Plan Where Apt_Code = @Apt_Code And Repair_Plan_Code = @Repair_Plan_Code And Plan_Year = @Plan_Year Order By Cost_Use_Plan_Code Desc", new { Apt_Code, Repair_Plan_Code, Plan_Year }, commandType: CommandType.Text);
                 return aa.ToList();
             }
-            //return this.dn.ctx.Query<Cost_Using_Plan_Entity>("Select * From Cost_Using_Plan Where Apt_Code = @Apt_Code And Repair_Plan_Code = @Repair_Plan_Code And Plan_Year = @Plan_Year Order By Cost_Use_Plan_Code Desc", new { Apt_Code, Repair_Plan_Code, Plan_Year }).ToList();
+            
+        }
+
+        /// <summary>
+        /// 장충금 사용계획서 정보 리스트
+        /// </summary>
+        public async Task<List<Cost_Using_Plan_Entity>> GetList_Year(string Apt_Code, string Plan_Year)
+        {
+            using (var ctx = new SqlConnection(_db.GetConnectionString("Khmais_db_Connection")))
+            {
+                var aa = await ctx.QueryAsync<Cost_Using_Plan_Entity>("Select Cost_Use_Plan_Code, Apt_Code, Repair_Plan_Code, Repair_Article_Code, Plan_Year, Repair_Name, Repair_Position, Repair_Range, Repair_Cost_Sum, Repair_Detail, Design_Drawing, Repair_Method, Start_Date, End_Date, Tender_Method_Process, PostDate, PostIP, Staff_Code From Cost_Using_Plan Where Apt_Code = @Apt_Code And Plan_Year = @Plan_Year Order By Cost_Use_Plan_Code Desc", new { Apt_Code, Plan_Year }, commandType: CommandType.Text);
+                return aa.ToList();
+            }
+
         }
 
         /// <summary>

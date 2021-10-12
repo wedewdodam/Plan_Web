@@ -81,6 +81,10 @@ namespace Plan_Web.Pages.Repair_Article
             }
         }
 
+        /// <summary>
+        /// 입력된 정보 불러오기
+        /// </summary>
+        /// <returns></returns>
         private async Task DetailsView()
         {
             rpn = await repair_Plan_Lib.Detail_Repair_Plan(Apt_Code, Aid);

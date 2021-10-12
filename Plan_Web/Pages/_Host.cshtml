@@ -37,7 +37,7 @@
     </div>
 
     <script src="_framework/blazor.server.js"></script>
-
+    <script src="_content/Microsoft.AspNetCore.ProtectedBrowserStorage/protectedBrowserStorage.js"></script>
     <script src="/lib/jquery.js"></script>
     <script src="/lib/dist/js/bootstrap.js"></script>
     <script src="/lib/jquery-ui.js"></script>
@@ -45,7 +45,11 @@
     @*[3] _Host에 CKEditor CDN 적용*@
     <script src="https://cdn.ckeditor.com/4.14.1/standard/ckeditor.js"></script>
     <script src="~/js/CkEditorFour.js"></script>
-
+    <script>
+        Blazor.defaultReconnectionHandler._reconnectCallback = function (d) {
+            document.location.reload();
+        }
+    </script>
     <script type="text/javascript">
         function setModalDraggableAndResizable() {
             $('.modal-content').resizable({

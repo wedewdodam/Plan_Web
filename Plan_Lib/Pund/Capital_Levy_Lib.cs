@@ -66,6 +66,20 @@ namespace Plan_Lib.Pund
         }
 
         /// <summary>
+        /// 단가 구하기 (숫자)
+        /// </summary>
+        /// <param name="Apt_Code"></param>
+        /// <param name="Repair_Plan_Code"></param>
+        /// <param name="Levy_Rate"></param>
+        /// <param name="Levy_Period"></param>
+        /// <returns></returns>
+        public Unit_Price_Entity Detail_Unit_Price_Up(string Apt_Code, string Repair_Plan_Code, double Levy_Rate, int Levy_Period)
+        {
+            using var db = new SqlConnection(_db.GetConnectionString("Khmais_db_Connection"));
+            return db.QuerySingleOrDefault<Unit_Price_Entity>("Unt_Price_New", new { Apt_Code, Repair_Plan_Code, Levy_Rate, Levy_Period }, commandType: System.Data.CommandType.StoredProcedure);
+        }
+
+        /// <summary>
         ///  단가 텍스트(문자)
         /// </summary>
         public async Task<Unit_Price_string_Entity> Report_Plan_Cost(string Apt_Code, string Repair_Plan_Code)
@@ -164,11 +178,14 @@ namespace Plan_Lib.Pund
             //return this.dn.ctx.Query<Capital_Levy_Entity>("Select distinct Levy_Year From Capital_Levy Where Apt_Code = @Apt_Code Order by Levy_Year Asc", new { Apt_Code }).ToList();
         }
 
-        //public List<string> Getlist_Adjustment_Year(string Apt_Code)
-        //{
-        //    var sql = "Select distinct Adjustment_Year From Repair_Plan Where Apt_Code = @Apt_Code";
-        //    return this.ctx.Query<string>(sql, new { Apt_Code }).ToList();
-        //}
+        /// <summary>
+        /// 년간합계(월 기준)
+        /// </summary>
+        public double _Year_Month_Sum(string Apt_Code, int Levy_Year, int Levy_Month)
+        {
+            using SqlConnection db = new SqlConnection(_db.GetConnectionString("Khmais_db_Connection"));
+            return db.QuerySingleOrDefault<double>("Select isNull(Sum(Levy_Month_Sum), 0) From Capital_Levy Where Apt_Code = @Apt_Code And Levy_Year = @Levy_Year And Levy_Month <= @Levy_Month", new { Apt_Code, Levy_Year, Levy_Month }, commandType: CommandType.Text);
+        }
 
         /// <summary>
         /// 부과금액 년간 합계
@@ -202,10 +219,8 @@ namespace Plan_Lib.Pund
         /// Use_Year = 기준년도
         public async Task<double> Get_Apt_Sum(string Apt_Code, string Use_Year)
         {
-            using (var ctx = new SqlConnection(_db.GetConnectionString("Khmais_db_Connection")))
-            {
-                return await ctx.QuerySingleOrDefaultAsync<double>("Select isNull(Sum(Levy_Month_Sum), 0) From Capital_Levy Where Apt_Code = @Apt_Code And Levy_Year > @Use_Year ", new { Apt_Code, Use_Year }, commandType: CommandType.Text);
-            }
+            using SqlConnection ctx = new SqlConnection(_db.GetConnectionString("Khmais_db_Connection"));
+            return await ctx.QuerySingleOrDefaultAsync<double>("Select isNull(Sum(Levy_Month_Sum), 0) From Capital_Levy Where Apt_Code = @Apt_Code And Levy_Year > @Use_Year ", new { Apt_Code, Use_Year }, commandType: CommandType.Text);
             //return this.dn.ctx.Query<double>("Select isNull(Sum(Levy_Month_Sum), 0) From Capital_Levy Where Apt_Code = @Apt_Code And Levy_Year > @Use_Year ", new { Apt_Code, Use_Year });
         }
 
@@ -397,6 +412,17 @@ namespace Plan_Lib.Pund
         }
 
         /// <summary>
+        /// 부과율 합계
+        /// </summary>
+        public async Task<int> Levy_Period_Total_New(string Apt_Code, int Bylaw_Code)
+        {
+            using (var ctx = new SqlConnection(_db.GetConnectionString("Khmais_db_Connection")))
+            {
+                return await ctx.QuerySingleOrDefaultAsync<int>("Select isNull(Sum(Levy_Period), 0) From Levy_Rate Where  Apt_Code = @Apt_Code And Bylaw_Code = @Bylaw_Code", new { Apt_Code, Bylaw_Code }, commandType: CommandType.Text);
+            }
+        }
+
+        /// <summary>
         /// 해당 공동주택의 입력된 관리규약 상의 요율 중에 입력된 마지막 구간 말의 년도
         /// </summary>
         /// <param name="Apt_Code"></param>
@@ -520,7 +546,7 @@ namespace Plan_Lib.Pund
         {
             using (var ctx = new SqlConnection(_db.GetConnectionString("Khmais_db_Connection")))
             {
-                var aa = await ctx.QueryAsync<Levy_Rate_Entity>("Select a.Levy_Rate_Code, a.Bylaw_Code, a.Levy_Start_Year, a.Levy_End_Year, a.Levy_Period, a.Levy_Period_New, a.Levy_Rate, a.Levy_Rate_Accumulate, b.Supply_Area, b.Area_Family_Num From Levy_Rate As a Join Dong_Composition As b on a.Apt_Code = b.Apt_Code Where a.Bylaw_Code = @Bylaw_Code And a.Apt_Code = @Apt_Code", new { Apt_Code, Bylaw_Code }, commandType: CommandType.Text);
+                var aa = await ctx.QueryAsync<Levy_Rate_Entity>("Select a.Levy_Rate_Code, a.Bylaw_Code, a.Levy_Start_Year, a.Levy_Start_Month, a.Levy_End_Year, a.Levy_End_Month, a.Levy_Period, a.Levy_Period_New, a.Levy_Rate, a.Levy_Rate_Accumulate, b.Supply_Area, b.Area_Family_Num From Levy_Rate As a Join Dong_Composition As b on a.Apt_Code = b.Apt_Code Where a.Bylaw_Code = @Bylaw_Code And a.Apt_Code = @Apt_Code", new { Apt_Code, Bylaw_Code }, commandType: CommandType.Text);
                 return aa.ToList();
             }
             //return this.dn.ctx.Query<Levy_Rate_Entity>("Select a.Levy_Rate_Code, a.Bylaw_Code, a.Levy_Start_Year, a.Levy_End_Year, a.Levy_Period, a.Levy_Period_New, a.Levy_Rate, a.Levy_Rate_Accumulate, b.Supply_Area, b.Area_Family_Num From Levy_Rate As a Join Dong_Composition As b on a.Apt_Code = b.Apt_Code Where a.Bylaw_Code = @Bylaw_Code And a.Apt_Code = @Apt_Code", new { Apt_Code, Bylaw_Code }).ToList();
@@ -534,8 +560,18 @@ namespace Plan_Lib.Pund
             using (var ctx = new SqlConnection(_db.GetConnectionString("Khmais_db_Connection")))
             {
                 return await ctx.QuerySingleOrDefaultAsync<Levy_Rate_Entity>("Select Top 1 Levy_Rate_Code, Apt_Code, Bylaw_Code, Bylaw_Date, Levy_Start_Date, Levy_Start_Year, Levy_Start_Month, Levy_Start_Day, Levy_End_Date, Levy_End_Year, Levy_End_Month, Levy_End_Day, Levy_Period, Levy_Period_New, Levy_Rate, Levy_Rate_Accumulate, PostDate From Levy_Rate Where Levy_Start_Year <= @Year And Levy_Start_Month > 1 And Levy_End_Year <= @Year And Levy_End_Month < 12 and Apt_Code = @Apt_Code And Bylaw_Code = @Bylaw_Code Order by Levy_Rate_Code Desc", new { Apt_Code, Bylaw_Code, Year }, commandType: CommandType.Text);
+            }            
+        }
+
+        /// <summary>
+        /// 해당 단지의 마지막 적립요율 정보 가져오기
+        /// </summary>
+        public async Task<Levy_Rate_Entity> Detail_New(string Apt_Code, string Bylaw_Code)
+        {
+            using (var ctx = new SqlConnection(_db.GetConnectionString("Khmais_db_Connection")))
+            {
+                return await ctx.QuerySingleOrDefaultAsync<Levy_Rate_Entity>("Select Top 1 Levy_Rate_Code, Apt_Code, Bylaw_Code, Bylaw_Date, Levy_Start_Date, Levy_Start_Year, Levy_Start_Month, Levy_Start_Day, Levy_End_Date, Levy_End_Year, Levy_End_Month, Levy_End_Day, Levy_Period, Levy_Period_New, Levy_Rate, Levy_Rate_Accumulate, PostDate From Levy_Rate Where Apt_Code = @Apt_Code And Bylaw_Code = @Bylaw_Code Order by Levy_Rate_Code Desc", new { Apt_Code, Bylaw_Code }, commandType: CommandType.Text);
             }
-            //return this.dn.ctx.Query<Levy_Rate_Entity>("Select Top 1 Levy_Rate_Code, Apt_Code, Bylaw_Code, Bylaw_Date, Levy_Start_Date, Levy_Start_Year, Levy_Start_Month, Levy_Start_Day, Levy_End_Date, Levy_End_Year, Levy_End_Month, Levy_End_Day, Levy_Period, Levy_Period_New, Levy_Rate, Levy_Rate_Accumulate, PostDate From Levy_Rate Where Levy_Start_Year <= @Year And Levy_Start_Month > 1 And Levy_End_Year <= @Year And Levy_End_Month < 12 and Apt_Code = @Apt_Code And Bylaw_Code = @Bylaw_Code Order by Levy_Rate_Code Desc", new { Apt_Code, Bylaw_Code, Year });
         }
 
         /// <summary>
@@ -561,25 +597,30 @@ namespace Plan_Lib.Pund
         {
             using (var ctx = new SqlConnection(_db.GetConnectionString("Khmais_db_Connection")))
             {
-                return await ctx.QuerySingleOrDefaultAsync<Levy_Rate_Entity>("Select Top 1 Levy_Rate_Code, Apt_Code, Bylaw_Code, Bylaw_Date, Levy_Start_Date, Levy_Start_Year, Levy_Start_Month, Levy_Start_Day, Levy_End_Date, Levy_End_Year, Levy_End_Month, Levy_End_Day, Levy_Period, Levy_Period_New, Levy_Rate, Levy_Rate_Accumulate, PostDate From Levy_Rate Where Levy_Start_Year <= @Year And Levy_Start_Month > 1 And Levy_End_Year >= @Year And Levy_End_Month <= 12 and Apt_Code = @Apt_Code And Bylaw_Code = @Bylaw_Code Order by Levy_Rate_Code Desc", new { Apt_Code, Bylaw_Code, Year }, commandType: CommandType.Text);
+                return await ctx.QuerySingleOrDefaultAsync<Levy_Rate_Entity>("Select Top 1 Levy_Rate_Code, Apt_Code, Bylaw_Code, Bylaw_Date, Levy_Start_Date, Levy_Start_Year, Levy_Start_Month, Levy_Start_Day, Levy_End_Date, Levy_End_Year, Levy_End_Month, Levy_End_Day, Levy_Period, Levy_Period_New, Levy_Rate, Levy_Rate_Accumulate, PostDate From Levy_Rate Where Levy_Start_Year <= @Year And Levy_Start_Month >= 1 And Levy_End_Year >= @Year And Levy_End_Month <= 12 and Apt_Code = @Apt_Code And Bylaw_Code = @Bylaw_Code Order by Levy_Rate_Code Desc", new { Apt_Code, Bylaw_Code, Year }, commandType: CommandType.Text);
             }
-            //return this.dn.ctx.Query<Levy_Rate_Entity>("Select Top 1 Levy_Rate_Code, Apt_Code, Bylaw_Code, Bylaw_Date, Levy_Start_Date, Levy_Start_Year, Levy_Start_Month, Levy_Start_Day, Levy_End_Date, Levy_End_Year, Levy_End_Month, Levy_End_Day, Levy_Period, Levy_Period_New, Levy_Rate, Levy_Rate_Accumulate, PostDate From Levy_Rate Where Levy_Start_Year <= @Year And Levy_Start_Month > 1 And Levy_End_Year >= @Year And Levy_End_Month <= 12 and Apt_Code = @Apt_Code And Bylaw_Code = @Bylaw_Code Order by Levy_Rate_Code Desc", new { Apt_Code, Bylaw_Code, Year });
+        }        
+
+        /// <summary>
+        /// 해당 단지에 해당년도 적립요율 정보 가져오기(후)
+        /// </summary>
+        public async Task<Levy_Rate_Entity> Sum_Month_Levy(string Apt_Code, string Bylaw_Code, int Year, int Month)
+        {
+            using (var ctx = new SqlConnection(_db.GetConnectionString("Khmais_db_Connection")))
+            {
+                return await ctx.QuerySingleOrDefaultAsync<Levy_Rate_Entity>("Select  From Levy_Rate Where Levy_Start_Year <= @Year And Levy_Start_Month >= 1 And Levy_End_Year >= @Year And Levy_End_Month <= @Month and Apt_Code = @Apt_Code And Bylaw_Code = @Bylaw_Code Order by Levy_Rate_Code Desc", new { Apt_Code, Bylaw_Code, Year, Month }, commandType: CommandType.Text);
+            }
         }
 
         /// <summary>
         /// 현재 년도 적립율 정보 존재 여부
         /// </summary>
-        /// <param name="Apt_Code"></param>
-        /// <param name="Bylaw_Code"></param>
-        /// <param name="Year"></param>
-        /// <returns></returns>
         public async Task<int> Detail_Year_Levy_Next_Be(string Apt_Code, string Bylaw_Code, int Year)
         {
             using (var ctx = new SqlConnection(_db.GetConnectionString("Khmais_db_Connection")))
             {
                 return await ctx.QuerySingleOrDefaultAsync<int>("Select Count(*) From Levy_Rate Where Levy_Start_Year <= @Year And Levy_Start_Month > 1 And Levy_End_Year >= @Year And Levy_End_Month <= 12 and Apt_Code = @Apt_Code And Bylaw_Code = @Bylaw_Code", new { Apt_Code, Bylaw_Code, Year }, commandType: CommandType.Text);
             }
-            //return this.dn.ctx.Query<int>("Select Count(*) From Levy_Rate Where Levy_Start_Year <= @Year And Levy_Start_Month > 1 And Levy_End_Year >= @Year And Levy_End_Month <= 12 and Apt_Code = @Apt_Code And Bylaw_Code = @Bylaw_Code", new { Apt_Code, Bylaw_Code, Year });
         }
 
         /// <summary>
@@ -592,7 +633,6 @@ namespace Plan_Lib.Pund
                 var aa = await ctx.QueryAsync<Levy_Rate_Entity>("Rate_Levy", new { Top_Count }, commandType: System.Data.CommandType.StoredProcedure);
                 return aa.ToList();
             }
-            //return this.dn.ctx.Query<Levy_Rate_Entity>("Rate_Levy", new { Top_Count }, commandType: System.Data.CommandType.StoredProcedure).ToList();
         }
 
         /// <summary>
@@ -604,8 +644,6 @@ namespace Plan_Lib.Pund
             {
                 return await ctx.QuerySingleOrDefaultAsync<int>("Select Count(*) From Levy_Rate Where Levy_Start_Year <= @Now_Year And Levy_End_Year >= @Now_Year And Apt_Code = @Apt_Code", new { Apt_Code, Now_Year }, commandType: CommandType.Text);
             }
-
-            //return this.dn.ctx.Query<int>("Select Count(*) From Levy_Rate Where Levy_Start_Year <= @Now_Year And Levy_End_Year >= @Now_Year And Apt_Code = @Apt_Code", new { Apt_Code, Now_Year });
         }
 
         /// <summary>
@@ -647,7 +685,33 @@ namespace Plan_Lib.Pund
                 var aa = await ctx.QueryAsync<Levy_Rate_Entity>("Report_Cost_Saving_New", new { Apt_Code, Repair_Plan_Code, Levy_Rate_Code, Levy_Rate, Levy_Period }, commandType: System.Data.CommandType.StoredProcedure);
                 return aa.ToList();
             }
-            //return this.dn.ctx.Query<Levy_Rate_Entity>("Report_Cost_Saving_New", new { Apt_Code, Repair_Plan_Code, Levy_Rate_Code, Levy_Rate, Levy_Period }, commandType: System.Data.CommandType.StoredProcedure).ToList();
+            
+        }
+
+
+        /// <summary>
+        /// 해당 단지 부과율에 따른 면적별 부과금액 정보 가져 오기(단일)
+        /// </summary>
+        public async Task<Levy_Rate_Entity> Details_Rate_Levy_Cost_Now(string Apt_Code, string Repair_Plan_Code, string Levy_Rate_Code, double Levy_Rate, int Levy_Period)
+        {
+            using (var ctx = new SqlConnection(_db.GetConnectionString("Khmais_db_Connection")))
+            {
+                return await ctx.QuerySingleOrDefaultAsync<Levy_Rate_Entity>("Report_Cost_Saving_Now", new { Apt_Code, Repair_Plan_Code, Levy_Rate_Code, Levy_Rate, Levy_Period }, commandType: System.Data.CommandType.StoredProcedure);
+               
+            }
+
+        }
+        /// <summary>
+        /// 해당 단지 부과율에 따른 면적별 부과금액 정보 가져 오기
+        /// </summary>
+        public List<Levy_Rate_Entity> GetList_Rate_Levy_Cost_A(string Apt_Code, string Repair_Plan_Code, string Levy_Rate_Code, double Levy_Rate, int Levy_Period)
+        {
+            using (var ctx = new SqlConnection(_db.GetConnectionString("Khmais_db_Connection")))
+            {
+                var aa = ctx.Query<Levy_Rate_Entity>("Report_Cost_Saving_New", new { Apt_Code, Repair_Plan_Code, Levy_Rate_Code, Levy_Rate, Levy_Period }, commandType: System.Data.CommandType.StoredProcedure);
+                return aa.ToList();
+            }
+
         }
 
         /// <summary>
@@ -702,11 +766,18 @@ namespace Plan_Lib.Pund
         /// <returns></returns>
         public async Task<Levy_Rate_Entity> Detail_Levy_Rate_Code(string Levy_Rate_Code)
         {
-            using (var ctx = new SqlConnection(_db.GetConnectionString("Khmais_db_Connection")))
-            {
-                return await ctx.QuerySingleOrDefaultAsync<Levy_Rate_Entity>("Select * From Levy_Rate Where Levy_Rate_Code = @Levy_Rate_Code", new { Levy_Rate_Code }, commandType: CommandType.Text);
-            }
+            using var ctx = new SqlConnection(_db.GetConnectionString("Khmais_db_Connection"));
+            return await ctx.QuerySingleOrDefaultAsync<Levy_Rate_Entity>("Select * From Levy_Rate Where Levy_Rate_Code = @Levy_Rate_Code", new { Levy_Rate_Code }, commandType: CommandType.Text);
             //return this.dn.ctx.Query<Levy_Rate_Entity>("Select * From Levy_Rate Where Levy_Rate_Code = @Levy_Rate_Code", new { Levy_Rate_Code });
+        }
+
+        /// <summary>
+        /// 부과개월 수 합계
+        /// </summary>
+        public async Task<int> Levy_Month(string Apt_Code, int ByLaw_Code)
+        {
+            using var db = new SqlConnection(_db.GetConnectionString("Khmais_db_Connection"));
+            return await db.QuerySingleOrDefaultAsync<int>("Select isnull(Sum(Levy_Rate), 0) From Levy_Rate Where Apt_Code = @Apt_Code And ByLaw_Code = @ByLaw_Code", new { Apt_Code, ByLaw_Code });
         }
     }
 
@@ -797,7 +868,7 @@ namespace Plan_Lib.Pund
         {
             using (var ctx = new SqlConnection(_db.GetConnectionString("Khmais_db_Connection")))
             {
-                return await ctx.QuerySingleOrDefaultAsync<Repair_Capital_Entity>("Select Balance_Capital, Levy_Capital, Use_Cost From Repair_Capital Where Apt_Code = @Apt_Code", new { Apt_Code }, commandType: CommandType.Text);
+                return await ctx.QuerySingleOrDefaultAsync<Repair_Capital_Entity>("Select Top 1 Repair_Capital_Code, Balance_Capital, Levy_Capital, Use_Cost, PostDate From Repair_Capital Where Apt_Code = @Apt_Code Order By Repair_Capital_Code Desc", new { Apt_Code }, commandType: CommandType.Text);
             }
             //return this.dn.ctx.Query<Repair_Capital_Entity>("Select Balance_Capital, Levy_Capital, Use_Cost From Repair_Capital Where Apt_Code = @Apt_Code", new { Apt_Code });
         }
@@ -1008,24 +1079,5 @@ namespace Plan_Lib.Pund
         }
     }
 
-    // 장기수선충당금 사용계획서 클래스
-    public class Capital_Use_Plan_Lib
-    {
-        private readonly IConfiguration _db;
-
-        public Capital_Use_Plan_Lib(IConfiguration configuration)
-        {
-            this._db = configuration;
-        }
-
-        public async Task<Capital_Use_Plan_Entity> Add(Capital_Use_Plan_Entity cp)
-        {
-            var sql = "Insert Into Capital_Use_Plan () Values ()";
-            using (var ctx = new SqlConnection(_db.GetConnectionString("Khmais_db_Connection")))
-            {
-                await ctx.ExecuteAsync(sql, cp);
-                return cp;
-            }
-        }
-    }
+    
 }

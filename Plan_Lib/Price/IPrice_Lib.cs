@@ -306,7 +306,10 @@ namespace Plan_Blazor_Lib.Price
         /// </summary>
         Task<Cost_Using_Plan_Entity> Detail_Code(string Cost_Use_Plan_Code);
 
-
+        /// <summary>
+        /// 장충금 사용계획서 정보 리스트
+        /// </summary>
+        Task<List<Cost_Using_Plan_Entity>> GetList_Year(string Apt_Code, string Plan_Year);
     }
 
 

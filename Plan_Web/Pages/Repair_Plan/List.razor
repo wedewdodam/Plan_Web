@@ -1,88 +1,88 @@
 ﻿@page "/Repair_Plan/List"
-@inject Blazored.LocalStorage.ILocalStorageService session
-
-    <div class="card">
-        <div class="card-header">
-            <table width="100%">
-                <tr>
-                    <td>
-                        <span style="font-size: 1em"> <span class="bi-house-fill"></span>&nbsp;<span>장기수선계획 목록 <span class="bi"> </span></span></span>
-                    </td>
-                    <td>
-                    </td>
-                    <td align="right">
-                    </td>
+@using Microsoft.AspNetCore.ProtectedBrowserStorage
+@inject ProtectedSessionStorage ProtectedSessionStore
+<div class="card">
+    <div class="card-header">
+        <table width="100%">
+            <tr>
+                <td>
+                    <span style="font-size: 1em"> <span class="bi-house-fill"></span>&nbsp;<span>장기수선계획 목록 <span class="bi"> </span></span></span>
+                </td>
+                <td>
+                </td>
+                <td align="right">
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div class="card-body">
+        <table class="table" style="font-size: 0.9em">
+            <thead>
+                <tr style="background-color: ghostwhite">
+                    <th class="text-center">조정구분</th>
+                    <th class="text-center">검토일자</th>
+                    <th class="text-center">조정일자</th>
+                    <th class="text-center">이전 조정일</th>
+                    <th class="text-center">수선항목 수</th>
+                    @*<th class="text-center">계획금액</th>*@
+                    <th class="text-center">계획기간</th>
+                    <th class="text-center">완료여부</th>
+                    <th class="text-center">이동</th>
                 </tr>
-            </table>
-        </div>
-        <div class="card-body">
-            <table class="table" style="font-size: 0.9em">
-                <thead>
-                    <tr style="background-color: ghostwhite">
-                        <th class="text-center">조정구분</th>
-                        <th class="text-center">검토일자</th>
-                        <th class="text-center">조정일자</th>
-                        <th class="text-center">이전 조정일</th>
-                        <th class="text-center">수선항목 수</th>
-                        <th class="text-center">계획금액</th>
-                        <th class="text-center">계획기간</th>
-                        <th class="text-center">완료여부</th>
-                        <th class="text-center">이동</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var st in rpe)
-                    {
-                        <tr>
-                            <td class="text-center" style="vertical-align: middle">
-                                @st.Adjustment_Division
-                            </td>
-                            <td class="text-center" style="vertical-align: middle">
-                                @if (st.Plan_Review_Code == "없음" || st.Plan_Review_Code == "" || st.Plan_Review_Code == null)
-                                {
-                                    <span>없음</span>
-                                }
-                                else
-                                {
-                                    @st.Plan_Review_Date.ToShortDateString();
-                                }
-                            </td>
-                            <td class="text-center" style="vertical-align: middle">
-                                @st.Adjustment_Date.ToShortDateString()
-                            </td>
-                            <td class="text-center" style="vertical-align: middle">
-                                @st.LastAdjustment_Date.ToShortDateString()
-                            </td>
-                            <td class="text-center" style="vertical-align: middle">
-                                <span>전체 : </span> @Article_All(st.Repair_Plan_Code) <span>개</span><span class="bi-chevron-double-right"></span><span>부분 : </span> @Article_Part(st.Repair_Plan_Code) <span>개</span>
-                            </td>
-                            <td class="text-center" style="vertical-align: middle">
-                                <span>전체 : </span> @Cost_All(st.Repair_Plan_Code) <span>원</span><span class="bi-chevron-double-right"></span><span>부분 : </span> @Cost_Part(st.Repair_Plan_Code) <span>원</span>
-                            </td>
-                            <td class="text-center" style="vertical-align: middle">
-                                @st.Plan_Period <span>년간</span>
-                            </td>
-                            <td class="text-center" style="vertical-align: middle">
-                                @if (st.Complete == "B")
-                                {
-                                    <span>완료</span>
-                                }
-                                else
-                                {
-                                    <span>미완료</span>
-                                }
-                            </td>
-                            <td class="text-center" style="vertical-align: middle">
-                                <button @onclick="() => OnSelect(st.Repair_Plan_Code)" class="btn btn-link btn-sm">선택</button>
-                            </td>
+            </thead>
+            <tbody>
+                @foreach (var st in rpe)
+                {
+                    <tr>
+                        <td class="text-center" style="vertical-align: middle" @onclick="() => OnSelect(st.Repair_Plan_Code)">
+                            @st.Adjustment_Division
+                        </td>
+                        <td class="text-center" style="vertical-align: middle" @onclick="() => OnSelect(st.Repair_Plan_Code)">
+                            @if (st.Plan_Review_Code == "없음" || st.Plan_Review_Code == "" || st.Plan_Review_Code == null)
+                            {
+                                <span>없음</span>
+                            }
+                            else
+                            {
+                                @st.Plan_Review_Date.ToShortDateString();
+                            }
+                        </td>
+                        <td class="text-center" style="vertical-align: middle" @onclick="() => OnSelect(st.Repair_Plan_Code)">
+                            @st.Adjustment_Date.ToShortDateString()
+                        </td>
+                        <td class="text-center" style="vertical-align: middle" @onclick="() => OnSelect(st.Repair_Plan_Code)">
+                            @st.LastAdjustment_Date.ToShortDateString()
+                        </td>
+                        <td class="text-center" style="vertical-align: middle" @onclick="() => OnSelect(st.Repair_Plan_Code)">
+                            <span>전체 : </span> @Article_All(st.Repair_Plan_Code) <span>개</span><span class="bi-chevron-double-right"></span><span>부분 : </span> @Article_Part(st.Repair_Plan_Code) <span>개</span>
+                        </td>
+                        @*<td class="text-center" style="vertical-align: middle">
+                            <span>전체 : </span> @Cost_All(st.Repair_Plan_Code) <span>원</span><span class="bi-chevron-double-right"></span><span>부분 : </span> @Cost_Part(st.Repair_Plan_Code) <span>원</span>
+                        </td>*@
+                        <td class="text-center" style="vertical-align: middle" @onclick="() => OnSelect(st.Repair_Plan_Code)">
+                            @st.Plan_Period <span>년간</span>
+                        </td>
+                        <td class="text-center" style="vertical-align: middle" @onclick="() => OnSelect(st.Repair_Plan_Code)">
+                            @if (st.Complete == "B")
+                            {
+                                <span>완료</span>
+                            }
+                            else
+                            {
+                                <span>미완료</span>
+                            }
+                        </td>
+                        <td class="text-center" style="vertical-align: middle">
+                            <button @onclick="() => OnSelect(st.Repair_Plan_Code)" class="btn btn-link btn-sm">선택</button>
+                        </td>
 
-                        </tr>
-                    }
-                </tbody>
-            </table>
-            <div class="col-md-12" style="margin-bottom: -20px">
-                <DulPager.DulPagerComponent Model="pager" PageIndexChanged="PageIndexChanged"></DulPager.DulPagerComponent>
-            </div>
+                    </tr>
+                }
+            </tbody>
+        </table>
+        <div class="col-md-12" style="margin-bottom: -20px">
+            <DulPager.DulPagerComponent Model="pager" PageIndexChanged="PageIndexChanged"></DulPager.DulPagerComponent>
         </div>
     </div>
+</div>
 

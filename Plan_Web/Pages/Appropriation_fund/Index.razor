@@ -1,6 +1,6 @@
 ﻿@page "/Appropriation_fund/"
-@inject Blazored.LocalStorage.ILocalStorageService session
-
+@using Microsoft.AspNetCore.ProtectedBrowserStorage
+@inject ProtectedSessionStorage ProtectedSessionStore
 <div class="card">
     <div class="card-header">
         <table style="width: 100%; font-size: 1.1em">
@@ -17,7 +17,15 @@
 
     </div>
     <div class="card-body">
-        <div style="font-size: 1em; font-weight: bold"> <span class="bi-clipboard-data"></span> 장기수선충당금 적립 및 사용 현황 &nbsp; &nbsp;&nbsp; &nbsp; <span style="color: red; font-size: 0.9em"> 초기화 잔액, 사용액 기준년도 : </span> </div>
+        <div style="font-size: 1em; font-weight: bold">
+            <span class="bi-clipboard-data"></span> 장기수선충당금 적립 및 사용 현황 &nbsp; &nbsp;&nbsp; &nbsp; <span style="color: red; font-size: 0.9em">
+                초기화 잔액, 사용액 기준년도 :
+                @if (capital_en != null)
+                {
+                    @capital_en.PostDate.Year.ToString()<span>년</span>
+                }
+            </span>
+        </div>
         <table class="table table-bordered" style="font-size: 0.9em">
             <thead>
                 <tr style="background-color: whitesmoke">
@@ -50,58 +58,413 @@
             <tbody>
                 <tr>
                     <td class="text-center">
+                        @*@string.Format("{0: ###,###}", upsn.plan_total_sum)*@
+                        @upsn.plan_total_sum
                         <span>원</span>
                     </td>
                     <td class="text-center">
-                        <span>원</span>
+                        @string.Format("{0: ###,###}", dbUseSum)<span>원</span>
                     </td>
                     <td class="text-center">
-                        <span>원</span>
+                        @*@string.Format("{0: ###,###}", upsn.Balance_sum_Adjust_All)*@
+                        @upsn.Using_Cost_Sum<span>원</span>
                     </td>
                     <td class="text-center">
-                        <span>원</span>
+                        @upsn.balance_sum<span>원</span>
                     </td>
                     <td class="text-center">
-                        <span>원</span>
+                        @string.Format("{0: ###,###}", dbLevySum_Year)<span>원</span>
+
                     </td>
                     <td class="text-center">
-                        <span>원</span>
+                        @string.Format("{0: ###,###}", upsn.User_Cost_All)<span>원</span>
                     </td>
                     <td class="text-center">
-                        <span>원</span>
+                        @string.Format("{0: ###,###}", dbLevysum_Month)<span>원</span>
                     </td>
                     <td class="text-center">
-                        <span>원</span>
+                        @string.Format("{0: ###,###.##}", upsn.Unit_Price)<span>원</span>
                     </td>
                 </tr>
             </tbody>
 
         </table>
 
-        
-            <table width="100%">
-                <tr>
-                    <td style="font-size: 1em; font-weight: bold; width: 320px; vertical-align: middle">
-                        <span class="bi-clipboard-data"></span> 관리규약 상의 적립률 현황 정보
-                    </td>
-                    <td width="120px">
-                        <select id="Select1" style="font-size: 0.9em" class="custom-select" @bind="bnn.Bylaw_Code">
-                            @foreach (var st in bylawList)
-                            {
-                                <option value="@st.Bylaw_Code">@st.Bylaw_Revision_Date.ToShortDateString()</option>
-                            }
 
+        <table width="100%" style="margin-bottom: 5px">
+            <tr>
+                <td style="font-size: 1em; font-weight: bold; width: 320px; vertical-align: middle">
+                    <span class="bi-clipboard-data"></span>&nbsp; 관리규약 상의 적립률 현황 정보
+                </td>
+                <td width="120px">
+                    <select id="Select1" style="font-size: 0.9em" class="custom-select" value="@bnn.Bylaw_Code" @onchange="OnBylawSelect">
+                        @foreach (var st in bylawList)
+                        {
+                            <option value="@st.Bylaw_Code">@st.Bylaw_Revision_Date.ToShortDateString()</option>
+                        }
+                    </select>
+                </td>
+                <td>
+                </td>
+            </tr>
+        </table>
 
-                        </select>
-                    </td>
-                    <td>
+        <div class="row">
 
-                    </td>
-                </tr>
-            </table>
-            
-            
-        
+            <div class="col-6">
+                <div class="card">
+                    <div class="card-body">
+                        <span class="bi-calendar2-event-fill"></span>&nbsp; 관리규약 적립요율 정보
+                        <table class="table table-sm" style="font-size: 0.9em; margin-bottom: 0px">
+                            <thead>
+                                <tr style="background-color: whitesmoke">
+                                    <th class="text-center">
+                                        적립요율 적용기간
+                                    </th>
+                                    <th class="text-center">
+                                        적립요율
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (lrList.Count > 0)
+                                {
+                                    @foreach (var st in lrList)
+                                    {
+                                        <tr>
+                                            <td class="text-center">
+                                                @st.Levy_Start_Year<span>년</span>@st.Levy_Start_Date.Month<span>월</span> <span> &nbsp; ~ &nbsp; </span> @st.Levy_End_Year<span>년</span>@st.Levy_End_Month<span>월</span> (@st.Levy_Period_New<span>개월</span>)
+                                            </td>
+                                            <td class="text-center">
+                                                @st.Levy_Rate<span>%</span> <span class="bi-chevron-double-right"></span> @st.Levy_Rate_Accumulate<span>%</span>
+                                            </td>
+                                        </tr>
+                                    }
+                                }
+                                else
+                                {
+                                    <tr>
+                                        <td colspan="2" align="center">
+                                            <span style="color: red">입력된 데이터가 없습니다.</span>
+                                        </td>
+                                    </tr>
+
+                                }
+                            </tbody>
+                        </table>
+                        <table class="table table-sm" style="font-size: 0.9em; margin-bottom: 0px">
+                            <thead>
+                                <tr>
+                                    <th class="text-center">
+                                        요율 계획기간 : @((rpn.Plan_Period - 1) * 12)<span>개월</span> (@rpn.Plan_Period<span>년간</span>)
+                                    </th>
+                                    <th class="text-center">
+                                        설정 적립기간 : @dbLevyMonthSum<span>개월</span> (@string.Format("{0: ###,###}", (MonthSum / 12))<span>년간</span> @(MonthSum % 12)<span>월</span>)
+                                    </th>
+
+                                    <th class="text-center">
+                                        누적 적립율 : @dbLevyRateSum<span>%</span>
+                                    </th>
+                                </tr>
+                                <tr>
+                                    <th colspan="2" style="vertical-align:middle">
+                                        전체 삭제는 적립율 전체가 삭제되므로 주의하시기 바랍니다.
+                                    </th>
+                                    <th class="text-center">
+                                        <button type="button" class="btn btn-danger btn-sm" style="font-size: 0.8em" @onclick="btnRemove">전체 삭제</button>
+                                    </th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-6">
+                <div class="card">
+                    <div class="card-body">
+                        <span class="bi-calendar-plus"></span>&nbsp; @DateTime.Now.Year<span>년</span> 면적별 부과금액 현황
+                        <table class="table table-sm" style="font-size: 0.9em; margin-bottom: 0px">
+                            <thead>
+                                <tr style="background-color: whitesmoke">
+                                    <th class="text-center">
+                                        부과면적
+                                    </th>
+                                    <th class="text-center">
+                                        단가
+                                    </th>
+                                    <th class="text-center">
+                                        적립요율
+                                    </th>
+                                    <th class="text-center">
+                                        부과금액
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (dong_ce.Count > 0)
+                                {
+                                    @foreach (var st in dong_ce)
+                                    {
+                                        <tr>
+                                            <td class="text-center">
+                                                @st.Supply_Area<span>㎡</span>
+                                            </td>
+
+                                            <td class="text-center">
+                                                @string.Format("{0: ###,###.##}", upsn.Unit_Price_All)<span>원</span>
+                                            </td>
+                                            <td class="text-center">
+                                                @upsn.Levy_Rate<span>%</span>
+                                            </td>
+                                            <td class="text-center">
+                                                @string.Format("{0: ###,###}", (st.Supply_Area * upsn.Unit_Price_All))<span>원</span>
+                                            </td>
+                                        </tr>
+                                    }
+                                }
+                                else
+                                {
+                                    <tr>
+                                        <td colspan="4" align="center">
+                                            <span style="color: red">입력된 데이터가 없습니다.</span>
+                                        </td>
+                                    </tr>
+
+                                }
+
+                            </tbody>
+                        </table>
+                        <table class="table table-sm" style="font-size: 0.9em; margin-bottom: 0px">
+                            <thead>
+                                <tr>
+                                    <th>
+                                        면적합계 : @upsn.supply_total_Area<span>㎡</span>
+                                    </th>
+                                    <th class="text-right">
+                                        부과금액 합계 : @string.Format("{0: ###,###}", dbLevysum_Month)<span>원</span>
+                                    </th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
 
     </div>
 </div>
+
+@*초기화 입력 폼*@
+@if (InsertViewsA == "B")
+{
+    <div class="modal fade show d-block" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header" style="background-color: burlywood; color: white">
+                    <h6 class="modal-title"><span class="bi-house-door"></span>&nbsp;@strTitleA</h6>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" @onclick="btnCloseA">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <table class="table" style="margin-bottom: 0px; font-size: 0.9em; margin-bottom: 0px">
+                        <tr>
+                            <td>
+                                <div class="input-group">
+                                    <div class="input-group-prepend"><span class="input-group-text" style="font-size: 0.9em"><span class="bi-pencil-square"></span>&nbsp;부과 총액</span></div>
+                                    <input id="Levy_Capital" name="Levy_Capital" style="font-size: 0.9em; text-align: right" @bind="@capital_en.Levy_Capital" class="form-control" type="number" readonly="readonly" />
+                                    <div class="input-group-append"><span class="input-group-text" style="font-size: 0.9em">원</span></div>
+                                </div>
+                                
+                            </td>
+                            <td class="text-right" style="vertical-align:middle">
+                                @strLevySum<span>원</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="input-group">
+                                    <div class="input-group-prepend"><span class="input-group-text" style="font-size: 0.9em"><span class="bi-pencil-square"></span>&nbsp;사용액</span></div>
+                                    <input id="Use_Cost" name="Use_Cost" style="font-size: 0.9em; text-align:right" value="@capital_en.Use_Cost" class="form-control" type="number" @onchange="OnUseCost" />
+                                    <div class="input-group-append"><span class="input-group-text" style="font-size: 0.9em">원</span></div>
+                                </div>
+                                
+                            </td>
+                            <td class="text-right" style="vertical-align:middle">
+                                @strUseSum<span>원</span>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>
+                                <div class="input-group">
+                                    <div class="input-group-prepend"><span class="input-group-text" style="font-size: 0.9em"><span class="bi-pencil-square"></span>&nbsp;잔액</span></div>
+                                    @*<InputNumber @onchange="OnBalance" @bind-Value="capital_en.Balance_Capital" @bind-Value:format="$#,###" class="form-control" />*@
+                                    <input id="Balance_Capital" name="Balance_Capital" style="font-size: 0.9em; text-align: right" value="@capital_en.Balance_Capital" class="form-control" type="number" @onchange="OnBalance" />
+                                    <div class="input-group-append"><span class="input-group-text" style="font-size: 0.9em">원</span></div>
+                                </div>
+                                
+                            </td>
+                            <td class="text-right" style="vertical-align:middle">
+                                @strBalance<span>원</span>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td colspan="2">
+                                <p style="color:blue">
+                                    초기화는 초기화 시의 전년도 잔액, 총 사용액을 입력하여 주십시오.<br />
+                                    장기수선충당금 초기화는 이 장기수선운영시스템을 처음할 경우에 한번만 입력하는 것입니다. <br />
+                                    초기화가 한번 입력되면 초기화 기준년도가 나타나고 기준년도는 변하지 않습니다.<br />
+                                    초기화 잔액이나 사용이 잘못입력되었다면 기준년도를 기준으로 입력하여 수정할 수 있습니다.
+                                </p>
+                            </td>
+                        </tr>
+
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary btn-sm" @onclick="btnSaveA">저장</button> &nbsp; &nbsp; &nbsp;
+                    <button type="button" class="btn btn-secondary btn-sm" @onclick="btnCloseA">닫기</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-backdrop show"></div>
+}
+
+@*적립요율 입력 폼*@
+@if (InsertViewsB == "B")
+{
+    <div class="modal fade show d-block" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header" style="background-color: darkgray; color: white">
+                    <span class="modal-title"><span class="bi-house-door"></span>&nbsp;@strTitleA</span>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" @onclick="btnCloseB">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+
+                    <table class="table table-sm" style="font-size: 0.9em">
+                        <tr style="background-color: whitesmoke; text-align:center">
+                            <th class="" colspan="2">
+                                요율 시작년도<span style="color: red">*</span>
+                            </th>
+                        </tr>
+                        @if (lrList.Count < 1)
+                        {
+                            <tr>
+                                <td style="text-align: center; width:60%">
+                                    <div class="input-group">
+                                        <div class="input-group-prepend"><span class="input-group-text" style="font-size: 0.9em"><span class="bi-pencil-square"></span>&nbsp;시작</span></div>
+                                        <input id="Levy_Start_Year" name="Levy_Start_Year" style="font-size: 0.9em; text-align:right" value="@bnn.Levy_Start_Year" class="form-control" type="number" @onchange="OnLevyStartYear" />
+                                        <div class="input-group-append"><span class="input-group-text" style="font-size: 0.9em">년</span></div>
+                                    </div>
+                                </td>
+                                <td style="text-align: center">
+                                    <div class="input-group">
+                                        <div class="input-group-prepend"><span class="input-group-text" style="font-size: 0.9em"><span class="bi-pencil-square"></span>&nbsp;시작</span></div>
+                                        <input id="Levy_Start_Year" name="Levy_Start_Year" style="font-size: 0.9em; text-align:right" value="@bnn.Levy_Start_Month" class="form-control" type="number" @onchange="onStartMonth" />
+                                        <div class="input-group-append"><span class="input-group-text" style="font-size: 0.9em">월</span></div>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                        else
+                        {
+                            <tr>
+                                <td style="text-align: center; width:60%">
+                                    <div class="input-group">
+                                        <div class="input-group-prepend"><span class="input-group-text" style="font-size: 0.9em"><span class="bi-pencil-square"></span>&nbsp;시작</span></div>
+                                        <input id="Levy_Start_Year" name="Levy_Start_Year" style="font-size: 0.9em; text-align:right" value="@bnn.Levy_Start_Year" class="form-control" readonly="readonly" type="number" />
+                                        <div class="input-group-append"><span class="input-group-text" style="font-size: 0.9em">년</span></div>
+                                    </div>
+                                </td>
+                                <td style="text-align: center">
+                                    <div class="input-group">
+                                        <div class="input-group-prepend"><span class="input-group-text" style="font-size: 0.9em"><span class="bi-pencil-square"></span>&nbsp;시작</span></div>
+                                        <input id="Levy_Start_Year" name="Levy_Start_Year" style="font-size: 0.9em; text-align:right" @bind="bnn.Levy_Start_Month" class="form-control" type="number" readonly="readonly" />
+                                        <div class="input-group-append"><span class="input-group-text" style="font-size: 0.9em">월</span></div>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                        <tr style="background-color: whitesmoke; text-align:center">
+                            <th class="" colspan="2">
+                                요율 종료년도<span style="color: red">*</span>
+                            </th>
+                        </tr>
+                        <tr>
+                            <td style="text-align: center; width:60%">
+                                <div class="input-group">
+                                    <div class="input-group-prepend"><span class="input-group-text" style="font-size: 0.9em"><span class="bi-pencil-square"></span>&nbsp;종료</span></div>
+                                    <input id="Levy_Start_Year" name="Levy_Start_Year" style="font-size: 0.9em; text-align:right" value="@bnn.Levy_End_Year" class="form-control" type="number" @onchange="OnLevyEndYear" />
+                                    <div class="input-group-append"><span class="input-group-text" style="font-size: 0.9em">년</span></div>
+                                </div>
+                            </td>
+                            <td style="text-align: center">
+                                <div class="input-group">
+                                    <div class="input-group-prepend"><span class="input-group-text" style="font-size: 0.9em"><span class="bi-pencil-square"></span>&nbsp;종료</span></div>
+                                    <select id="Levy_Start_Month" style="font-size: 0.9em" class="custom-select" value="@bnn.Levy_End_Month" @onchange="onEndMonth">
+                                        <option value="1">1</option>
+                                        <option value="2">2</option>
+                                        <option value="3">3</option>
+                                        <option value="4">4</option>
+                                        <option value="5">5</option>
+                                        <option value="6">6</option>
+                                        <option value="7">7</option>
+                                        <option value="8">3</option>
+                                        <option value="9">9</option>
+                                        <option value="10">10</option>
+                                        <option value="11">11</option>
+                                        <option value="12">12</option>
+                                    </select>
+                                    <div class="input-group-append"><span class="input-group-text" style="font-size: 0.9em">월</span></div>
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+
+                    <table class="table table-sm" style="font-size: 0.9em">
+                        <tr style="background-color: whitesmoke; text-align:center">
+                            <th class="text-center" width="100">
+                                기간<span style="color: red">*</span>
+                            </th>
+                            <th class="text-center">
+                                적립율(%)<span style="color:red">*</span>
+                            </th>
+                            <th class="text-center">
+                                누적적립율(%)<span style="color: red">*</span>
+                            </th>
+                        </tr>
+                        <tr>
+                            <td class="text-center" style="vertical-align:middle">
+                                @intLevy_Period_New<span>개월</span>
+                            </td>
+                            <td class="text-center">
+                                <div class="input-group">
+                                    <div class="input-group-prepend"><span class="input-group-text" style="font-size: 0.9em"><span class="bi-pencil-square"></span>&nbsp;적립율</span></div>
+                                    <input id="Levy_Rate" name="Levy_Rate" style="font-size: 0.9em; text-align:right" value="@bnn.Levy_Rate" class="form-control" type="number" @onchange="OnRateSum" />
+                                    <div class="input-group-append"><span class="input-group-text" style="font-size: 0.9em">%</span></div>
+                                </div>
+                            </td>
+                            <td class="text-center" width="150" style="vertical-align:middle">
+                                @bnn.Levy_Rate_Accumulate<span>%</span>
+                            </td>
+                        </tr>
+                    </table>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary btn-sm" @onclick="btnSaveB">저장</button> &nbsp; &nbsp; &nbsp;
+                    <button type="button" class="btn btn-secondary btn-sm" @onclick="btnCloseB">닫기</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-backdrop show"></div>
+}

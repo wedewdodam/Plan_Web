@@ -16,6 +16,8 @@ namespace Plan_Lib.Pund
 
         Task<Unit_Price_Entity> Detail_Unit_Price_New(string Apt_Code, string Repair_Plan_Code, double Levy_Rate, int Levy_Period);
 
+        Unit_Price_Entity Detail_Unit_Price_Up(string Apt_Code, string Repair_Plan_Code, double Levy_Rate, int Levy_Period);
+
         Task<Unit_Price_string_Entity> Report_Plan_Cost(string Apt_Code, string Repair_Plan_Code);
 
         Task<Unit_Price_string_Entity> Report_Plan_Cost_Bylaw(string Apt_Code, string Repair_Plan_Code, string Bylaw_Code);
@@ -53,6 +55,11 @@ namespace Plan_Lib.Pund
         Task<DateTime> be_Capital_Levy_date(string Apt_Code, int Levy_Year);
 
         Task<double> Capital_Levy_Now_Sum(string Apt_Code, int Frist_Year, string Now_date);
+
+        /// <summary>
+        /// 년간합계(월 기준)
+        /// </summary>
+       double _Year_Month_Sum(string Apt_Code, int Levy_Year, int Levy_Month);
     }
 
     public interface ILevy_Rate_Lib
@@ -95,6 +102,11 @@ namespace Plan_Lib.Pund
 
         Task<Levy_Rate_Entity> Detail_Year_Levy(string Apt_Code, string Bylaw_Code, int Year);
 
+        /// <summary>
+        /// 해당 단지의 마지막 적립요율 정보 가져오기
+        /// </summary>
+        Task<Levy_Rate_Entity> Detail_New(string Apt_Code, string Bylaw_Code);
+
         Task<int> Detail_Year_Levy_Be(string Apt_Code, string Bylaw_Code, int Year);
 
         Task<Levy_Rate_Entity> Detail_Year_Levy_Next(string Apt_Code, string Bylaw_Code, int Year);
@@ -120,6 +132,27 @@ namespace Plan_Lib.Pund
         Task<string> Levy_Rate_Code_Search(string Apt_Code, string Bylaw_Code, string Num);
 
         Task<Levy_Rate_Entity> Detail_Levy_Rate_Code(string Levy_Rate_Code);
+
+        /// <summary>
+        /// 부과율 합계
+        /// </summary>
+        Task<int> Levy_Period_Total_New(string Apt_Code, int Bylaw_Code);
+
+        /// <summary>
+        /// 해당 단지 부과율에 따른 면적별 부과금액 정보 가져 오기
+        /// </summary>
+        List<Levy_Rate_Entity> GetList_Rate_Levy_Cost_A(string Apt_Code, string Repair_Plan_Code, string Levy_Rate_Code, double Levy_Rate, int Levy_Period);
+
+        /// <summary>
+        /// 부과개월 수 합계
+        /// </summary>
+        Task<int> Levy_Month(string Apt_Code, int ByLaw_Code);
+
+        /// <summary>
+        /// 해당 단지 부과율에 따른 면적별 부과금액 정보 가져 오기(단일)
+        /// </summary>
+        Task<Levy_Rate_Entity> Details_Rate_Levy_Cost_Now(string Apt_Code, string Repair_Plan_Code, string Levy_Rate_Code, double Levy_Rate, int Levy_Period);
+
     }
 
     /// <summary>
@@ -205,12 +238,5 @@ namespace Plan_Lib.Pund
 
         Task<List<Join_Article_Cycle_Cost_EntityA>> GetList_Main_Plan(string Apt_Code, string Repair_Plan_Code, string Repair_Plan_Year);
     }
-
-    /// <summary>
-    /// 장기수선충당금 사용계획서 인터페이스
-    /// </summary>
-    public interface ICapital_Use_Plan_Lib
-    {
-        Task<Capital_Use_Plan_Entity> Add(Capital_Use_Plan_Entity cp);
-    }
+    
 }

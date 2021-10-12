@@ -372,7 +372,7 @@
                                             </div>
                                         </td>
                                         <td>
-                                            <button class="btn btn-info btn-sm">시설물 정보</button>
+                                            <button class="btn btn-info btn-sm"><span class="bi-tools"></span> &nbsp;시설물 정보</button>
                                         </td>
                                     </tr>
                                 </table>
@@ -805,8 +805,8 @@
 
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-primary btn-sm" @onclick="btnSave">저장</button> &nbsp; &nbsp; &nbsp;
-                    <button type="button" class="btn btn-secondary btn-sm" @onclick="btnClose">닫기</button>
+                    <button type="button" class="btn btn-primary btn-sm" @onclick="btnSave"><span class="bi-save2-fill"></span> &nbsp; 저장</button> &nbsp; &nbsp; &nbsp;
+                    <button type="button" class="btn btn-secondary btn-sm" @onclick="btnClose"><span class="bi-x-square-fill"></span> &nbsp;닫기</button>
                 </div>
             </div>
         </div>
@@ -833,7 +833,7 @@
                             <td></td>
                             <td width="30%">
                                 <div class="input-group">
-                                    <div class="input-group-prepend"><span class="input-group-text" style="font-size: 0.9em"><span class="bi-pencil-square"></span>&nbsp;대분류선택</span></div>
+                                    <div class="input-group-prepend"><span class="input-group-text" style="font-size: 0.9em"><span class="bi-pencil-square"></span>&nbsp;대분류</span></div>
                                     <select id="Sort_A_Code" class="custom-select" value="@strSortA" style="font-size: 0.9em" @onchange="onSortA" required>
                                         <option value="Z">=대분류 선택=</option>
                                         @foreach (var it in fnnA)
@@ -845,7 +845,7 @@
                             </td>
                             <td width="30%">
                                 <div class="input-group">
-                                    <div class="input-group-prepend"><span class="input-group-text" style="font-size: 0.9em"><span class="bi-pencil-square"></span>&nbsp;조정년도</span></div>
+                                    <div class="input-group-prepend"><span class="input-group-text" style="font-size: 0.9em"><span class="bi-pencil-square"></span>&nbsp;중분류</span></div>
                                     <select id="Sort_A_Code" class="custom-select" value="@strSortB" style="font-size: 0.9em" @onchange="onSortB" required>
                                         <option value="Z">=중분류 선택=</option>
                                         @foreach (var it in fnnB)
@@ -907,7 +907,7 @@
                                                         </div>
                                                     </td>
                                                     <td>
-                                                        <button class="btn btn-info btn-sm">시설물 정보</button>
+                                                        <button class="btn btn-info btn-sm"><span class="bi-tools"></span> &nbsp;시설물 정보</button>
                                                     </td>
                                                 </tr>
                                             </table>
@@ -1339,8 +1339,8 @@
                     </table>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-primary btn-sm" @onclick="btnSave">저장</button> &nbsp; &nbsp; &nbsp;
-                    <button type="button" class="btn btn-secondary btn-sm" @onclick="btnClose">닫기</button>
+                    <button type="button" class="btn btn-primary btn-sm" @onclick="btnSave"><span class="bi-save2"></span> &nbsp;저장</button> &nbsp; &nbsp; &nbsp;
+                    <button type="button" class="btn btn-secondary btn-sm" @onclick="btnClose"><span class="bi-x-square-fill"></span> &nbsp;닫기</button>
                 </div>
             </div>
         </div>

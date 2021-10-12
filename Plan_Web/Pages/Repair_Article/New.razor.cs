@@ -176,7 +176,8 @@ namespace Plan_Web.Pages.Repair_Article
         private async Task btnOpen()
         {
             fnnA = await facility_Sort_Lib.GetList_A_FacilitySort(); //대분류 만들기
-            fnn = await facility_Sort_Lib.GetList_Sort_A_List("3");
+            //fnn = await facility_Sort_Lib.GetList_Sort_A_List("3");
+            fnn = await facility_Sort_Lib.GetList_Sort_AA_List(Apt_Code, Aid, "3");
             strTitle = "수선항목 추가 입력";
 
             bnn = new Article_Entity();

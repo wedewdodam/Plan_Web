@@ -5,6 +5,7 @@ using Plan_Blazor_Lib.Cost;
 using Plan_Blazor_Lib.Plan;
 using Plan_Lib;
 using Plan_Lib.Pund;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,7 +23,7 @@ namespace Plan_Web.Pages.Repair_Plan
         [Inject] public IUnit_Price_Lib unit_Price_Lib { get; set; }
         [Inject] public IBylaw_Lib bylaw_Lib { get; set; }
         [Inject] public ICost_Lib cost_Lib { get; set; }
-        //public Blazored.LocalStorage.ILocalStorageService session;
+        
         #endregion
 
         #region 속성
@@ -117,7 +118,7 @@ namespace Plan_Web.Pages.Repair_Plan
         }
 
         /// <summary>
-        /// 전체수선항목 수
+        /// 전체수선금액
         /// </summary>
         private string Cost_All(string Repair_Plan_Code)
         {
@@ -140,7 +141,9 @@ namespace Plan_Web.Pages.Repair_Plan
         private async Task OnSelect(string Aid)
         {
             //SessiValue = await session.GetItemAsync<string>(Aid);
-            await session.SetItemAsync<string>("Plan_Code", Aid);
+            //await session.SetItemAsync("Plan_Code", Aid);
+            //await session.SetItem("Plan_Code", Aid);
+            await ProtectedSessionStore.SetAsync("Plan_Code", Aid);
             MyNav.NavigateTo("/Repair_Plan/" + Aid);
         }
     }

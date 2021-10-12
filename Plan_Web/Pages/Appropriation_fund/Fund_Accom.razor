@@ -1,0 +1,312 @@
+﻿@page "/Appropriation_fund/Fund_Accom"
+@using Microsoft.AspNetCore.ProtectedBrowserStorage
+@inject ProtectedSessionStorage ProtectedSessionStore
+
+<div class="card">
+    <div class="card-header">
+        <table style="width: 100%; font-size: 1.1em">
+            <tr>
+                <td>
+                    <img src="/images/01_01_img.jpg" alt="" height="30" /> <span>장기수선충당금 관리</span> @*@strCode*@
+                </td>
+                <td class="text-right">
+                    <button type="button" class="btn btn-success btn-sm" @onclick="btnFundOpen"><span class="bi-box-arrow-in-right"></span> &nbsp; 장기수선충당금 징수 열기</button>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div class="card-body">
+        <table width="100%" style="margin-bottom: 5px">
+            <tr>
+                <td style="font-size: 1em; font-weight: bold; width: 320px; vertical-align: middle">
+                    <div style="font-size: 1em; font-weight: bold">
+                        <span class="bi-clipboard-data"></span> 장기수선충당금 적립 및 사용 현황
+                    </div>
+                </td>
+                <td width="120px">
+                    <select id="Levy_Year" style="font-size: 0.9em" class="custom-select" value="@dnn.Levy_Year" @onchange="OnByYearSelect">
+                        <option value="">==선택==</option>
+                        <option value="2016">2016</option>
+                        <option value="2017">2017</option>
+                        <option value="2018">2018</option>
+                        <option value="2019">2019</option>
+                        <option value="2020">2020</option>
+                        <option value="2021">2021</option>
+                        <option value="2022">2022</option>
+                        <option value="2023">2023</option>
+                        <option value="2024">2024</option>
+                        <option value="2025">2025</option>
+                        <option value="2026">2026</option>
+                        <option value="2027">2027</option>
+                        <option value="2028">2028</option>
+                        <option value="2029">2029</option>
+                        <option value="2030">2030</option>
+                        <option value="2031">2031</option>
+                        <option value="2032">2032</option>
+                        <option value="2033">2033</option>
+                        <option value="2034">2034</option>
+                        <option value="2035">2035</option>
+                        <option value="2036">2036</option>
+                        <option value="2037">2037</option>
+                        <option value="2038">2038</option>
+                        <option value="2039">2039</option>
+                        <option value="2040">2040</option>
+                        <option value="2041">2041</option>
+                        <option value="2042">2042</option>
+                        <option value="2043">2043</option>
+                        <option value="2044">2044</option>
+                        <option value="2045">2045</option>
+                        <option value="2046">2046</option>
+                        <option value="2047">2047</option>
+                        <option value="2048">2048</option>
+                        <option value="2049">2049</option>
+                        <option value="2050">2050</option>
+                    </select>
+                </td>
+                <td>
+
+                </td>
+            </tr>
+        </table>
+
+        <table class="table table-sm" style="font-size:0.9em; margin-bottom: 0px">
+            <thead>
+                <tr style="border-top:ridge; background-color: whitesmoke">
+                    <th style="text-align:center">
+                        적립월
+                    </th>
+                    <th style="text-align:center">
+                        적립할 금액
+                    </th>
+                    <th style="text-align:center">
+                        계정과목
+                    </th>
+                    <th style="text-align:center">
+                        적립금액
+                    </th>
+                    <th style="text-align:center">
+                        금년 적립 합계
+                    </th>
+                    <th style="text-align:center">
+                        적립 설명
+                    </th>
+                    <th style="text-align:center">
+                        버튼
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (CL_List == null)
+                {
+                    <tr>
+                        <td colspan="8" class="text-center">
+                            <img src="/images/common/AjaxLoader_64.gif" alt="" />
+                        </td>
+                    </tr>
+
+                }
+                else if (CL_List.Count < 1)
+                {
+                    <tr>
+                        <td colspan="8" class="text-center">
+                            데이터가 없습니다.
+                        </td>
+                    </tr>
+                }
+                else
+                {
+                    @foreach (var st in CL_List)
+                    {
+                        <tr>
+                            <td style="text-align: center; vertical-align: middle">
+                                @st.Levy_Year<span>년</span>@st.Levy_Month<span>월</span>
+                            </td>
+                            <td style="text-align: center; vertical-align: middle">
+                                @string.Format("{0: ###,###}", st.Law_Levy_Month_Sum)<span>원</span>
+                            </td>
+                            <td style="text-align: center; vertical-align: middle">
+                                @st.Levy_Account
+                            </td>
+                            <td style="text-align: center; vertical-align: middle">
+                                @string.Format("{0: ###,###}", st.Levy_Month_Sum)<span>원</span>
+                            </td>
+                            <td style="text-align: center; vertical-align: middle">
+                                @string.Format("{0: ###,###}", capital_Levy_Lib._Year_Month_Sum(st.Apt_Code, st.Levy_Year, st.Levy_Month))<span>원</span>
+                            </td>
+                            <td style="text-align:center; vertical-align:middle">
+                                @st.Capital_Levy_Etc
+                            </td>
+                            <td style="text-align:center; vertical-align:middle">
+                                <button @onclick="() => OnByEdit(st)" class="btn btn-link btn-sm">수정</button> <button @onclick="() => OnByRemove(st.Capital_Levy_Code)" class="btn btn-link btn-sm">삭제</button>
+                            </td>
+                        </tr>
+                    }
+                    <tr style="border-bottom: solid; border-bottom-width: 1px">
+                        <td style="text-align: center; vertical-align: middle" colspan="2">
+                        </td>
+                        <th style="text-align:right; vertical-align:middle" colspan="4">
+                            년간 징수·적립 총액 : @string.Format("{0: ###,###}", dbYearCapital)<span>원</span>&nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp;
+                            징수·적립 총액 : @string.Format("{0: ###,###}", dbTotalCapital)<span>원</span>
+                        </th>
+                        <td style="text-align:center; vertical-align:middle" colspan="1">
+                            @if (true)
+                            {
+                                <button type="button" class="btn btn-secondary btn-sm" @onclick="btnFundOpen"><span class="bi-box-arrow-in-right"></span> &nbsp;전년도 완료</button>
+                            }
+                            else
+                            {
+                                <button type="button" class="btn btn-primary btn-sm" @onclick="btnFundOpen"><span class="bi-box-arrow-in-right"></span> &nbsp;전년도 미완료</button>
+                            }
+                        </td>
+                    </tr>
+                }
+
+
+            </tbody>
+
+        </table>
+    </div>
+</div>
+<br />
+
+@*적립요율 입력 폼*@
+@if (InsertViews == "B")
+{
+    <div class="modal fade show d-block" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-sm" role="document">
+            <div class="modal-content">
+                <div class="modal-header" style="background-color: darkgray; color: white">
+                    <span class="modal-title"><span class="bi-house-door"></span>&nbsp;@strTitle</span>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" @onclick="btnClose">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+
+                    <table class="table table-sm" style="font-size: 0.9em">
+                        <tr>
+                            <td class="text-center">
+                                금년 부과할 금액 : @unn_A.Total_Cost_Year<span>원</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="text-center">
+                                금월 부과할 금액 : @unn_A.Total_Cost_Month<span>원</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: center;">
+                                <div class="input-group">
+                                    <div class="input-group-prepend"><span class="input-group-text" style="font-size: 0.9em"><span class="bi-pencil-square"></span>&nbsp;부과년도</span></div>
+                                    <select id="Levy_Year" style="font-size: 0.9em; text-align: center" class="custom-select" value="@dnn.Levy_Year" @onchange="OnByYear">
+                                        <option value="0">==선택==</option>
+                                        <option value="2016">2016</option>
+                                        <option value="2017">2017</option>
+                                        <option value="2018">2018</option>
+                                        <option value="2019">2019</option>
+                                        <option value="2020">2020</option>
+                                        <option value="2021">2021</option>
+                                        <option value="2022">2022</option>
+                                        <option value="2023">2023</option>
+                                        <option value="2024">2024</option>
+                                        <option value="2025">2025</option>
+                                        <option value="2026">2026</option>
+                                        <option value="2027">2027</option>
+                                        <option value="2028">2028</option>
+                                        <option value="2029">2029</option>
+                                        <option value="2030">2030</option>
+                                        <option value="2031">2031</option>
+                                        <option value="2032">2032</option>
+                                        <option value="2033">2033</option>
+                                        <option value="2034">2034</option>
+                                        <option value="2035">2035</option>
+                                        <option value="2036">2036</option>
+                                        <option value="2037">2037</option>
+                                        <option value="2038">2038</option>
+                                        <option value="2039">2039</option>
+                                        <option value="2040">2040</option>
+                                        <option value="2041">2041</option>
+                                        <option value="2042">2042</option>
+                                        <option value="2043">2043</option>
+                                        <option value="2044">2044</option>
+                                        <option value="2045">2045</option>
+                                        <option value="2046">2046</option>
+                                        <option value="2047">2047</option>
+                                        <option value="2048">2048</option>
+                                        <option value="2049">2049</option>
+                                        <option value="2050">2050</option>
+                                    </select>
+                                    <div class="input-group-append"><span class="input-group-text" style="font-size: 0.9em">년</span></div>
+                                </div>
+                            </td>
+
+                        </tr>
+                        <tr>
+                            <td style="text-align: center">
+                                <div class="input-group">
+                                    <div class="input-group-prepend"><span class="input-group-text" style="font-size: 0.9em"><span class="bi-pencil-square"></span>&nbsp;부과월</span></div>
+                                    <select id="Levy_Month" style="font-size: 0.9em; text-align:center" class="custom-select" value="@dnn.Levy_Month" @onchange="OnByMonth">
+                                        <option value="0">==선택==</option>
+                                        <option value="1">1</option>
+                                        <option value="2">2</option>
+                                        <option value="3">3</option>
+                                        <option value="4">4</option>
+                                        <option value="5">5</option>
+                                        <option value="6">6</option>
+                                        <option value="7">7</option>
+                                        <option value="8">3</option>
+                                        <option value="9">9</option>
+                                        <option value="10">10</option>
+                                        <option value="11">11</option>
+                                        <option value="12">12</option>
+                                    </select>
+                                    <div class="input-group-append"><span class="input-group-text" style="font-size: 0.9em">월</span></div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="text-center">
+                                <div class="input-group">
+                                    <div class="input-group-prepend"><span class="input-group-text" style="font-size: 0.9em"><span class="bi-pencil-square"></span>&nbsp;개정과목</span></div>
+                                    <select id="Levy_Account" style="font-size: 0.9em" class="custom-select" @bind="dnn.Levy_Account">
+                                        <option value="">==선택==</option>
+                                        <option value="장기수선충당금">장기수선충당금</option>
+                                        <option value="잡수익">잡수익</option>
+                                        <option value="이익잉여금">이익잉여금</option>
+                                        <option value="잉여금">잉여금</option>
+                                        <option value="이자">이자</option>
+                                        <option value="기타">기타</option>
+                                    </select>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="text-center">
+                                <div class="input-group" >
+                                    <div class="input-group-prepend"><span class="input-group-text" style="font-size: 0.9em"><span class="bi-pencil-square"></span>&nbsp;금액</span></div>
+                                    <input id="Levy_Capital" name="Levy_Capital" style="font-size: 0.9em; text-align:right" @bind="dnn.Levy_Month_Sum" class="form-control" type="number" />
+                                    <div class="input-group-append"><span class="input-group-text" style="font-size: 0.9em">원</span></div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="text-center">
+                                <div class="input-group">
+                                    <textarea id="PlanReview_Opinion" name="PlanReview_Opinion" style="font-size: 0.9em" placeholder="기타 참고사항 입력하는 곳" @bind="dnn.Capital_Levy_Etc" rows="3" class="form-control"></textarea>
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+
+                    
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary btn-sm" @onclick="btnSave">저장</button> &nbsp; &nbsp; &nbsp;
+                    <button type="button" class="btn btn-secondary btn-sm" @onclick="btnClose">닫기</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-backdrop show"></div>
+}

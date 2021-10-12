@@ -188,23 +188,96 @@ namespace Plan_Blazor_Lib.Price
     public class Cost_Using_Plan_Entity
     {
         public int Cost_Use_Plan_Code { get; set; }
+
+        /// <summary>
+        /// 공동주택 식별코드
+        /// </summary>
         public string Apt_Code { get; set; }
+
+        /// <summary>
+        /// 장기수선계획 식별코드
+        /// </summary>
         public string Repair_Plan_Code { get; set; }
+
+        /// <summary>
+        /// 장기수선 항목 식별코드
+        /// </summary>
         public string Repair_Article_Code { get; set; }
+
+        /// <summary>
+        /// 계획년도
+        /// </summary>
         public string Plan_Year { get; set; }
+
+        /// <summary>
+        /// 공사 명칭
+        /// </summary>
         public string Repair_Name { get; set; }
+
+        /// <summary>
+        /// 공사 위치(장소)
+        /// </summary>
         public string Repair_Position { get; set; }
+
+        /// <summary>
+        /// 공사 범위
+        /// </summary>
         public string Repair_Range { get; set; }
+
+        /// <summary>
+        /// 공사 금액
+        /// </summary>
         public double Repair_Cost_Sum { get; set; }
+
+        /// <summary>
+        /// 공사 설명
+        /// </summary>
         public string Repair_Detail { get; set; }
+
+        /// <summary>
+        /// 설계도면
+        /// </summary>
         public string Design_Drawing { get; set; }
+
+        /// <summary>
+        /// 공사방법
+        /// </summary>
         public string Repair_Method { get; set; }
+
+        /// <summary>
+        /// 공사 시작일
+        /// </summary>
         public DateTime Start_Date { get; set; }
+
+        /// <summary>
+        /// 공사 마감일
+        /// </summary>
         public DateTime End_Date { get; set; }
+
+        /// <summary>
+        /// 입찰 방법 
+        /// </summary>
         public string Tender_Method_Process { get; set; }
+
+        /// <summary>
+        /// 입력일
+        /// </summary>
         public DateTime PostDate { get; set; }
+
+        /// <summary>
+        /// 입력 아이피
+        /// </summary>
         public string PostIP { get; set; }
+
+        /// <summary>
+        /// 입력자 아이디
+        /// </summary>
         public string Staff_Code { get; set; }
+
+        /// <summary>
+        /// 수선항목 명
+        /// </summary>
+        public string Repair_Article_Name { get; set; }
     }
 
     /// <summary>

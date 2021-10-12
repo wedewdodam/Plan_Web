@@ -110,6 +110,16 @@ namespace Plan_Lib
         }
 
         /// <summary>
+        /// 관리규약 상세보기 불러오기
+        /// </summary>
+        public async Task<Bylaw_Entity> Details_Bylaw(string Apt_Code)
+        {
+            using var db = new SqlConnection(_db.GetConnectionString("Khmais_db_Connection"));
+            return await db.QuerySingleOrDefaultAsync<Bylaw_Entity>("Select Top 1 * From Bylaw Where Apt_Code = @Apt_Code Order By Bylaw_Code Desc", new { Apt_Code });
+        }
+
+
+        /// <summary>
         ///  관리규약 기본 정보 상세보기
         /// </summary>
         public async Task<Bylaw_Entity> GetDetail_Bylaw(int Bylaw_Code)

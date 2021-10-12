@@ -1,0 +1,559 @@
+﻿@page "/Fund_Use_Plan"
+@using Microsoft.AspNetCore.ProtectedBrowserStorage
+@inject ProtectedSessionStorage ProtectedSessionStore
+
+<div class="card">
+    <div class="card-header">
+        <table width="100%">
+            <tr>
+                <td><span style="font-size: 1.1em; color:Highlight"> <span class="bi-house-fill"></span>&nbsp;<span>장기수선충당금 사용계획서 현황</span></span></td>
+                <td style="width:120px">
+                    <select id="Levy_Year" style="font-size: 0.9em" class="custom-select" value="@dnn.Plan_Year" @onchange="OnByYearSelect">
+                        <option value="">==선택==</option>
+                        <option value="2016">2016</option>
+                        <option value="2017">2017</option>
+                        <option value="2018">2018</option>
+                        <option value="2019">2019</option>
+                        <option value="2020">2020</option>
+                        <option value="2021">2021</option>
+                        <option value="2022">2022</option>
+                        <option value="2023">2023</option>
+                        <option value="2024">2024</option>
+                        <option value="2025">2025</option>
+                        <option value="2026">2026</option>
+                        <option value="2027">2027</option>
+                        <option value="2028">2028</option>
+                        <option value="2029">2029</option>
+                        <option value="2030">2030</option>
+                        <option value="2031">2031</option>
+                        <option value="2032">2032</option>
+                        <option value="2033">2033</option>
+                        <option value="2034">2034</option>
+                        <option value="2035">2035</option>
+                        <option value="2036">2036</option>
+                        <option value="2037">2037</option>
+                        <option value="2038">2038</option>
+                        <option value="2039">2039</option>
+                        <option value="2040">2040</option>
+                        <option value="2041">2041</option>
+                        <option value="2042">2042</option>
+                        <option value="2043">2043</option>
+                        <option value="2044">2044</option>
+                        <option value="2045">2045</option>
+                        <option value="2046">2046</option>
+                        <option value="2047">2047</option>
+                        <option value="2048">2048</option>
+                        <option value="2049">2049</option>
+                        <option value="2050">2050</option>
+                    </select>
+                </td>
+                <td align="right">
+                    <button type="button" class="btn btn-primary btn-sm" @onclick="btnOpen"><span class="bi-box-arrow-in-right">&nbsp; 사용계획 작성 열기</span></button>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div class="card-body">
+        <table width="100%" style="margin-bottom: 5px">
+            <tr>
+                <td style="font-size: 1em; font-weight: bold; width: 420px; vertical-align: middle">
+                    <div style="font-size: 1em; font-weight: bold">
+                        <span class="bi-clipboard-data"></span> 장기수선충당금 적립 및 사용 현황
+                    </div>
+                </td>
+                <td width="120px">
+                </td>
+                <td>
+                </td>
+            </tr>
+        </table>
+
+        <table class="table table-sm" style="font-size: 0.9em">
+            <thead>
+                <tr style="background-color:whitesmoke">
+                    <th style="text-align:center">
+                        수선공사 명칭
+                    </th>
+                    <th style="text-align:center">
+                        수선항목명
+                    </th>
+                    <th style="text-align:center">
+                        예정년도
+                    </th>
+                    <th style="text-align:center">
+                        공사기간
+                    </th>
+                    <th style="text-align:center">
+                        공사 금액
+                    </th>
+                    <th style="text-align:center">
+                        발주 절차 및 방법
+                    </th>
+                    <th style="text-align:center">
+                        버튼
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var st in cup)
+                {
+                    <tr>
+                        <td style="text-align:center; vertical-align:middle">@st.Repair_Name</td>
+                        <td style="text-align:center; vertical-align:middle">@Name(st.Repair_Article_Code)</td>
+                        <td style="text-align:center; vertical-align:middle">@st.Plan_Year<span>년</span></td>
+                        <td style="text-align:center; vertical-align:middle">@st.Start_Date.ToShortDateString() <span>~</span> @st.End_Date.ToShortDateString()</td>
+                        <td style="text-align:center; vertical-align:middle">
+                            @if (st.Repair_Cost_Sum < 1)
+                            {
+                                <span>0원</span>
+
+                            }
+                            else
+                            {
+                                @string.Format("{0: ###,###.#}", st.Repair_Cost_Sum)<span>원</span>
+                            }
+
+                        </td>
+                        <td style="text-align:center; vertical-align:middle"><span title="@st.Tender_Method_Process">@Dul.StringLibrary.CutString(st.Tender_Method_Process, 18)</span> </td>
+                        <td style="text-align:center; vertical-align:middle">
+                            <button @onclick="() => OnByEdit(st)" class="btn btn-link btn-sm">수정</button> 
+                            <button @onclick="() => OnByRemove(st.Cost_Use_Plan_Code)" class="btn btn-link btn-sm">삭제</button>
+                        </td>
+                    </tr>
+                }
+
+            </tbody>
+
+        </table>
+
+        <br />
+
+        <table width="100%" style="margin-bottom: 5px">
+            <tr>
+                <td style="font-size: 1em; font-weight: bold; width: 420px; vertical-align: middle">
+                    <div style="font-size: 1em; font-weight: bold">
+                        <span class="bi-clipboard-data"></span> @NowYear<span>년</span> &nbsp; 장기수선충당금 적립 및 사용 현황
+                    </div>
+                </td>
+                <td width="120px">
+                </td>
+                <td>
+                </td>
+            </tr>
+        </table>
+
+        <table class="table table-sm" style="font-size: 0.9em">
+            <thead>
+                <tr style="background-color:whitesmoke">
+                    <th style="text-align:center">
+                        분류명
+                    </th>
+                    <th style="text-align:center">
+                        수선항목 명
+                    </th>
+                    <th style="text-align:center">
+                        전체수선
+                    </th>
+                    <th style="text-align:center">
+                        부분수선
+                    </th>
+                    <th style="text-align:center">
+                        전체계획금액
+                    </th>
+                    <th style="text-align:center">
+                        부분계획금액
+                    </th>
+
+                    <th style="text-align:center">
+                        버튼
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var st in JACC)
+                {
+                    <tr>
+                        <td style="text-align:center; vertical-align:middle"><span title="@st.Sort_A_Name"> @Dul.StringLibrary.CutString(st.Sort_A_Name, 18)</span> <span class="bi-chevron-double-right"></span> @st.Sort_B_Name <span class="bi-chevron-double-right"></span> <span title="@st.Sort_C_Name">@Dul.StringLibrary.CutString(st.Sort_C_Name, 18)</span></td>
+
+                        <td style="text-align:center; vertical-align:middle">@st.Repair_Article_Name</td>
+                        <td style="text-align:center; vertical-align:middle">
+                            @if (st.Repair_Plan_Year_All < 1)
+                            {
+                                <span>없음</span>
+                            }
+                            else
+                            {
+                                @st.Repair_Plan_Year_All<span>년</span>
+                            }
+
+                        </td>
+                        <td style="text-align:center; vertical-align:middle">
+                            @if (st.Repair_Plan_Year_Part < 1)
+                            {
+                                <span>없음</span>
+                            }
+                            else
+                            {
+                                @st.Repair_Plan_Year_Part<span>년</span>
+                            }
+
+                        </td>
+                        <td style="text-align:center; vertical-align:middle">
+                            @if (st.Repair_All_Cost < 1)
+                            {
+                                <span>0원</span>
+                            }
+                            else
+                            {
+                                @string.Format("{0: ###,###.#}", st.Repair_All_Cost)<span>원</span>
+                            }
+
+                        </td>
+                        <td style="text-align:center; vertical-align:middle">
+                            @if (st.Repair_Part_Cost < 1)
+                            {
+                                <span>없음</span>
+                            }
+                            else
+                            {
+                                @string.Format("{0: ###,###.#}", st.Repair_Part_Cost)<span>원</span>
+                            }
+
+                        </td>
+                        <td style="text-align:center; vertical-align:middle">
+                            <button @onclick="() => OnBySelectA(st)" class="btn btn-link btn-sm">선택</button>
+                        </td>
+                    </tr>
+                }
+
+            </tbody>
+
+        </table>
+
+        <br />
+
+        <table width="100%" style="margin-bottom: 5px">
+            <tr>
+                <td style="font-size: 1em; font-weight: bold; width: 420px; vertical-align: middle">
+                    <div style="font-size: 1em; font-weight: bold">
+                        <span class="bi-clipboard-data"></span> @NextYear<span>년</span> &nbsp; 장기수선충당금 적립 및 사용 현황
+                    </div>
+                </td>
+                <td width="120px">
+                </td>
+                <td>
+                </td>
+            </tr>
+        </table>
+
+        <table class="table table-sm" style="font-size: 0.9em">
+            <thead>
+                <tr style="background-color:whitesmoke">
+                    <th style="text-align:center">
+                        분류명
+                    </th>
+                    <th style="text-align:center">
+                        수선항목 명
+                    </th>
+                    <th style="text-align:center">
+                        전체수선
+                    </th>
+                    <th style="text-align:center">
+                        부분수선
+                    </th>
+                    <th style="text-align:center">
+                        전체계획금액
+                    </th>
+                    <th style="text-align:center">
+                        부분계획금액
+                    </th>
+
+                    <th style="text-align:center">
+                        버튼
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var st in JACC1)
+                {
+                <tr>
+                    <td style="text-align:center; vertical-align:middle"><span title="@st.Sort_A_Name"> @Dul.StringLibrary.CutString(st.Sort_A_Name, 18)</span> <span class="bi-chevron-double-right"></span> @st.Sort_B_Name <span class="bi-chevron-double-right"></span> <span title="@st.Sort_C_Name">@Dul.StringLibrary.CutString(st.Sort_C_Name, 18)</span></td>
+
+                    <td style="text-align:center; vertical-align:middle">@st.Repair_Article_Name</td>
+                    <td style="text-align:center; vertical-align:middle">
+                        @if (st.Repair_Plan_Year_All < 1)
+                        {
+                            <span>없음</span>
+                        }
+                        else
+                        {
+                            @st.Repair_Plan_Year_All<span>년</span>
+                        }
+
+                    </td>
+                    <td style="text-align:center; vertical-align:middle">
+                        @if (st.Repair_Plan_Year_Part < 1)
+                        {
+                            <span>없음</span>
+                        }
+                        else
+                        {
+                            @st.Repair_Plan_Year_Part<span>년</span>
+                        }
+
+                    </td>
+                    <td style="text-align:center; vertical-align:middle">
+                        @if (st.Repair_All_Cost < 1)
+                        {
+                            <span>0원</span>
+                        }
+                        else
+                        {
+                            @string.Format("{0: ###,###.#}", st.Repair_All_Cost)<span>원</span>
+                        }
+
+                    </td>
+                    <td style="text-align:center; vertical-align:middle">
+                        @if (st.Repair_Part_Cost < 1)
+                        {
+                            <span>없음</span>
+                        }
+                        else
+                        {
+                            @string.Format("{0: ###,###.#}", st.Repair_Part_Cost)<span>원</span>
+                        }
+
+                    </td>
+                    <td style="text-align:center; vertical-align:middle">
+                        <button @onclick="() => OnBySelectA(st)" class="btn btn-link btn-sm">선택</button>
+                    </td>
+                </tr>
+                }
+
+            </tbody>
+
+        </table>
+    </div>
+</div>
+
+<br />
+@*수선항목 입력*@
+@if (InsertViews == "B")
+{
+    <div class="modal fade show d-block" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-xl" role="document">
+            <div class="modal-content">
+                <div class="modal-header" style="background-color: cornflowerblue; color: white">
+                    <h5 class="modal-title"><span class="bi-house-door"></span>&nbsp;@strTitle</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" @onclick="btnClose">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+
+                    <table width="100%" style="margin-bottom: 5px">
+                        <tr>
+
+                            <td style="width: 25%">
+                                <div class="input-group">
+                                    <div class="input-group-prepend"><span class="input-group-text" style="font-size: 0.9em"><span class="bi-pencil-square"></span>&nbsp;대분류</span></div>
+                                    <select id="Sort_A_Code" class="custom-select" value="@strSortA" style="font-size: 0.9em" @onchange="onSortA" required>
+                                        <option value="Z">=대분류 선택=</option>
+                                        @foreach (var it in fnnA)
+                                        {
+                                            <option value="@it.Aid">@it.Sort_Name</option>
+                                        }
+                                    </select>
+                                </div>
+                            </td>
+                            <td style="width: 20%">
+                                <div class="input-group">
+                                    <div class="input-group-prepend"><span class="input-group-text" style="font-size: 0.9em"><span class="bi-pencil-square"></span>&nbsp;중분류</span></div>
+                                    <select id="Sort_B_Code" class="custom-select" value="@strSortB" style="font-size: 0.9em" @onchange="onSortB" required>
+                                        <option value="Z">=중분류 선택=</option>
+                                        @foreach (var it in fnnB)
+                                        {
+                                            <option value="@it.Aid">@it.Sort_Name</option>
+                                        }
+                                    </select>
+                                </div>
+                            </td>
+                            <td style="width: 25%">
+                                <div class="input-group">
+                                    <div class="input-group-prepend"><span class="input-group-text" style="font-size: 0.9em"><span class="bi-pencil-square"></span>&nbsp;소분류</span></div>
+                                    <select id="Sort_C_Code" class="custom-select" value="@strSortC" style="font-size: 0.9em" @onchange="onSortC" required>
+                                        <option value="Z">=소분류 선택=</option>
+                                        @foreach (var it in fnnC)
+                                        {
+                                            <option value="@it.Aid">@it.Sort_Name</option>
+                                        }
+                                        <option value="예외지출">예외지출</option>
+                                    </select>
+                                </div>
+                            </td>
+                            <td style="width: 30%">
+                                <div class="input-group">
+                                    <div class="input-group-prepend"><span class="input-group-text" style="font-size: 0.9em"><span class="bi-pencil-square"></span>&nbsp;시설명</span></div>
+                                    <select id="Sort_Code" class="custom-select" value="@strSortD" style="font-size: 0.9em" @onchange="onSortD" required>
+                                        <option value="Z">=시설명 선택=</option>
+                                        @foreach (var it in Arnn)
+                                        {
+                                            <option value="@it.Aid">@it.Repair_Article_Name</option>
+                                        }
+                                        <option value="소액지출">소액지출</option>
+                                        <option value="긴급공사">긴급공사</option>
+                                        <option value="하자비용">하지비용</option>
+                                    </select>
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+                    <table class="table" style="font-size: 0.9em">
+                        <tr>
+                            <th style="width: 20%; vertical-align: middle; text-align:center; background-color: whitesmoke">
+                                수선공사 명칭
+                            </th>
+                            <td style="vertical-align: middle" colspan="2">
+                                <div class="input-group">
+                                    <div class="input-group-prepend"><span class="input-group-text" style="font-size: 0.9em"><span class="bi-pencil-square"></span>&nbsp;공사명칭</span></div>
+                                    <input id="Repair_Name" name="Repair_Article_Name" style="font-size: 0.9em;" @bind="dnn.Repair_Name" class="form-control" type="text" />
+                                </div>
+                            </td>
+
+                        </tr>
+
+                        <tr>
+                            <th style="width: 20%; vertical-align: middle; text-align: center; background-color: whitesmoke">
+                                대상시설의 위치 및 부위<br /> 수선공사의 설계도면
+                            </th>
+                            <td style="vertical-align: middle">
+                                <div class="input-group">
+                                    <div class="input-group-prepend"><span class="input-group-text" style="font-size: 0.9em"><span class="bi-pencil-square"></span>&nbsp;위치 및 부위</span></div>
+                                    <input id="Repair_Name" name="Repair_Article_Name" style="font-size: 0.9em;" @bind="dnn.Repair_Position" class="form-control" type="text" />
+                                </div>
+                            </td>
+                            <td style="vertical-align: middle">
+                                <div class="input-group">
+                                    <div class="input-group-prepend"><span class="input-group-text" style="font-size: 0.9em"><span class="bi-pencil-square"></span>&nbsp;설계도면</span></div>
+                                    <input id="Repair_Name" name="Repair_Article_Name" style="font-size: 0.9em;" @bind="dnn.Design_Drawing" class="form-control" type="text" />
+                                </div>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <th style="width: 20%; vertical-align: middle; text-align: center; background-color: whitesmoke">
+                                공사기간
+                            </th>
+                            <td style="vertical-align: middle">
+                                <div class="input-group">
+                                    <div class="input-group-prepend"><span class="input-group-text" style="font-size: 0.9em"><span class="bi-pencil-square"></span>&nbsp;공사 시작일</span></div>
+                                    <input id="Start_Date" name="Start_Date" style="font-size: 0.9em; text-align: center" @bind="dnn.Start_Date" class="form-control" type="date" />
+                                </div>
+                            </td>
+                            <td style="vertical-align: middle">
+                                <div class="input-group">
+                                    <div class="input-group-prepend"><span class="input-group-text" style="font-size: 0.9em"><span class="bi-pencil-square"></span>&nbsp;공사 종료일</span></div>
+                                    <input id="End_Date" name="End_Date" style="font-size: 0.9em; text-align:center" @bind="dnn.End_Date" class="form-control" type="date" />
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th style="width: 20%; vertical-align: middle; text-align: center; background-color: whitesmoke">
+                                공사금액 및 방법
+                            </th>
+                            <td style="vertical-align: middle">
+                                <div class="input-group">
+                                    <div class="input-group-prepend"><span class="input-group-text" style="font-size: 0.9em"><span class="bi-pencil-square"></span>&nbsp;공사 금액</span></div>
+                                    <input id="Repair_Cost_Sum" name="Repair_Cost_Sum" style="font-size: 0.9em; text-align: right" @bind="dnn.Repair_Cost_Sum" class="form-control" type="number" />
+                                    <div class="input-group-append"><span class="input-group-text" style="font-size: 0.9em">원</span></div>
+                                </div>
+                            </td>
+                            <td style="vertical-align: middle">
+                                <div class="input-group">
+                                    <div class="input-group-prepend"><span class="input-group-text" style="font-size: 0.9em"><span class="bi-pencil-square"></span>&nbsp;방법</span></div>
+                                    <input id="Repair_Method" name="Repair_Method" style="font-size: 0.9em;" @bind="dnn.Repair_Method" class="form-control" type="text" />
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th style="width: 20%; vertical-align: middle; text-align: center; background-color: whitesmoke">
+                                수선공사 내용 및 범위
+                            </th>
+                            <td style="vertical-align: middle">
+                                <div class="input-group">
+                                    <div class="input-group-prepend"><span class="input-group-text" style="font-size: 0.9em"><span class="bi-pencil-square"></span>&nbsp;공사 내용</span></div>
+                                    <textarea id="Repair_Detail" name="Repair_Detail" title="최대 4,000자 이내 입력 가능" placeholder="공사내용을 상세하게 입력하는 곳" rows="3" style="font-size: 0.9em" @bind="dnn.Repair_Detail" class="form-control" type="text" />
+                                </div>
+                            </td>
+                            <td style="vertical-align: middle">
+                                <div class="input-group">
+                                    <div class="input-group-prepend"><span class="input-group-text" style="font-size: 0.9em"><span class="bi-pencil-square"></span>&nbsp;공사 범위</span></div>
+                                    <textarea id="Repair_Range" name="Repair_Range" title="최대 4,000자 이내 입력 가능" placeholder="전체 혹은 부분수선이나 기타 사항을 입력하는 곳" rows="3" style="font-size: 0.9em" @bind="dnn.Repair_Range" class="form-control" type="text" />
+                                </div>
+                            </td>
+                        </tr>
+                        
+                        <tr>
+                            <th style="width: 20%; vertical-align: middle; text-align: center; background-color: whitesmoke">
+                                발주 방법 및 절차
+                            </th>
+                            <td style="vertical-align: middle; width: 40%">
+                                <div class="input-group">
+                                    <div class="input-group-prepend"><span class="input-group-text" style="font-size: 0.9em"><span class="bi-pencil-square"></span>&nbsp;의사결정방법</span></div>
+                                    <div class="input-group-append">
+                                        <select id="TenderA" style="font-size: 0.9em" class="custom-select" value="@strTenderA" @onchange="OnTenderA">
+                                            <option Value="">::결정선택::</option>
+                                            <option Value="입주자대표회의 의결">입대의 의결</option>
+                                            <option Value="입주자 동의">입주자 동의</option>
+                                            <option Value="입주자등 동의">입주자등 동의</option>
+                                            <option Value="기타 결정">기타 결정</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="input-group">
+                                    <div class="input-group-prepend"><span class="input-group-text" style="font-size: 0.9em"><span class="bi-pencil-square"></span>&nbsp;입찰방법</span></div>
+                                    <div class="input-group-append">
+                                        <select id="TenderB" style="font-size: 0.9em" class="custom-select" value="@strTenderB" @onchange="OnTenderB">
+                                            <option Value="">::입찰선택::</option>
+                                            <option Value="일반경쟁입찰">일반경쟁입찰</option>
+                                            <option Value="제한경쟁입찰">제한경쟁입찰</option>
+                                            <option Value="지명경쟁입찰">지명경쟁입찰</option>
+                                            <option Value="수의계약">수의계약</option>
+                                            <option Value="자체공사">자체공사</option>
+                                            <option Value="기타 방법">기타 방법</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="input-group">
+                                    <div class="input-group-prepend"><span class="input-group-text" style="font-size: 0.9em"><span class="bi-pencil-square"></span>&nbsp;낙찰방법</span></div>
+                                    <div class="input-group-append">
+                                        <select id="TenderC" style="font-size: 0.9em" class="custom-select" value="@strTenderC" @onchange="OnTenderC">
+                                            <option Value="">::낙찰선택::</option>
+                                            <option Value="최저가 입찰">최저가 입찰</option>
+                                            <option Value="최고가 입찰">최고가 입찰</option>
+                                            <option Value="적격심사 입찰">적격심사 입찰</option>
+                                            <option Value="기타 방법">기타 방법</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </td>
+                            <td style="vertical-align: middle">
+                                <div class="input-group">
+                                    <div class="input-group-prepend"><span class="input-group-text" style="font-size: 0.9em"><span class="bi-pencil-square"></span>&nbsp;방법 및 절차</span></div>
+                                    <textarea id="Tender_Method_Process" name="Repair_Article_Etc" title="최대 4,000자 이내 입력 가능" placeholder="발주방법 및 절자를 입력하는 곳" rows="4" style="font-size: 0.9em" @bind="dnn.Tender_Method_Process" class="form-control" type="text" />
+                                </div>
+                            </td>
+                        </tr>
+
+                    </table>
+                    
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary btn-sm" @onclick="btnSave">저장</button> &nbsp; &nbsp; &nbsp;
+                    <button type="button" class="btn btn-secondary btn-sm" @onclick="btnClose">닫기</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-backdrop show"></div>
+}

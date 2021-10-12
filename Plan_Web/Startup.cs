@@ -1,13 +1,10 @@
-using Blazored.LocalStorage;
+
 using Facility;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.UI;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -28,9 +25,6 @@ using Plan_Lib.Pund;
 using Plan_Web.Areas.Identity;
 using Plan_Web.Data;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Plan_Web
 {
@@ -58,7 +52,12 @@ namespace Plan_Web
                  options.UseSqlServer(
                      Configuration.GetConnectionString("Khmais_db_Connection")));
 
-            services.AddBlazoredLocalStorage(); //세션 사용
+            //services.AddBlazoredLocalStorage(); //세션 사용
+            //services.AddBlazoredSessionStorage();
+            //services.AddSingleton<LocalStorage>(); //쿠키 사용
+            //services.AddStorage();
+            services.AddProtectedBrowserStorage();//상태관리
+            //services.AddScoped<StateContainer>();
 
             services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
                 .AddEntityFrameworkStores<ApplicationDbContext>();
@@ -138,6 +137,7 @@ namespace Plan_Web
             services.AddTransient<IRelation_Law_Lib, Relation_Law_Lib>(); //관계 법령 정보
             services.AddTransient<IBylaw_Lib, Bylaw_Lib>();//관리규약 정보
             services.AddTransient<IUnit_Price_Lib, Unit_Price_Lib>();
+            services.AddTransient<ILevy_Rate_Lib, Levy_Rate_Lib>();//적립률 관련정보
 
             services.AddTransient<IRepair_SmallSum_Object_Lib, Repair_SmallSum_Object_Lib>(); //소액지출 대상
             services.AddTransient<IRepair_SmallSum_Requirement_Lib, Repair_SmallSum_Requirement_Lib>(); //소액지출 요건

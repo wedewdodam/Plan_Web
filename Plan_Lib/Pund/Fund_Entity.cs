@@ -141,6 +141,11 @@ namespace Plan_Lib.Pund
         /// <summary>
         /// 초기화 잔액
         /// </summary>
+        public double balanceSum { get; set; }
+
+        /// <summary>
+        /// 초기화 잔액 텍스트
+        /// </summary>
         public string balance_sum { get; set; }
 
         /// <summary>

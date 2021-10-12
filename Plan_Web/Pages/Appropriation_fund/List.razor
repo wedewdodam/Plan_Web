@@ -1,0 +1,1285 @@
+﻿@page "/Appropriation_fund/List"
+@using Microsoft.AspNetCore.ProtectedBrowserStorage
+@inject ProtectedSessionStorage ProtectedSessionStore
+<div class="card">
+    <div class="card-header">
+        <table style="width: 100%; font-size: 1.1em">
+            <tr>
+                <td>
+                    <img src="/images/01_01_img.jpg" alt="" height="30" /> <span>장기수선충당금 적립율 정보</span>
+                </td>
+                <td class="text-right">
+                </td>
+            </tr>
+        </table>
+        
+        
+    </div>
+    <div class="card-body">
+
+        @if (LevyCount >= 1)
+        {
+            <img src="/images/sub/icon_con_tit.png" alt="" /> <span style="font-size: 1em;"> 적용기간 : @bnn1.Levy_Start_Year<span>년</span> @bnn1.Levy_Start_Month<span>월</span> ~ @bnn1.Levy_End_Year<span>년</span> @bnn1.Levy_End_Month<span>월</span></span> <span style="font-size: 1em;">(@bnn1.Levy_Period_New<span>개월간)</span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 누적 적립율 : @bnn1.Levy_Rate_Accumulate<span>%</span>  </span>
+            <table class="table table-sm" style="font-size: 0.9em; margin-bottom:0px">
+                <thead>
+                    <tr style="background-color: whitesmoke">
+                        <th class="text-center">
+                            공급면적
+                        </th>
+                        <th class="text-center">
+                            단가(㎡)
+                        </th>
+                        <th class="text-center">
+                            적립율
+                        </th>
+                        <th class="text-center">
+                            세대 부과금액(월간)
+                        </th>
+                        <th class="text-center">
+                            세대 부과금액(년간)
+                        </th>
+                        <th class="text-center">
+                            세대수
+                        </th>
+                        <th class="text-center">
+                            면적별 총액(월간)
+                        </th>
+                        <th class="text-center">
+                            면적별 총액(년간)
+                        </th>
+                    </tr>
+                </thead>
+
+                @foreach (var st in List_1)
+                {
+                    <tbody>
+                        <tr>
+                            <td style="text-align:center; font-size:0.9em; vertical-align:middle">
+                                @st.Supply_Area<span>㎡</span>
+                            </td>
+                            <td style="text-align:center; font-size:0.9em; vertical-align:middle">
+                                @st.Unit_Price<span>원</span>
+                            </td>
+                            <td style="text-align:center; font-size:0.9em; vertical-align:middle">
+                                @st.Levy_Rate<span>%</span>
+                            </td>
+                            <td style="text-align:center; font-size:0.9em; vertical-align:middle">
+                                @st.Family_Month_Rate_Cost<span>원</span>
+                            </td>
+                            <td style="text-align:center; font-size:0.9em; vertical-align:middle">
+                                @st.Family_Year_Rate_Cost<span>원</span>
+                            </td>
+                            <td style="text-align:center; font-size:0.9em; vertical-align:middle">
+                                @st.Area_Family_Num<span>세대</span>
+                            </td>
+                            <td style="text-align:center; font-size:0.9em; vertical-align:middle">
+                                @st.Area_Rate_Month<span>원</span>
+                            </td>
+                            <td style="text-align:center; font-size:0.9em; vertical-align:middle">
+                                @st.Area_Rate_Year<span>원</span>
+                            </td>
+                        </tr>
+
+                    </tbody>
+                }                
+
+                <tr style="font-size: 1em; font-weight: bold; background-color: whitesmoke">
+                    <td colspan="2" style="text-align:center">
+                        <span style="vertical-align:middle">총 공급면적 : @string.Format("{0: ###,###.##}", bnn1.supply_total_Area)<span>㎡</span></span>
+                    </td>
+                    <td colspan="2" style="text-align:center">
+                        <span style="vertical-align:middle">세대수 : @string.Format("{0: ###,###.##}", bnn1.household)<span>세대</span></span>
+                    </td>
+                    <td colspan="2" style="text-align:center">
+                        <span style="vertical-align:middle">월간 부과총액 : @bnn1.Total_Cost_Month<span>원</span></span>
+                    </td>
+                    <td colspan="2" style="text-align:center">
+                        <span style="vertical-align:middle">년간 부과총액 : @bnn1.Total_Cost_Year<span>원</span></span>
+                    </td>
+                </tr>
+
+            </table>
+            <br />
+        }
+
+        @if (LevyCount >= 2)
+        {
+            <img src="/images/sub/icon_con_tit.png" alt="" /> <span style="font-size: 1em;"> 적용기간 : @bnn2.Levy_Start_Year<span>년</span> @bnn2.Levy_Start_Month<span>월</span> ~ @bnn2.Levy_End_Year<span>년</span> @bnn2.Levy_End_Month<span>월</span></span> <span style="font-size: 1em;">(@bnn2.Levy_Period_New<span>개월간)</span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 누적 적립율 : @bnn2.Levy_Rate_Accumulate<span>%</span>  </span>
+            <table class="table table-sm" style="font-size: 0.9em; margin-bottom:0px">
+                <thead>
+                    <tr style="background-color: whitesmoke">
+                        <th class="text-center">
+                            공급면적
+                        </th>
+                        <th class="text-center">
+                            단가(㎡)
+                        </th>
+                        <th class="text-center">
+                            적립율
+                        </th>
+                        <th class="text-center">
+                            세대 부과금액(월간)
+                        </th>
+                        <th class="text-center">
+                            세대 부과금액(년간)
+                        </th>
+                        <th class="text-center">
+                            세대수
+                        </th>
+                        <th class="text-center">
+                            면적별 총액(월간)
+                        </th>
+                        <th class="text-center">
+                            면적별 총액(년간)
+                        </th>
+                    </tr>
+                </thead>
+
+                @foreach (var st in List_2)
+                {
+                    <tbody>
+                        <tr>
+                            <td style="text-align:center; font-size:0.9em; vertical-align:middle">
+                                @st.Supply_Area<span>㎡</span>
+                            </td>
+                            <td style="text-align:center; font-size:0.9em; vertical-align:middle">
+                                @st.Unit_Price<span>원</span>
+                            </td>
+                            <td style="text-align:center; font-size:0.9em; vertical-align:middle">
+                                @st.Levy_Rate<span>%</span>
+                            </td>
+                            <td style="text-align:center; font-size:0.9em; vertical-align:middle">
+                                @st.Family_Month_Rate_Cost<span>원</span>
+                            </td>
+                            <td style="text-align:center; font-size:0.9em; vertical-align:middle">
+                                @st.Family_Year_Rate_Cost<span>원</span>
+                            </td>
+                            <td style="text-align:center; font-size:0.9em; vertical-align:middle">
+                                @st.Area_Family_Num<span>세대</span>
+                            </td>
+                            <td style="text-align:center; font-size:0.9em; vertical-align:middle">
+                                @st.Area_Rate_Month<span>원</span>
+                            </td>
+                            <td style="text-align:center; font-size:0.9em; vertical-align:middle">
+                                @st.Area_Rate_Year<span>원</span>
+                            </td>
+                        </tr>
+
+                    </tbody>
+                }
+                <tr style="font-size: 1em; font-weight: bold; background-color: whitesmoke">
+                    <td colspan="2" style="text-align:center">
+                        <span style="vertical-align:middle">총 공급면적 : @string.Format("{0: ###,###.##}", bnn2.supply_total_Area)<span>㎡</span></span>
+                    </td>
+                    <td colspan="2" style="text-align:center">
+                        <span style="vertical-align:middle">세대수 : @string.Format("{0: ###,###.##}", bnn2.household)<span>세대</span></span>
+                    </td>
+                    <td colspan="2" style="text-align:center">
+                        <span style="vertical-align:middle">월간 부과총액 : @bnn2.Total_Cost_Month<span>원</span></span>
+                    </td>
+                    <td colspan="2" style="text-align:center">
+                        <span style="vertical-align:middle">년간 부과총액 : @bnn2.Total_Cost_Year<span>원</span></span>
+                    </td>
+                </tr>
+            </table>
+            <br />
+        }
+
+        @if (LevyCount >= 3)
+        {
+            <img src="/images/sub/icon_con_tit.png" alt="" /> <span style="font-size: 1em;"> 적용기간 : @bnn3.Levy_Start_Year<span>년</span> @bnn3.Levy_Start_Month<span>월</span> ~ @bnn3.Levy_End_Year<span>년</span> @bnn3.Levy_End_Month<span>월</span></span> <span style="font-size: 1em;">(@bnn3.Levy_Period_New<span>개월간)</span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 누적 적립율 : @bnn3.Levy_Rate_Accumulate<span>%</span>  </span>
+            <table class="table table-sm" style="font-size: 0.9em; margin-bottom:0px">
+                <thead>
+                    <tr style="background-color: whitesmoke">
+                        <th class="text-center">
+                            공급면적
+                        </th>
+                        <th class="text-center">
+                            단가(㎡)
+                        </th>
+                        <th class="text-center">
+                            적립율
+                        </th>
+                        <th class="text-center">
+                            세대 부과금액(월간)
+                        </th>
+                        <th class="text-center">
+                            세대 부과금액(년간)
+                        </th>
+                        <th class="text-center">
+                            세대수
+                        </th>
+                        <th class="text-center">
+                            면적별 총액(월간)
+                        </th>
+                        <th class="text-center">
+                            면적별 총액(년간)
+                        </th>
+                    </tr>
+                </thead>
+
+                @foreach (var st in List_3)
+                {
+                    <tbody>
+                        <tr>
+                            <td style="text-align:center; font-size:0.9em; vertical-align:middle">
+                                @st.Supply_Area<span>㎡</span>
+                            </td>
+                            <td style="text-align:center; font-size:0.9em; vertical-align:middle">
+                                @st.Unit_Price<span>원</span>
+                            </td>
+                            <td style="text-align:center; font-size:0.9em; vertical-align:middle">
+                                @st.Levy_Rate<span>%</span>
+                            </td>
+                            <td style="text-align:center; font-size:0.9em; vertical-align:middle">
+                                @st.Family_Month_Rate_Cost<span>원</span>
+                            </td>
+                            <td style="text-align:center; font-size:0.9em; vertical-align:middle">
+                                @st.Family_Year_Rate_Cost<span>원</span>
+                            </td>
+                            <td style="text-align:center; font-size:0.9em; vertical-align:middle">
+                                @st.Area_Family_Num<span>세대</span>
+                            </td>
+                            <td style="text-align:center; font-size:0.9em; vertical-align:middle">
+                                @st.Area_Rate_Month<span>원</span>
+                            </td>
+                            <td style="text-align:center; font-size:0.9em; vertical-align:middle">
+                                @st.Area_Rate_Year<span>원</span>
+                            </td>
+                        </tr>
+
+                    </tbody>
+
+                }
+                <tr style="font-size: 1em; font-weight: bold; background-color: whitesmoke">
+                    <td colspan="2" style="text-align:center">
+                        <span style="vertical-align:middle">총 공급면적 : @string.Format("{0: ###,###.##}", bnn3.supply_total_Area)<span>㎡</span></span>
+                    </td>
+                    <td colspan="2" style="text-align:center">
+                        <span style="vertical-align:middle">세대수 : @string.Format("{0: ###,###.##}", bnn3.household)<span>세대</span></span>
+                    </td>
+                    <td colspan="2" style="text-align:center">
+                        <span style="vertical-align:middle">월간 부과총액 : @bnn3.Total_Cost_Month<span>원</span></span>
+                    </td>
+                    <td colspan="2" style="text-align:center">
+                        <span style="vertical-align:middle">년간 부과총액 : @bnn3.Total_Cost_Year<span>원</span></span>
+                    </td>
+                </tr>
+            </table>
+            <br />
+        }
+
+        @if (LevyCount >= 4)
+        {
+            <img src="/images/sub/icon_con_tit.png" alt="" /> <span style="font-size: 1em;"> 적용기간 : @bnn4.Levy_Start_Year<span>년</span> @bnn4.Levy_Start_Month<span>월</span> ~ @bnn4.Levy_End_Year<span>년</span> @bnn4.Levy_End_Month<span>월</span></span> <span style="font-size: 1em;">(@bnn4.Levy_Period_New<span>개월간)</span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 누적 적립율 : @bnn4.Levy_Rate_Accumulate<span>%</span>  </span>
+            <table class="table table-sm" style="font-size: 0.9em; margin-bottom:0px">
+                <thead>
+                    <tr style="background-color: whitesmoke">
+                        <th class="text-center">
+                            공급면적
+                        </th>
+                        <th class="text-center">
+                            단가(㎡)
+                        </th>
+                        <th class="text-center">
+                            적립율
+                        </th>
+                        <th class="text-center">
+                            세대 부과금액(월간)
+                        </th>
+                        <th class="text-center">
+                            세대 부과금액(년간)
+                        </th>
+                        <th class="text-center">
+                            세대수
+                        </th>
+                        <th class="text-center">
+                            면적별 총액(월간)
+                        </th>
+                        <th class="text-center">
+                            면적별 총액(년간)
+                        </th>
+                    </tr>
+                </thead>
+
+                @foreach (var st in List_4)
+                {
+                    <tbody>
+                        <tr>
+                            <td style="text-align:center; font-size:0.9em; vertical-align:middle">
+                                @st.Supply_Area<span>㎡</span>
+                            </td>
+                            <td style="text-align:center; font-size:0.9em; vertical-align:middle">
+                                @st.Unit_Price<span>원</span>
+                            </td>
+                            <td style="text-align:center; font-size:0.9em; vertical-align:middle">
+                                @st.Levy_Rate<span>%</span>
+                            </td>
+                            <td style="text-align:center; font-size:0.9em; vertical-align:middle">
+                                @st.Family_Month_Rate_Cost<span>원</span>
+                            </td>
+                            <td style="text-align:center; font-size:0.9em; vertical-align:middle">
+                                @st.Family_Year_Rate_Cost<span>원</span>
+                            </td>
+                            <td style="text-align:center; font-size:0.9em; vertical-align:middle">
+                                @st.Area_Family_Num<span>세대</span>
+                            </td>
+                            <td style="text-align:center; font-size:0.9em; vertical-align:middle">
+                                @st.Area_Rate_Month<span>원</span>
+                            </td>
+                            <td style="text-align:center; font-size:0.9em; vertical-align:middle">
+                                @st.Area_Rate_Year<span>원</span>
+                            </td>
+                        </tr>
+
+                    </tbody>
+
+                }
+                <tr style="font-size: 1em; font-weight: bold; background-color: whitesmoke">
+                    <td colspan="2" style="text-align:center">
+                        <span style="vertical-align:middle">총 공급면적 : @string.Format("{0: ###,###.##}", bnn4.supply_total_Area)<span>㎡</span></span>
+                    </td>
+                    <td colspan="2" style="text-align:center">
+                        <span style="vertical-align:middle">세대수 : @string.Format("{0: ###,###.##}", bnn4.household)<span>세대</span></span>
+                    </td>
+                    <td colspan="2" style="text-align:center">
+                        <span style="vertical-align:middle">월간 부과총액 : @bnn4.Total_Cost_Month<span>원</span></span>
+                    </td>
+                    <td colspan="2" style="text-align:center">
+                        <span style="vertical-align:middle">년간 부과총액 : @bnn4.Total_Cost_Year<span>원</span></span>
+                    </td>
+                </tr>
+            </table>
+            <br />
+        }
+
+        @if (LevyCount >= 5)
+        {
+            <img src="/images/sub/icon_con_tit.png" alt="" /> <span style="font-size: 1em;"> 적용기간 : @bnn5.Levy_Start_Year<span>년</span> @bnn5.Levy_Start_Month<span>월</span> ~ @bnn5.Levy_End_Year<span>년</span> @bnn5.Levy_End_Month<span>월</span></span> <span style="font-size: 1em;">(@bnn5.Levy_Period_New<span>개월간)</span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 누적 적립율 : @bnn5.Levy_Rate_Accumulate<span>%</span>  </span>
+            <table class="table table-sm" style="font-size: 0.9em; margin-bottom:0px">
+                <thead>
+                    <tr style="background-color: whitesmoke">
+                        <th class="text-center">
+                            공급면적
+                        </th>
+                        <th class="text-center">
+                            단가(㎡)
+                        </th>
+                        <th class="text-center">
+                            적립율
+                        </th>
+                        <th class="text-center">
+                            세대 부과금액(월간)
+                        </th>
+                        <th class="text-center">
+                            세대 부과금액(년간)
+                        </th>
+                        <th class="text-center">
+                            세대수
+                        </th>
+                        <th class="text-center">
+                            면적별 총액(월간)
+                        </th>
+                        <th class="text-center">
+                            면적별 총액(년간)
+                        </th>
+                    </tr>
+                </thead>
+
+                @foreach (var st in List_5)
+                {
+                    <tbody>
+                        <tr>
+                            <td style="text-align:center; font-size:0.9em; vertical-align:middle">
+                                @st.Supply_Area<span>㎡</span>
+                            </td>
+                            <td style="text-align:center; font-size:0.9em; vertical-align:middle">
+                                @st.Unit_Price<span>원</span>
+                            </td>
+                            <td style="text-align:center; font-size:0.9em; vertical-align:middle">
+                                @st.Levy_Rate<span>%</span>
+                            </td>
+                            <td style="text-align:center; font-size:0.9em; vertical-align:middle">
+                                @st.Family_Month_Rate_Cost<span>원</span>
+                            </td>
+                            <td style="text-align:center; font-size:0.9em; vertical-align:middle">
+                                @st.Family_Year_Rate_Cost<span>원</span>
+                            </td>
+                            <td style="text-align:center; font-size:0.9em; vertical-align:middle">
+                                @st.Area_Family_Num<span>세대</span>
+                            </td>
+                            <td style="text-align:center; font-size:0.9em; vertical-align:middle">
+                                @st.Area_Rate_Month<span>원</span>
+                            </td>
+                            <td style="text-align:center; font-size:0.9em; vertical-align:middle">
+                                @st.Area_Rate_Year<span>원</span>
+                            </td>
+                        </tr>
+
+                    </tbody>
+
+                }
+                <tr style="font-size: 1em; font-weight: bold; background-color: whitesmoke">
+                    <td colspan="2" style="text-align:center">
+                        <span style="vertical-align:middle">총 공급면적 : @string.Format("{0: ###,###.##}", bnn5.supply_total_Area)<span>㎡</span></span>
+                    </td>
+                    <td colspan="2" style="text-align:center">
+                        <span style="vertical-align:middle">세대수 : @string.Format("{0: ###,###.##}", bnn5.household)<span>세대</span></span>
+                    </td>
+                    <td colspan="2" style="text-align:center">
+                        <span style="vertical-align:middle">월간 부과총액 : @bnn5.Total_Cost_Month<span>원</span></span>
+                    </td>
+                    <td colspan="2" style="text-align:center">
+                        <span style="vertical-align:middle">년간 부과총액 : @bnn5.Total_Cost_Year<span>원</span></span>
+                    </td>
+                </tr>
+            </table>
+            <br />
+        }
+
+        @if (LevyCount >= 6)
+        {
+            <img src="/images/sub/icon_con_tit.png" alt="" /> <span style="font-size: 1em;"> 적용기간 : @bnn6.Levy_Start_Year<span>년</span> @bnn6.Levy_Start_Month<span>월</span> ~ @bnn6.Levy_End_Year<span>년</span> @bnn3.Levy_End_Month<span>월</span></span> <span style="font-size: 1em;">(@bnn6.Levy_Period_New<span>개월간)</span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 누적 적립율 : @bnn6.Levy_Rate_Accumulate<span>%</span>  </span>
+            <table class="table table-sm" style="font-size: 0.9em; margin-bottom:0px">
+                <thead>
+                    <tr style="background-color: whitesmoke">
+                        <th class="text-center">
+                            공급면적
+                        </th>
+                        <th class="text-center">
+                            단가(㎡)
+                        </th>
+                        <th class="text-center">
+                            적립율
+                        </th>
+                        <th class="text-center">
+                            세대 부과금액(월간)
+                        </th>
+                        <th class="text-center">
+                            세대 부과금액(년간)
+                        </th>
+                        <th class="text-center">
+                            세대수
+                        </th>
+                        <th class="text-center">
+                            면적별 총액(월간)
+                        </th>
+                        <th class="text-center">
+                            면적별 총액(년간)
+                        </th>
+                    </tr>
+                </thead>
+
+                @foreach (var st in List_6)
+                {
+                    <tbody>
+                        <tr>
+                            <td style="text-align:center; font-size:0.9em; vertical-align:middle">
+                                @st.Supply_Area<span>㎡</span>
+                            </td>
+                            <td style="text-align:center; font-size:0.9em; vertical-align:middle">
+                                @st.Unit_Price<span>원</span>
+                            </td>
+                            <td style="text-align:center; font-size:0.9em; vertical-align:middle">
+                                @st.Levy_Rate<span>%</span>
+                            </td>
+                            <td style="text-align:center; font-size:0.9em; vertical-align:middle">
+                                @st.Family_Month_Rate_Cost<span>원</span>
+                            </td>
+                            <td style="text-align:center; font-size:0.9em; vertical-align:middle">
+                                @st.Family_Year_Rate_Cost<span>원</span>
+                            </td>
+                            <td style="text-align:center; font-size:0.9em; vertical-align:middle">
+                                @st.Area_Family_Num<span>세대</span>
+                            </td>
+                            <td style="text-align:center; font-size:0.9em; vertical-align:middle">
+                                @st.Area_Rate_Month<span>원</span>
+                            </td>
+                            <td style="text-align:center; font-size:0.9em; vertical-align:middle">
+                                @st.Area_Rate_Year<span>원</span>
+                            </td>
+                        </tr>
+
+                    </tbody>
+
+                }
+                <tr style="font-size: 1em; font-weight: bold; background-color: whitesmoke">
+                    <td colspan="2" style="text-align:center">
+                        <span style="vertical-align:middle">총 공급면적 : @string.Format("{0: ###,###.##}", bnn6.supply_total_Area)<span>㎡</span></span>
+                    </td>
+                    <td colspan="2" style="text-align:center">
+                        <span style="vertical-align:middle">세대수 : @string.Format("{0: ###,###.##}", bnn6.household)<span>세대</span></span>
+                    </td>
+                    <td colspan="2" style="text-align:center">
+                        <span style="vertical-align:middle">월간 부과총액 : @bnn6.Total_Cost_Month<span>원</span></span>
+                    </td>
+                    <td colspan="2" style="text-align:center">
+                        <span style="vertical-align:middle">년간 부과총액 : @bnn6.Total_Cost_Year<span>원</span></span>
+                    </td>
+                </tr>
+            </table>
+            <br />
+        }
+
+        @if (LevyCount >= 7)
+        {
+            <img src="/images/sub/icon_con_tit.png" alt="" /> <span style="font-size: 1em;"> 적용기간 : @bnn7.Levy_Start_Year<span>년</span> @bnn7.Levy_Start_Month<span>월</span> ~ @bnn7.Levy_End_Year<span>년</span> @bnn7.Levy_End_Month<span>월</span></span> <span style="font-size: 1em;">(@bnn7.Levy_Period_New<span>개월간)</span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 누적 적립율 : @bnn7.Levy_Rate_Accumulate<span>%</span>  </span>
+            <table class="table table-sm" style="font-size: 0.9em; margin-bottom:0px">
+                <thead>
+                    <tr style="background-color: whitesmoke">
+                        <th class="text-center">
+                            공급면적
+                        </th>
+                        <th class="text-center">
+                            단가(㎡)
+                        </th>
+                        <th class="text-center">
+                            적립율
+                        </th>
+                        <th class="text-center">
+                            세대 부과금액(월간)
+                        </th>
+                        <th class="text-center">
+                            세대 부과금액(년간)
+                        </th>
+                        <th class="text-center">
+                            세대수
+                        </th>
+                        <th class="text-center">
+                            면적별 총액(월간)
+                        </th>
+                        <th class="text-center">
+                            면적별 총액(년간)
+                        </th>
+                    </tr>
+                </thead>
+
+                @foreach (var st in List_7)
+                {
+                    <tbody>
+                        <tr>
+                            <td style="text-align:center; font-size:0.9em; vertical-align:middle">
+                                @st.Supply_Area<span>㎡</span>
+                            </td>
+                            <td style="text-align:center; font-size:0.9em; vertical-align:middle">
+                                @st.Unit_Price<span>원</span>
+                            </td>
+                            <td style="text-align:center; font-size:0.9em; vertical-align:middle">
+                                @st.Levy_Rate<span>%</span>
+                            </td>
+                            <td style="text-align:center; font-size:0.9em; vertical-align:middle">
+                                @st.Family_Month_Rate_Cost<span>원</span>
+                            </td>
+                            <td style="text-align:center; font-size:0.9em; vertical-align:middle">
+                                @st.Family_Year_Rate_Cost<span>원</span>
+                            </td>
+                            <td style="text-align:center; font-size:0.9em; vertical-align:middle">
+                                @st.Area_Family_Num<span>세대</span>
+                            </td>
+                            <td style="text-align:center; font-size:0.9em; vertical-align:middle">
+                                @st.Area_Rate_Month<span>원</span>
+                            </td>
+                            <td style="text-align:center; font-size:0.9em; vertical-align:middle">
+                                @st.Area_Rate_Year<span>원</span>
+                            </td>
+                        </tr>
+
+                    </tbody>
+
+                }
+                <tr style="font-size: 1em; font-weight: bold; background-color: whitesmoke">
+                    <td colspan="2" style="text-align:center">
+                        <span style="vertical-align:middle">총 공급면적 : @string.Format("{0: ###,###.##}", bnn7.supply_total_Area)<span>㎡</span></span>
+                    </td>
+                    <td colspan="2" style="text-align:center">
+                        <span style="vertical-align:middle">세대수 : @string.Format("{0: ###,###.##}", bnn7.household)<span>세대</span></span>
+                    </td>
+                    <td colspan="2" style="text-align:center">
+                        <span style="vertical-align:middle">월간 부과총액 : @bnn7.Total_Cost_Month<span>원</span></span>
+                    </td>
+                    <td colspan="2" style="text-align:center">
+                        <span style="vertical-align:middle">년간 부과총액 : @bnn7.Total_Cost_Year<span>원</span></span>
+                    </td>
+                </tr>
+            </table>
+            <br />
+        }
+
+
+        @if (LevyCount >= 8)
+        {
+            <img src="/images/sub/icon_con_tit.png" alt="" /> <span style="font-size: 1em;"> 적용기간 : @bnn8.Levy_Start_Year<span>년</span> @bnn8.Levy_Start_Month<span>월</span> ~ @bnn8.Levy_End_Year<span>년</span> @bnn8.Levy_End_Month<span>월</span></span> <span style="font-size: 1em;">(@bnn8.Levy_Period_New<span>개월간)</span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 누적 적립율 : @bnn8.Levy_Rate_Accumulate<span>%</span>  </span>
+            <table class="table table-sm" style="font-size: 0.9em; margin-bottom:0px">
+                <thead>
+                    <tr style="background-color: whitesmoke">
+                        <th class="text-center">
+                            공급면적
+                        </th>
+                        <th class="text-center">
+                            단가(㎡)
+                        </th>
+                        <th class="text-center">
+                            적립율
+                        </th>
+                        <th class="text-center">
+                            세대 부과금액(월간)
+                        </th>
+                        <th class="text-center">
+                            세대 부과금액(년간)
+                        </th>
+                        <th class="text-center">
+                            세대수
+                        </th>
+                        <th class="text-center">
+                            면적별 총액(월간)
+                        </th>
+                        <th class="text-center">
+                            면적별 총액(년간)
+                        </th>
+                    </tr>
+                </thead>
+
+                @foreach (var st in List_8)
+                {
+                    <tbody>
+                        <tr>
+                            <td style="text-align:center; font-size:0.9em; vertical-align:middle">
+                                @st.Supply_Area<span>㎡</span>
+                            </td>
+                            <td style="text-align:center; font-size:0.9em; vertical-align:middle">
+                                @st.Unit_Price<span>원</span>
+                            </td>
+                            <td style="text-align:center; font-size:0.9em; vertical-align:middle">
+                                @st.Levy_Rate<span>%</span>
+                            </td>
+                            <td style="text-align:center; font-size:0.9em; vertical-align:middle">
+                                @st.Family_Month_Rate_Cost<span>원</span>
+                            </td>
+                            <td style="text-align:center; font-size:0.9em; vertical-align:middle">
+                                @st.Family_Year_Rate_Cost<span>원</span>
+                            </td>
+                            <td style="text-align:center; font-size:0.9em; vertical-align:middle">
+                                @st.Area_Family_Num<span>세대</span>
+                            </td>
+                            <td style="text-align:center; font-size:0.9em; vertical-align:middle">
+                                @st.Area_Rate_Month<span>원</span>
+                            </td>
+                            <td style="text-align:center; font-size:0.9em; vertical-align:middle">
+                                @st.Area_Rate_Year<span>원</span>
+                            </td>
+                        </tr>
+
+                    </tbody>
+
+                }
+                <tr style="font-size: 1em; font-weight: bold; background-color: whitesmoke">
+                    <td colspan="2" style="text-align:center">
+                        <span style="vertical-align:middle">총 공급면적 : @string.Format("{0: ###,###.##}", bnn8.supply_total_Area)<span>㎡</span></span>
+                    </td>
+                    <td colspan="2" style="text-align:center">
+                        <span style="vertical-align:middle">세대수 : @string.Format("{0: ###,###.##}", bnn8.household)<span>세대</span></span>
+                    </td>
+                    <td colspan="2" style="text-align:center">
+                        <span style="vertical-align:middle">월간 부과총액 : @bnn8.Total_Cost_Month<span>원</span></span>
+                    </td>
+                    <td colspan="2" style="text-align:center">
+                        <span style="vertical-align:middle">년간 부과총액 : @bnn8.Total_Cost_Year<span>원</span></span>
+                    </td>
+                </tr>
+            </table>
+            <br />
+        }
+
+
+        @if (LevyCount >= 9)
+        {
+            <img src="/images/sub/icon_con_tit.png" alt="" /> <span style="font-size: 1em;"> 적용기간 : @bnn9.Levy_Start_Year<span>년</span> @bnn9.Levy_Start_Month<span>월</span> ~ @bnn9.Levy_End_Year<span>년</span> @bnn9.Levy_End_Month<span>월</span></span> <span style="font-size: 1em;">(@bnn9.Levy_Period_New<span>개월간)</span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 누적 적립율 : @bnn9.Levy_Rate_Accumulate<span>%</span>  </span>
+            <table class="table table-sm" style="font-size: 0.9em; margin-bottom:0px">
+                <thead>
+                    <tr style="background-color: whitesmoke">
+                        <th class="text-center">
+                            공급면적
+                        </th>
+                        <th class="text-center">
+                            단가(㎡)
+                        </th>
+                        <th class="text-center">
+                            적립율
+                        </th>
+                        <th class="text-center">
+                            세대 부과금액(월간)
+                        </th>
+                        <th class="text-center">
+                            세대 부과금액(년간)
+                        </th>
+                        <th class="text-center">
+                            세대수
+                        </th>
+                        <th class="text-center">
+                            면적별 총액(월간)
+                        </th>
+                        <th class="text-center">
+                            면적별 총액(년간)
+                        </th>
+                    </tr>
+                </thead>
+
+                @foreach (var st in List_9)
+                {
+                    <tbody>
+                        <tr>
+                            <td style="text-align:center; font-size:0.9em; vertical-align:middle">
+                                @st.Supply_Area<span>㎡</span>
+                            </td>
+                            <td style="text-align:center; font-size:0.9em; vertical-align:middle">
+                                @st.Unit_Price<span>원</span>
+                            </td>
+                            <td style="text-align:center; font-size:0.9em; vertical-align:middle">
+                                @st.Levy_Rate<span>%</span>
+                            </td>
+                            <td style="text-align:center; font-size:0.9em; vertical-align:middle">
+                                @st.Family_Month_Rate_Cost<span>원</span>
+                            </td>
+                            <td style="text-align:center; font-size:0.9em; vertical-align:middle">
+                                @st.Family_Year_Rate_Cost<span>원</span>
+                            </td>
+                            <td style="text-align:center; font-size:0.9em; vertical-align:middle">
+                                @st.Area_Family_Num<span>세대</span>
+                            </td>
+                            <td style="text-align:center; font-size:0.9em; vertical-align:middle">
+                                @st.Area_Rate_Month<span>원</span>
+                            </td>
+                            <td style="text-align:center; font-size:0.9em; vertical-align:middle">
+                                @st.Area_Rate_Year<span>원</span>
+                            </td>
+                        </tr>
+
+                    </tbody>
+
+                }
+                <tr style="font-size: 1em; font-weight: bold; background-color: whitesmoke">
+                    <td colspan="2" style="text-align:center">
+                        <span style="vertical-align:middle">총 공급면적 : @string.Format("{0: ###,###.##}", bnn9.supply_total_Area)<span>㎡</span></span>
+                    </td>
+                    <td colspan="2" style="text-align:center">
+                        <span style="vertical-align:middle">세대수 : @string.Format("{0: ###,###.##}", bnn9.household)<span>세대</span></span>
+                    </td>
+                    <td colspan="2" style="text-align:center">
+                        <span style="vertical-align:middle">월간 부과총액 : @bnn9.Total_Cost_Month<span>원</span></span>
+                    </td>
+                    <td colspan="2" style="text-align:center">
+                        <span style="vertical-align:middle">년간 부과총액 : @bnn9.Total_Cost_Year<span>원</span></span>
+                    </td>
+                </tr>
+            </table>
+            <br />
+        }
+
+        @if (LevyCount >= 10)
+        {
+            <img src="/images/sub/icon_con_tit.png" alt="" /> <span style="font-size: 1em;"> 적용기간 : @bnn10.Levy_Start_Year<span>년</span> @bnn10.Levy_Start_Month<span>월</span> ~ @bnn10.Levy_End_Year<span>년</span> @bnn10.Levy_End_Month<span>월</span></span> <span style="font-size: 1em;">(@bnn10.Levy_Period_New<span>개월간)</span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 누적 적립율 : @bnn10.Levy_Rate_Accumulate<span>%</span>  </span>
+            <table class="table table-sm" style="font-size: 0.9em; margin-bottom:0px">
+                <thead>
+                    <tr style="background-color: whitesmoke">
+                        <th class="text-center">
+                            공급면적
+                        </th>
+                        <th class="text-center">
+                            단가(㎡)
+                        </th>
+                        <th class="text-center">
+                            적립율
+                        </th>
+                        <th class="text-center">
+                            세대 부과금액(월간)
+                        </th>
+                        <th class="text-center">
+                            세대 부과금액(년간)
+                        </th>
+                        <th class="text-center">
+                            세대수
+                        </th>
+                        <th class="text-center">
+                            면적별 총액(월간)
+                        </th>
+                        <th class="text-center">
+                            면적별 총액(년간)
+                        </th>
+                    </tr>
+                </thead>
+
+                @foreach (var st in List_10)
+                {
+                    <tbody>
+                        <tr>
+                            <td style="text-align:center; font-size:0.9em; vertical-align:middle">
+                                @st.Supply_Area<span>㎡</span>
+                            </td>
+                            <td style="text-align:center; font-size:0.9em; vertical-align:middle">
+                                @st.Unit_Price<span>원</span>
+                            </td>
+                            <td style="text-align:center; font-size:0.9em; vertical-align:middle">
+                                @st.Levy_Rate<span>%</span>
+                            </td>
+                            <td style="text-align:center; font-size:0.9em; vertical-align:middle">
+                                @st.Family_Month_Rate_Cost<span>원</span>
+                            </td>
+                            <td style="text-align:center; font-size:0.9em; vertical-align:middle">
+                                @st.Family_Year_Rate_Cost<span>원</span>
+                            </td>
+                            <td style="text-align:center; font-size:0.9em; vertical-align:middle">
+                                @st.Area_Family_Num<span>세대</span>
+                            </td>
+                            <td style="text-align:center; font-size:0.9em; vertical-align:middle">
+                                @st.Area_Rate_Month<span>원</span>
+                            </td>
+                            <td style="text-align:center; font-size:0.9em; vertical-align:middle">
+                                @st.Area_Rate_Year<span>원</span>
+                            </td>
+                        </tr>
+
+                    </tbody>
+
+                }
+                <tr style="font-size: 1em; font-weight: bold; background-color: whitesmoke">
+                    <td colspan="2" style="text-align:center">
+                        <span style="vertical-align:middle">총 공급면적 : @string.Format("{0: ###,###.##}", Convert.ToInt32(bnn10.supply_total_Area))<span>㎡</span></span>
+                    </td>
+                    <td colspan="2" style="text-align:center">
+                        <span style="vertical-align:middle">세대수 : @string.Format("{0: ###,###.##}", bnn10.household)<span>세대</span></span>
+                    </td>
+                    <td colspan="2" style="text-align:center">
+                        <span style="vertical-align:middle">월간 부과총액 : @bnn10.Total_Cost_Month<span>원</span></span>
+                    </td>
+                    <td colspan="2" style="text-align:center">
+                        <span style="vertical-align:middle">년간 부과총액 : @@bnn10.Total_Cost_Year<span>원</span></span>
+                    </td>
+                </tr>
+            </table>
+            <br />
+        }
+
+        @if (LevyCount >= 11)
+        {
+            <img src="/images/sub/icon_con_tit.png" alt="" /> <span style="font-size: 1em;"> 적용기간 : @bnn11.Levy_Start_Year<span>년</span> @bnn11.Levy_Start_Month<span>월</span> ~ @bnn11.Levy_End_Year<span>년</span> @bnn11.Levy_End_Month<span>월</span></span> <span style="font-size: 1em;">(@bnn11.Levy_Period_New<span>개월간)</span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 누적 적립율 : @bnn11.Levy_Rate_Accumulate<span>%</span>  </span>
+            <table class="table table-sm" style="font-size: 0.9em; margin-bottom:0px">
+                <thead>
+                    <tr style="background-color: whitesmoke">
+                        <th class="text-center">
+                            공급면적
+                        </th>
+                        <th class="text-center">
+                            단가(㎡)
+                        </th>
+                        <th class="text-center">
+                            적립율
+                        </th>
+                        <th class="text-center">
+                            세대 부과금액(월간)
+                        </th>
+                        <th class="text-center">
+                            세대 부과금액(년간)
+                        </th>
+                        <th class="text-center">
+                            세대수
+                        </th>
+                        <th class="text-center">
+                            면적별 총액(월간)
+                        </th>
+                        <th class="text-center">
+                            면적별 총액(년간)
+                        </th>
+                    </tr>
+                </thead>
+
+                @foreach (var st in List_11)
+                {
+                    <tbody>
+                        <tr>
+                            <td style="text-align:center; font-size:0.9em; vertical-align:middle">
+                                @st.Supply_Area<span>㎡</span>
+                            </td>
+                            <td style="text-align:center; font-size:0.9em; vertical-align:middle">
+                                @st.Unit_Price<span>원</span>
+                            </td>
+                            <td style="text-align:center; font-size:0.9em; vertical-align:middle">
+                                @st.Levy_Rate<span>%</span>
+                            </td>
+                            <td style="text-align:center; font-size:0.9em; vertical-align:middle">
+                                @st.Family_Month_Rate_Cost<span>원</span>
+                            </td>
+                            <td style="text-align:center; font-size:0.9em; vertical-align:middle">
+                                @st.Family_Year_Rate_Cost<span>원</span>
+                            </td>
+                            <td style="text-align:center; font-size:0.9em; vertical-align:middle">
+                                @st.Area_Family_Num<span>세대</span>
+                            </td>
+                            <td style="text-align:center; font-size:0.9em; vertical-align:middle">
+                                @st.Area_Rate_Month<span>원</span>
+                            </td>
+                            <td style="text-align:center; font-size:0.9em; vertical-align:middle">
+                                @st.Area_Rate_Year<span>원</span>
+                            </td>
+                        </tr>
+
+                    </tbody>
+
+                }
+                <tr style="font-size: 1em; font-weight: bold; background-color: whitesmoke">
+                    <td colspan="2" style="text-align:center">
+                        <span style="vertical-align:middle">총 공급면적 : @string.Format("{0: ###,###.##}", Convert.ToInt32(bnn11.supply_total_Area))<span>㎡</span></span>
+                    </td>
+                    <td colspan="2" style="text-align:center">
+                        <span style="vertical-align:middle">세대수 : @string.Format("{0: ###,###.##}", bnn11.household)<span>세대</span></span>
+                    </td>
+                    <td colspan="2" style="text-align:center">
+                        <span style="vertical-align:middle">월간 부과총액 : @bnn11.Total_Cost_Month<span>원</span></span>
+                    </td>
+                    <td colspan="2" style="text-align:center">
+                        <span style="vertical-align:middle">년간 부과총액 : @bnn11.Total_Cost_Year<span>원</span></span>
+                    </td>
+                </tr>
+            </table>
+            <br />
+        }
+
+
+        @if (LevyCount >= 12)
+        {
+            <img src="/images/sub/icon_con_tit.png" alt="" /> <span style="font-size: 1em;"> 적용기간 : @bnn12.Levy_Start_Year<span>년</span> @bnn12.Levy_Start_Month<span>월</span> ~ @bnn12.Levy_End_Year<span>년</span> @bnn12.Levy_End_Month<span>월</span></span> <span style="font-size: 1em;">(@bnn12.Levy_Period_New<span>개월간)</span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 누적 적립율 : @bnn12.Levy_Rate_Accumulate<span>%</span>  </span>
+            <table class="table table-sm" style="font-size: 0.9em; margin-bottom:0px">
+                <thead>
+                    <tr style="background-color: whitesmoke">
+                        <th class="text-center">
+                            공급면적
+                        </th>
+                        <th class="text-center">
+                            단가(㎡)
+                        </th>
+                        <th class="text-center">
+                            적립율
+                        </th>
+                        <th class="text-center">
+                            세대 부과금액(월간)
+                        </th>
+                        <th class="text-center">
+                            세대 부과금액(년간)
+                        </th>
+                        <th class="text-center">
+                            세대수
+                        </th>
+                        <th class="text-center">
+                            면적별 총액(월간)
+                        </th>
+                        <th class="text-center">
+                            면적별 총액(년간)
+                        </th>
+                    </tr>
+                </thead>
+
+                @foreach (var st in List_12)
+                {
+                    <tbody>
+                        <tr>
+                            <td style="text-align:center; font-size:0.9em; vertical-align:middle">
+                                @st.Supply_Area<span>㎡</span>
+                            </td>
+                            <td style="text-align:center; font-size:0.9em; vertical-align:middle">
+                                @st.Unit_Price<span>원</span>
+                            </td>
+                            <td style="text-align:center; font-size:0.9em; vertical-align:middle">
+                                @st.Levy_Rate<span>%</span>
+                            </td>
+                            <td style="text-align:center; font-size:0.9em; vertical-align:middle">
+                                @st.Family_Month_Rate_Cost<span>원</span>
+                            </td>
+                            <td style="text-align:center; font-size:0.9em; vertical-align:middle">
+                                @st.Family_Year_Rate_Cost<span>원</span>
+                            </td>
+                            <td style="text-align:center; font-size:0.9em; vertical-align:middle">
+                                @st.Area_Family_Num<span>세대</span>
+                            </td>
+                            <td style="text-align:center; font-size:0.9em; vertical-align:middle">
+                                @st.Area_Rate_Month<span>원</span>
+                            </td>
+                            <td style="text-align:center; font-size:0.9em; vertical-align:middle">
+                                @st.Area_Rate_Year<span>원</span>
+                            </td>
+                        </tr>
+
+                    </tbody>
+
+                }
+                <tr style="font-size: 1em; font-weight: bold; background-color: whitesmoke">
+                    <td colspan="2" style="text-align:center">
+                        <span style="vertical-align:middle">총 공급면적 : @string.Format("{0: ###,###.##}", Convert.ToInt32(bnn12.supply_total_Area))<span>㎡</span></span>
+                    </td>
+                    <td colspan="2" style="text-align:center">
+                        <span style="vertical-align:middle">세대수 : @string.Format("{0: ###,###.##}", bnn12.household)<span>세대</span></span>
+                    </td>
+                    <td colspan="2" style="text-align:center">
+                        <span style="vertical-align:middle">월간 부과총액 : @bnn12.Total_Cost_Month<span>원</span></span>
+                    </td>
+                    <td colspan="2" style="text-align:center">
+                        <span style="vertical-align:middle">년간 부과총액 : @bnn12.Total_Cost_Year<span>원</span></span>
+                    </td>
+                </tr>
+            </table>
+            <br />
+        }
+
+        @if (LevyCount >= 13)
+        {
+            <img src="/images/sub/icon_con_tit.png" alt="" /> <span style="font-size: 1em;"> 적용기간 : @bnn13.Levy_Start_Year<span>년</span> @bnn13.Levy_Start_Month<span>월</span> ~ @bnn13.Levy_End_Year<span>년</span> @bnn13.Levy_End_Month<span>월</span></span> <span style="font-size: 1em;">(@bnn13.Levy_Period_New<span>개월간)</span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 누적 적립율 : @bnn13.Levy_Rate_Accumulate<span>%</span>  </span>
+            <table class="table table-sm" style="font-size: 0.9em; margin-bottom:0px">
+                <thead>
+                    <tr style="background-color: whitesmoke">
+                        <th class="text-center">
+                            공급면적
+                        </th>
+                        <th class="text-center">
+                            단가(㎡)
+                        </th>
+                        <th class="text-center">
+                            적립율
+                        </th>
+                        <th class="text-center">
+                            세대 부과금액(월간)
+                        </th>
+                        <th class="text-center">
+                            세대 부과금액(년간)
+                        </th>
+                        <th class="text-center">
+                            세대수
+                        </th>
+                        <th class="text-center">
+                            면적별 총액(월간)
+                        </th>
+                        <th class="text-center">
+                            면적별 총액(년간)
+                        </th>
+                    </tr>
+                </thead>
+
+                @foreach (var st in List_13)
+                {
+                    <tbody>
+                        <tr>
+                            <td style="text-align:center; font-size:0.9em; vertical-align:middle">
+                                @st.Supply_Area<span>㎡</span>
+                            </td>
+                            <td style="text-align:center; font-size:0.9em; vertical-align:middle">
+                                @st.Unit_Price<span>원</span>
+                            </td>
+                            <td style="text-align:center; font-size:0.9em; vertical-align:middle">
+                                @st.Levy_Rate<span>%</span>
+                            </td>
+                            <td style="text-align:center; font-size:0.9em; vertical-align:middle">
+                                @st.Family_Month_Rate_Cost<span>원</span>
+                            </td>
+                            <td style="text-align:center; font-size:0.9em; vertical-align:middle">
+                                @st.Family_Year_Rate_Cost<span>원</span>
+                            </td>
+                            <td style="text-align:center; font-size:0.9em; vertical-align:middle">
+                                @st.Area_Family_Num<span>세대</span>
+                            </td>
+                            <td style="text-align:center; font-size:0.9em; vertical-align:middle">
+                                @st.Area_Rate_Month<span>원</span>
+                            </td>
+                            <td style="text-align:center; font-size:0.9em; vertical-align:middle">
+                                @st.Area_Rate_Year<span>원</span>
+                            </td>
+                        </tr>
+
+                    </tbody>
+
+                }
+                <tr style="font-size: 1em; font-weight: bold; background-color: whitesmoke">
+                    <td colspan="2" style="text-align:center">
+                        <span style="vertical-align:middle">총 공급면적 : @string.Format("{0: ###,###.##}", Convert.ToInt32(bnn13.supply_total_Area))<span>㎡</span></span>
+                    </td>
+                    <td colspan="2" style="text-align:center">
+                        <span style="vertical-align:middle">세대수 : @string.Format("{0: ###,###.##}", bnn13.household)<span>세대</span></span>
+                    </td>
+                    <td colspan="2" style="text-align:center">
+                        <span style="vertical-align:middle">월간 부과총액 : @bnn13.Total_Cost_Month<span>원</span></span>
+                    </td>
+                    <td colspan="2" style="text-align:center">
+                        <span style="vertical-align:middle">년간 부과총액 : @bnn13.Total_Cost_Year<span>원</span></span>
+                    </td>
+                </tr>
+            </table>
+            <br />
+        }
+
+        @if (LevyCount >= 14)
+        {
+            <img src="/images/sub/icon_con_tit.png" alt="" /> <span style="font-size: 1em;"> 적용기간 : @bnn14.Levy_Start_Year<span>년</span> @bnn14.Levy_Start_Month<span>월</span> ~ @bnn14.Levy_End_Year<span>년</span> @bnn14.Levy_End_Month<span>월</span></span> <span style="font-size: 1em;">(@bnn14.Levy_Period_New<span>개월간)</span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 누적 적립율 : @bnn14.Levy_Rate_Accumulate<span>%</span>  </span>
+            <table class="table table-sm" style="font-size: 0.9em; margin-bottom:0px">
+                <thead>
+                    <tr style="background-color: whitesmoke">
+                        <th class="text-center">
+                            공급면적
+                        </th>
+                        <th class="text-center">
+                            단가(㎡)
+                        </th>
+                        <th class="text-center">
+                            적립율
+                        </th>
+                        <th class="text-center">
+                            세대 부과금액(월간)
+                        </th>
+                        <th class="text-center">
+                            세대 부과금액(년간)
+                        </th>
+                        <th class="text-center">
+                            세대수
+                        </th>
+                        <th class="text-center">
+                            면적별 총액(월간)
+                        </th>
+                        <th class="text-center">
+                            면적별 총액(년간)
+                        </th>
+                    </tr>
+                </thead>
+
+                @foreach (var st in List_14)
+                {
+                    <tbody>
+                        <tr>
+                            <td style="text-align:center; font-size:0.9em; vertical-align:middle">
+                                @st.Supply_Area<span>㎡</span>
+                            </td>
+                            <td style="text-align:center; font-size:0.9em; vertical-align:middle">
+                                @st.Unit_Price<span>원</span>
+                            </td>
+                            <td style="text-align:center; font-size:0.9em; vertical-align:middle">
+                                @st.Levy_Rate<span>%</span>
+                            </td>
+                            <td style="text-align:center; font-size:0.9em; vertical-align:middle">
+                                @st.Family_Month_Rate_Cost<span>원</span>
+                            </td>
+                            <td style="text-align:center; font-size:0.9em; vertical-align:middle">
+                                @st.Family_Year_Rate_Cost<span>원</span>
+                            </td>
+                            <td style="text-align:center; font-size:0.9em; vertical-align:middle">
+                                @st.Area_Family_Num<span>세대</span>
+                            </td>
+                            <td style="text-align:center; font-size:0.9em; vertical-align:middle">
+                                @st.Area_Rate_Month<span>원</span>
+                            </td>
+                            <td style="text-align:center; font-size:0.9em; vertical-align:middle">
+                                @st.Area_Rate_Year<span>원</span>
+                            </td>
+                        </tr>
+
+                    </tbody>
+
+                }
+                <tr style="font-size: 1em; font-weight: bold; background-color: whitesmoke">
+                    <td colspan="2" style="text-align:center">
+                        <span style="vertical-align:middle">총 공급면적 : @string.Format("{0: ###,###.##}", Convert.ToInt32(bnn14.supply_total_Area))<span>㎡</span></span>
+                    </td>
+                    <td colspan="2" style="text-align:center">
+                        <span style="vertical-align:middle">세대수 : @string.Format("{0: ###,###.##}", bnn14.household)<span>세대</span></span>
+                    </td>
+                    <td colspan="2" style="text-align:center">
+                        <span style="vertical-align:middle">월간 부과총액 : @bnn14.Total_Cost_Month<span>원</span></span>
+                    </td>
+                    <td colspan="2" style="text-align:center">
+                        <span style="vertical-align:middle">년간 부과총액 : @bnn14.Total_Cost_Year<span>원</span></span>
+                    </td>
+                </tr>
+            </table>
+            <br />
+        }
+
+        @if (LevyCount >= 15)
+        {
+            <img src="/images/sub/icon_con_tit.png" alt="" /> <span style="font-size: 1em;"> 적용기간 : @bnn15.Levy_Start_Year<span>년</span> @bnn15.Levy_Start_Month<span>월</span> ~ @bnn15.Levy_End_Year<span>년</span> @bnn15.Levy_End_Month<span>월</span></span> <span style="font-size: 1em;">(@bnn3.Levy_Period_New<span>개월간)</span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 누적 적립율 : @bnn15.Levy_Rate_Accumulate<span>%</span>  </span>
+            <table class="table table-sm" style="font-size: 0.9em; margin-bottom:0px">
+                <thead>
+                    <tr style="background-color: whitesmoke">
+                        <th class="text-center">
+                            공급면적
+                        </th>
+                        <th class="text-center">
+                            단가(㎡)
+                        </th>
+                        <th class="text-center">
+                            적립율
+                        </th>
+                        <th class="text-center">
+                            세대 부과금액(월간)
+                        </th>
+                        <th class="text-center">
+                            세대 부과금액(년간)
+                        </th>
+                        <th class="text-center">
+                            세대수
+                        </th>
+                        <th class="text-center">
+                            면적별 총액(월간)
+                        </th>
+                        <th class="text-center">
+                            면적별 총액(년간)
+                        </th>
+                    </tr>
+                </thead>
+
+                @foreach (var st in List_15)
+                {
+                    <tbody>
+                        <tr>
+                            <td style="text-align:center; font-size:0.9em; vertical-align:middle">
+                                @st.Supply_Area<span>㎡</span>
+                            </td>
+                            <td style="text-align:center; font-size:0.9em; vertical-align:middle">
+                                @st.Unit_Price<span>원</span>
+                            </td>
+                            <td style="text-align:center; font-size:0.9em; vertical-align:middle">
+                                @st.Levy_Rate<span>%</span>
+                            </td>
+                            <td style="text-align:center; font-size:0.9em; vertical-align:middle">
+                                @st.Family_Month_Rate_Cost<span>원</span>
+                            </td>
+                            <td style="text-align:center; font-size:0.9em; vertical-align:middle">
+                                @st.Family_Year_Rate_Cost<span>원</span>
+                            </td>
+                            <td style="text-align:center; font-size:0.9em; vertical-align:middle">
+                                @st.Area_Family_Num<span>세대</span>
+                            </td>
+                            <td style="text-align:center; font-size:0.9em; vertical-align:middle">
+                                @st.Area_Rate_Month<span>원</span>
+                            </td>
+                            <td style="text-align:center; font-size:0.9em; vertical-align:middle">
+                                @st.Area_Rate_Year<span>원</span>
+                            </td>
+                        </tr>
+
+                    </tbody>
+
+                }
+                <tr style="font-size: 1em; font-weight: bold; background-color: whitesmoke">
+                    <td colspan="2" style="text-align:center">
+                        <span style="vertical-align:middle">총 공급면적 : @string.Format("{0: ###,###.##}", Convert.ToInt32(bnn15.supply_total_Area))<span>㎡</span></span>
+                    </td>
+                    <td colspan="2" style="text-align:center">
+                        <span style="vertical-align:middle">세대수 : @string.Format("{0: ###,###.##}", bnn15.household)<span>세대</span></span>
+                    </td>
+                    <td colspan="2" style="text-align:center">
+                        <span style="vertical-align:middle">월간 부과총액 : @bnn15.Total_Cost_Month<span>원</span></span>
+                    </td>
+                    <td colspan="2" style="text-align:center">
+                        <span style="vertical-align:middle">년간 부과총액 : @bnn15.Total_Cost_Year<span>원</span></span>
+                    </td>
+                </tr>
+            </table>
+            <br />
+        }
+
+    </div>
+</div>
+<br />

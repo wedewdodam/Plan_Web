@@ -99,6 +99,11 @@ namespace Plan_Blazor_Lib
         /// 수선항목 이전 정보
         /// </summary>
         Article_Entity Article_Ago(string Apt_Code, string Ago_Code, string Article_Name);
+
+        /// <summary>
+        /// 수선항목에 따른 공사종별 명 가져오기
+        /// </summary>
+        string ArticleName(string Aid);
     }
 
     /// <summary>
@@ -322,15 +327,21 @@ namespace Plan_Blazor_Lib
         /// <summary>
         /// 수선항목에 따른 공사종별 명 가져오기
         /// </summary>
-        /// <returns></returns>
         public async Task<string> Article_Name(int Aid)
         {
             string sql = "Select Repair_Article_Name From Repair_Article Where Aid = @Aid";
-            using (var conn = new SqlConnection(_db.GetConnectionString("Khmais_db_Connection")))
-            {
-                conn.Open();
-                return await conn.QuerySingleOrDefaultAsync<string>(sql, new { Aid }, commandType: CommandType.Text);
-            }
+            using var conn = new SqlConnection(_db.GetConnectionString("Khmais_db_Connection"));
+            return await conn.QuerySingleOrDefaultAsync<string>(sql, new { Aid }, commandType: CommandType.Text);
+        }
+
+        /// <summary>
+        /// 수선항목에 따른 공사종별 명 가져오기
+        /// </summary>
+        public string ArticleName(string Aid)
+        {
+            string sql = "Select Repair_Article_Name From Repair_Article Where Aid = @Aid";
+            using var conn = new SqlConnection(_db.GetConnectionString("Khmais_db_Connection"));
+            return conn.QuerySingleOrDefault<string>(sql, new { Aid });
         }
 
         /// <summary>
