@@ -53,6 +53,7 @@ namespace Plan_Web.Pages.Fund_Use_Plan
         public string User_Name { get; set; }
         public string BuildDate { get; set; }
         public string InsertViews { get; set; } = "A";
+        public string DataViews { get; set; } = "A";
         public string strTitle { get; set; }
         public string NowYear { get; private set; }
         public string NextYear { get; private set; }
@@ -270,6 +271,7 @@ namespace Plan_Web.Pages.Fund_Use_Plan
         /// </summary>
         private async Task btnOpen()
         {
+            dnn = new Cost_Using_Plan_Entity();
             fnnA = await facility_Sort_Lib.GetList_A_FacilitySort(); //대분류 만들기
             InsertViews = "B";
             dnn.Repair_Method = "첨부된 시방서 참조";
@@ -282,7 +284,6 @@ namespace Plan_Web.Pages.Fund_Use_Plan
         /// <summary>
         /// 계획예년 목록에서 선택 시 실행
         /// </summary>
-        /// <param name="ann"></param>
         private async Task OnBySelectA(Join_Article_Cycle_Cost_EntityA ann)
         {
             dnn.Repair_Name = ann.Sort_B_Name + " " + ann.Sort_C_Name + " " + ann.Repair_Article_Name + " 보수 공사";
@@ -318,7 +319,6 @@ namespace Plan_Web.Pages.Fund_Use_Plan
         /// <summary>
         /// 장기수선충당금 사용계획서 저장
         /// </summary>
-        /// <returns></returns>
         private async Task btnSave()
         {
             dnn.Apt_Code = Apt_Code;
@@ -392,6 +392,31 @@ namespace Plan_Web.Pages.Fund_Use_Plan
         private void btnClose()
         {
             InsertViews = "A";
+        }
+
+        /// <summary>
+        /// 인쇄로 이동
+        /// </summary>
+        private void btnPrint()
+        {
+            ///
+        }
+
+        /// <summary>
+        /// 장기수선충당금 사용계획서 상세보기
+        /// </summary>
+        private void OnByViews(Cost_Using_Plan_Entity cupe)
+        {
+            dnn = cupe;
+            DataViews = "B";
+        }
+
+        /// <summary>
+        /// 장기수선충당금 사용계획서 입력 닫기
+        /// </summary>
+        private void btnCloseA()
+        {
+            DataViews = "A";
         }
     }   
 }

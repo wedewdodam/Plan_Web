@@ -98,11 +98,11 @@
                 @foreach (var st in cup)
                 {
                     <tr>
-                        <td style="text-align:center; vertical-align:middle">@st.Repair_Name</td>
-                        <td style="text-align:center; vertical-align:middle">@Name(st.Repair_Article_Code)</td>
-                        <td style="text-align:center; vertical-align:middle">@st.Plan_Year<span>년</span></td>
-                        <td style="text-align:center; vertical-align:middle">@st.Start_Date.ToShortDateString() <span>~</span> @st.End_Date.ToShortDateString()</td>
-                        <td style="text-align:center; vertical-align:middle">
+                        <td style="text-align:center; vertical-align:middle" @onclick="() => OnByViews(st)">@st.Repair_Name</td>
+                        <td style="text-align:center; vertical-align:middle" @onclick="() => OnByViews(st)">@Name(st.Repair_Article_Code)</td>
+                        <td style="text-align:center; vertical-align:middle" @onclick="() => OnByViews(st)">@st.Plan_Year<span>년</span></td>
+                        <td style="text-align:center; vertical-align:middle" @onclick="() => OnByViews(st)">@st.Start_Date.ToShortDateString() <span>~</span> @st.End_Date.ToShortDateString()</td>
+                        <td style="text-align:center; vertical-align:middle" @onclick="() => OnByViews(st)">
                             @if (st.Repair_Cost_Sum < 1)
                             {
                                 <span>0원</span>
@@ -114,9 +114,9 @@
                             }
 
                         </td>
-                        <td style="text-align:center; vertical-align:middle"><span title="@st.Tender_Method_Process">@Dul.StringLibrary.CutString(st.Tender_Method_Process, 18)</span> </td>
+                        <td style="text-align:center; vertical-align:middle" @onclick="() => OnByViews(st)"><span title="@st.Tender_Method_Process">@Dul.StringLibrary.CutString(st.Tender_Method_Process, 18)</span> </td>
                         <td style="text-align:center; vertical-align:middle">
-                            <button @onclick="() => OnByEdit(st)" class="btn btn-link btn-sm">수정</button> 
+                            <button @onclick="() => OnByEdit(st)" class="btn btn-link btn-sm">수정</button>
                             <button @onclick="() => OnByRemove(st.Cost_Use_Plan_Code)" class="btn btn-link btn-sm">삭제</button>
                         </td>
                     </tr>
@@ -276,58 +276,58 @@
             <tbody>
                 @foreach (var st in JACC1)
                 {
-                <tr>
-                    <td style="text-align:center; vertical-align:middle"><span title="@st.Sort_A_Name"> @Dul.StringLibrary.CutString(st.Sort_A_Name, 18)</span> <span class="bi-chevron-double-right"></span> @st.Sort_B_Name <span class="bi-chevron-double-right"></span> <span title="@st.Sort_C_Name">@Dul.StringLibrary.CutString(st.Sort_C_Name, 18)</span></td>
+                    <tr>
+                        <td style="text-align:center; vertical-align:middle"><span title="@st.Sort_A_Name"> @Dul.StringLibrary.CutString(st.Sort_A_Name, 18)</span> <span class="bi-chevron-double-right"></span> @st.Sort_B_Name <span class="bi-chevron-double-right"></span> <span title="@st.Sort_C_Name">@Dul.StringLibrary.CutString(st.Sort_C_Name, 18)</span></td>
 
-                    <td style="text-align:center; vertical-align:middle">@st.Repair_Article_Name</td>
-                    <td style="text-align:center; vertical-align:middle">
-                        @if (st.Repair_Plan_Year_All < 1)
-                        {
-                            <span>없음</span>
-                        }
-                        else
-                        {
-                            @st.Repair_Plan_Year_All<span>년</span>
-                        }
+                        <td style="text-align:center; vertical-align:middle">@st.Repair_Article_Name</td>
+                        <td style="text-align:center; vertical-align:middle">
+                            @if (st.Repair_Plan_Year_All < 1)
+                            {
+                                <span>없음</span>
+                            }
+                            else
+                            {
+                                @st.Repair_Plan_Year_All<span>년</span>
+                            }
 
-                    </td>
-                    <td style="text-align:center; vertical-align:middle">
-                        @if (st.Repair_Plan_Year_Part < 1)
-                        {
-                            <span>없음</span>
-                        }
-                        else
-                        {
-                            @st.Repair_Plan_Year_Part<span>년</span>
-                        }
+                        </td>
+                        <td style="text-align:center; vertical-align:middle">
+                            @if (st.Repair_Plan_Year_Part < 1)
+                            {
+                                <span>없음</span>
+                            }
+                            else
+                            {
+                                @st.Repair_Plan_Year_Part<span>년</span>
+                            }
 
-                    </td>
-                    <td style="text-align:center; vertical-align:middle">
-                        @if (st.Repair_All_Cost < 1)
-                        {
-                            <span>0원</span>
-                        }
-                        else
-                        {
-                            @string.Format("{0: ###,###.#}", st.Repair_All_Cost)<span>원</span>
-                        }
+                        </td>
+                        <td style="text-align:center; vertical-align:middle">
+                            @if (st.Repair_All_Cost < 1)
+                            {
+                                <span>0원</span>
+                            }
+                            else
+                            {
+                                @string.Format("{0: ###,###.#}", st.Repair_All_Cost)<span>원</span>
+                            }
 
-                    </td>
-                    <td style="text-align:center; vertical-align:middle">
-                        @if (st.Repair_Part_Cost < 1)
-                        {
-                            <span>없음</span>
-                        }
-                        else
-                        {
-                            @string.Format("{0: ###,###.#}", st.Repair_Part_Cost)<span>원</span>
-                        }
+                        </td>
+                        <td style="text-align:center; vertical-align:middle">
+                            @if (st.Repair_Part_Cost < 1)
+                            {
+                                <span>없음</span>
+                            }
+                            else
+                            {
+                                @string.Format("{0: ###,###.#}", st.Repair_Part_Cost)<span>원</span>
+                            }
 
-                    </td>
-                    <td style="text-align:center; vertical-align:middle">
-                        <button @onclick="() => OnBySelectA(st)" class="btn btn-link btn-sm">선택</button>
-                    </td>
-                </tr>
+                        </td>
+                        <td style="text-align:center; vertical-align:middle">
+                            <button @onclick="() => OnBySelectA(st)" class="btn btn-link btn-sm">선택</button>
+                        </td>
+                    </tr>
                 }
 
             </tbody>
@@ -492,7 +492,7 @@
                                 </div>
                             </td>
                         </tr>
-                        
+
                         <tr>
                             <th style="width: 20%; vertical-align: middle; text-align: center; background-color: whitesmoke">
                                 발주 방법 및 절차
@@ -546,11 +546,127 @@
                         </tr>
 
                     </table>
-                    
+
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-primary btn-sm" @onclick="btnSave">저장</button> &nbsp; &nbsp; &nbsp;
                     <button type="button" class="btn btn-secondary btn-sm" @onclick="btnClose">닫기</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-backdrop show"></div>
+}
+
+@*수선항목 입력*@
+@if (DataViews == "B")
+{
+    <div class="modal fade show d-block" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header" style="background-color: cornflowerblue; color: white">
+                    <h5 class="modal-title"><span class="bi-house-door"></span>&nbsp;장기수선충당금 사용계획서 상세보기</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" @onclick="btnCloseA">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+
+                   
+                    <table class="table" style="font-size: 0.9em">
+                        <tr>
+                            <th style="width: 30%; vertical-align: middle; text-align:center; background-color: whitesmoke">
+                                수선공사 명칭
+                            </th>
+                            <td style="vertical-align: middle" colspan="2">
+                                @dnn.Repair_Name
+
+                            </td>
+
+                        </tr>
+
+                        <tr>
+                            <th style="width: 20%; vertical-align: middle; text-align: center; background-color: whitesmoke">
+                                대상시설의 위치 및 부위
+                            </th>
+                            <td style="vertical-align: middle">
+                                @dnn.Repair_Position
+                            </td>
+
+                        </tr>
+                        <tr>
+                            <th style="width: 20%; vertical-align: middle; text-align:center; background-color: whitesmoke">
+                                수선공사의 설계도면
+                            </th>
+                            <td style="vertical-align: middle" colspan="2">
+                                @dnn.Design_Drawing
+
+                            </td>
+
+                        </tr>
+
+                        <tr>
+                            <th style="width: 20%; vertical-align: middle; text-align: center; background-color: whitesmoke">
+                                공사기간
+                            </th>
+                            <td style="vertical-align: middle">
+                                @dnn.Start_Date.ToShortDateString() ~ @dnn.End_Date.ToShortDateString()
+
+                            </td>
+
+                        </tr>
+                        <tr>
+                            <th style="width: 20%; vertical-align: middle; text-align: center; background-color: whitesmoke">
+                                공사금액
+                            </th>
+                            <td style="vertical-align: middle">
+                                @string.Format("{0: ###,###.#}", dnn.Repair_Cost_Sum)<span>원</span>
+                                
+                            </td>
+                            
+                        </tr>
+                        <tr>
+                            <th style="width: 20%; vertical-align: middle; text-align: center; background-color: whitesmoke">
+                                공사 방법
+                            </th>
+                            <td style="vertical-align: middle">
+                                @dnn.Repair_Method
+
+                            </td>
+
+                        </tr>
+                        <tr>
+                            <th style="width: 20%; vertical-align: middle; text-align: center; background-color: whitesmoke">
+                                수선공사 내용
+                            </th>
+                            <td style="vertical-align: middle">
+                                @dnn.Repair_Detail
+                            </td>                            
+                        </tr>
+                        <tr>
+                            <th style="width: 20%; vertical-align: middle; text-align: center; background-color: whitesmoke">
+                                수선공사 범위
+                            </th>
+                            <td style="vertical-align: middle">
+                                @dnn.Repair_Range
+                            </td>
+                        </tr>
+                        <tr>
+                            <th style="width: 20%; vertical-align: middle; text-align: center; background-color: whitesmoke">
+                                발주 방법 및 절차
+                            </th>
+                            
+                            <td style="vertical-align: middle">
+                                @dnn.Tender_Method_Process
+                            </td>
+                        </tr>
+
+                    </table>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-success btn-sm" @onclick="btnPrint">인쇄</button> &nbsp; &nbsp; &nbsp;
+                    <button type="button" class="btn btn-secondary btn-sm" @onclick="btnCloseA">닫기</button>
                 </div>
             </div>
         </div>

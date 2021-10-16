@@ -43,6 +43,12 @@ namespace Plan_Lib.Company
 
         Task<int> CorporRate_Number(string CorporRate_Number);
 
+        /// <summary>
+        /// 업체 상세 정보(사업번호)
+        /// </summary>
+        Task<Company_Entity> ByDetails_Company(string CorporRate_Number);
+
+
         Task<List<Company_Entity>> GetList_Company(string SortA_Code, string SortB_Code);
 
         Task<List<Company_Entity>> List_Company();
@@ -74,6 +80,8 @@ namespace Plan_Lib.Company
         Task<Company_Etc_Entity> Edit_CompanyEtc(Company_Etc_Entity Sort);
 
         Task<int> Last_Number();
+
+        
 
         Task<List<Company_Etc_Entity>> GetList_CompanyEtc(string Company_Code);
 

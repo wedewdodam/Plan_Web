@@ -86,7 +86,7 @@ namespace Plan_Blazor_Lib.Record
         }
 
         /// <summary>
-        /// 해당 공동주택 수선공사 이력 목록 (현재년도 입력된 수선이력만 보여주기
+        /// 해당 공동주택 수선공사 이력 목록 (현재년도 입력된 수선이력만 보여주기)
         /// </summary>
         public async Task<List<Repair_Record_Entity>> list_Year_List(string apt_Code, string PostStart, string PostEnd)
         {
@@ -104,10 +104,12 @@ namespace Plan_Blazor_Lib.Record
         {
             using (var ctx = new SqlConnection(_db.GetConnectionString("Khmais_db_Connection")))
             {
-                var Lsit = await ctx.QueryAsync<Repair_Record_Entity>("Select  Aid, Apt_Code, Repair_Plan_Code, Sort_A_Code, Sort_A_Name, Sort_B_Code, Sort_B_Name, Sort_C_Code, Sort_C_Name, Repair_Article_Code, Repair_Article_Name, Repair_Division, Repair_Plan_Cost, Repair_contract_Cost, Repair_Cost_Complete, Repair_Start_Date, Repair_Year, Repair_Month, Repair_Day, Repair_End_Date, Repair_laver_Count, Company_Code, CorporRate_Number, Tender_Mothed, Tender_bid, Cost_Division, Charge_Man, ChargeMan_mobile, Work_Division, Repair_Record_Etc, Staff_Code, PostDate, PostIP From Repair_Record Where Apt_Code = @Apt_Code And Repair_End_Year = @PostEnd Order By Repair_Start_Date Desc", new { apt_Code, PostEnd });
+                var Lsit = await ctx.QueryAsync<Repair_Record_Entity>("Select a.Aid, a.Apt_Code, a.Repair_Plan_Code, a.Sort_A_Code, a.Sort_A_Name, a.Sort_B_Code, a.Sort_B_Name, a.Sort_C_Code, a.Sort_C_Name, a.Repair_Article_Code, a.Repair_Article_Name, a.Repair_Division, a.Repair_Plan_Cost, a.Repair_contract_Cost, a.Repair_Cost_Complete, a.Repair_Start_Date, a.Repair_Year, a.Repair_Month, a.Repair_Day, a.Repair_End_Date, a.Repair_laver_Count, a.Company_Code, a.CorporRate_Number, a.Tender_Mothed, a.Tender_bid, a.Cost_Division, a.Charge_Man,a. ChargeMan_mobile, a.Work_Division, a.Repair_Record_Etc, a.Staff_Code, a.PostDate, a.PostIP, b.Company_Name From Repair_Record as a Join Company as b on a.Company_Code = b.Company_Code Where a.Apt_Code = @Apt_Code And a.Repair_Year = @PostEnd Order By a.Repair_Month Desc", new { apt_Code, PostEnd });
                 return Lsit.ToList();
             }
         }
+
+
 
         /// <summary>
         /// 해당 공동주택의 수선이력 리스트

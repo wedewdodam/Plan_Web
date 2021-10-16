@@ -58,6 +58,11 @@ namespace Plan_Blazor_Lib.Record
         public string Company_Code { get; set; }//업체코드
 
         /// <summary>
+        /// 업체 명
+        /// </summary>
+        public string Company_Name { get; set; }
+
+        /// <summary>
         /// 수선항목 코드
         /// </summary>
         public string Repair_Article_Code { get; set; } //수선항목코드
@@ -100,7 +105,7 @@ namespace Plan_Blazor_Lib.Record
         /// <summary>
         /// 작업 연인월
         /// </summary>
-        public int Repair_laver_Count { get; set; } // 작업 연인월
+        public int Repair_laver_Count { get; set; } // 작업 연인월        
 
         /// <summary>
         /// 공사업체 사업자 등록번호

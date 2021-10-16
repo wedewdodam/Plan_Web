@@ -230,10 +230,19 @@ namespace Plan_Lib.Company
         {
             using (var ctx = new SqlConnection(_db.GetConnectionString("Khmais_db_Connection")))
             {
-                return await ctx.QuerySingleOrDefaultAsync<int>("Select Count(*) Aid From Company Where CorporRate_Number = @CorporRate_Number Order by Aid Desc", new { CorporRate_Number }, commandType: CommandType.Text);
+                return await ctx.QuerySingleOrDefaultAsync<int>("Select Count(*) From Company Where CorporRate_Number = @CorporRate_Number", new { CorporRate_Number }, commandType: CommandType.Text);
             }
+        }
 
-            //return this.ctx.Query<int>("Select Count(*) Aid From Company Where CorporRate_Number = @CorporRate_Number Order by Aid Desc", new { CorporRate_Number }).SingleOrDefault();
+        /// <summary>
+        /// 업체 상세 정보(사업번호)
+        /// </summary>
+        public async Task<Company_Entity> ByDetails_Company(string CorporRate_Number)
+        {
+            using (var ctx = new SqlConnection(_db.GetConnectionString("Khmais_db_Connection")))
+            {
+                return await ctx.QuerySingleOrDefaultAsync<Company_Entity>("Select Aid, Apt_Code, Staff_Code, SortA_Code, SortB_Code, SortA_Name, SortB_Name, Company_Code, Company_Name, CorporRate_Number, Company_Etc, PostDate, PostIP From Company Where SortA_Code = @SortA_Code And SortB_Code = @SortB_Code Order By Aid Asc", new { CorporRate_Number });                
+            }
         }
 
         /// <summary>
@@ -246,7 +255,6 @@ namespace Plan_Lib.Company
                 var apt = await ctx.QueryAsync<Company_Entity>("Select * From Company Where SortA_Code = @SortA_Code And SortB_Code = @SortB_Code Order By Aid Asc", new { SortA_Code, SortB_Code }, commandType: CommandType.Text);
                 return apt.ToList();
             }
-            //return this.ctx.Query<Company_Entity>("Select * From Company Where SortA_Code = @SortA_Code And SortB_Code = @SortB_Code Order By Aid Asc", new { SortA_Code, SortB_Code }).ToList();
         }
 
         /// <summary>
@@ -344,7 +352,7 @@ namespace Plan_Lib.Company
         {
             using (var ctx = new SqlConnection(_db.GetConnectionString("Khmais_db_Connection")))
             {
-                return await ctx.QuerySingleOrDefaultAsync<Company_Entity>("Select  * From Company Where Company_Code = @Company_Code", new { Company_Code }, commandType: CommandType.Text);
+                return await ctx.QuerySingleOrDefaultAsync<Company_Entity>("Select * From Company Where Company_Code = @Company_Code", new { Company_Code }, commandType: CommandType.Text);
             }
             //return this.ctx.Query<Company_Entity>("Select  * From Company Where Company_Code = @Company_Code", new { Company_Code }).SingleOrDefault();
         }
@@ -358,7 +366,7 @@ namespace Plan_Lib.Company
         {
             using (var ctx = new SqlConnection(_db.GetConnectionString("Khmais_db_Connection")))
             {
-                return await ctx.QuerySingleOrDefaultAsync<Company_Entity_Etc>("", new { CorporRate_Number }, commandType: CommandType.Text);
+                return await ctx.QuerySingleOrDefaultAsync<Company_Entity_Etc>("Select Top 1 * From Company a Join Company_Etc b on a.Company_Code = b.Company_Code Where a.CorporRate_Number = @CorporRate_Number Order By a.Aid Desc", new { CorporRate_Number }, commandType: CommandType.Text);
             }
             //return this.ctx.Query<Company_Entity_Etc>("Select Top 1 * From Company a Join Company_Etc b on a.Company_Code = b.Company_Code Where a.CorporRate_Number = @CorporRate_Number Order By a.Aid Desc", new { CorporRate_Number }).SingleOrDefault();
         }
