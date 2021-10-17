@@ -6,6 +6,7 @@ using Plan_Apt_Lib;
 using Plan_Blazor_Lib;
 using Plan_Blazor_Lib.Article;
 using Plan_Blazor_Lib.Plan;
+using Plan_Blazor_Lib.Record;
 using Plan_Lib.Company;
 using Plan_Lib.Pund;
 using System;
@@ -33,6 +34,7 @@ namespace Plan_Web.Pages.Company
         [Inject] public IFacility_Sort_Lib facility_Sort_Lib { get; set; }
         [Inject] public IArticle_Lib article_Lib { get; set; }
         [Inject] public ISido_Lib sido_Lib { get; set; }
+        [Inject] public IRepair_Record_Lib repair_Record_Lib { get; set; }
 
         //private Repair_Plan_Entity rpn { get; set; } = new Repair_Plan_Entity();
         List<Company_Sort_Entity> CsnnA { get; set; } = new List<Company_Sort_Entity>();
@@ -40,10 +42,11 @@ namespace Plan_Web.Pages.Company
         //private List<Facility_Sort_Entity> fnnC { get; set; } = new List<Facility_Sort_Entity>();
         //private List<Article_Entity> Arnn { get; set; } = new List<Article_Entity>();
         private List<Company_Entity_Etc> ann { get; set; } = new List<Company_Entity_Etc>();
-        //private Article_Entity arnn { get; set; } = new Article_Entity();
+        private Company_Entity_Etc dnn { get; set; } = new Company_Entity_Etc();
         Company_Entity bnn { get; set; } = new Company_Entity();
         Company_Etc_Entity cnn { get; set; } = new Company_Etc_Entity();
         List<Sido_Entity> sidos { get; set; } = new List<Sido_Entity>();
+        List<Repair_Record_Entity> rrnn { get; set; } = new List<Repair_Record_Entity>();
 
         private string strSortA;
         private string CorporRate_Num;
@@ -54,6 +57,7 @@ namespace Plan_Web.Pages.Company
         public string Apt_Name { get; set; }
         public string User_Name { get; set; }
         public string BuildDate { get; set; }
+        public int LevelCount { get; set; } = 0;
         public string InsertViews { get; set; } = "A";
         public string DataViews { get; set; } = "A";
         public string strTitle { get; set; }
@@ -109,7 +113,7 @@ namespace Plan_Web.Pages.Company
                 Apt_Name = authState.User.Claims.FirstOrDefault(c => c.Type == "AptName")?.Value;
                 User_Name = authState.User.Claims.FirstOrDefault(c => c.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name")?.Value;
                 BuildDate = authState.User.Claims.FirstOrDefault(c => c.Type == "BuildDate")?.Value;
-
+                LevelCount = Convert.ToInt32(authState.User.Claims.FirstOrDefault(c => c.Type == "LevelCount")?.Value);
                 strCode = await ProtectedSessionStore.GetAsync<string>("Plan_Code");
 
                 if (strCode != null)
@@ -151,16 +155,43 @@ namespace Plan_Web.Pages.Company
         /// <summary>
         /// 업체 정보 수정
         /// </summary>
-        private void OnByEdit(Company_Entity_Etc ar)
+        private async Task OnByEdit(Company_Entity_Etc ar)
         {
-            bnn.Apt_Code = ar.Apt_Code;
-            bnn.Company_Code = ar.Company_Code;
-            bnn.Company_Etc = ar.Company_Etc;
+            if (LevelCount > 5)
+            {
+                bnn.Apt_Code = ar.Apt_Code;
+                bnn.Company_Code = ar.Company_Code;
+                bnn.Company_Etc = ar.Company_Etc;
 
-            cnn.Capital = ar.Capital;
-            cnn.Ceo_Mobile = ar.Ceo_Mobile;
+                cnn.Capital = ar.Capital;
+                cnn.Ceo_Mobile = ar.Ceo_Mobile;
 
-            InsertViews = "B";
+                InsertViews = "B";
+            }
+            else
+            {
+                await JSRuntime.InvokeVoidAsync("exampleJsFunctions.ShowMsg", "수정 권한이 없습니다. \n 수정을 원하시면 관리자에게 문의하세요.");
+            }
+        }
+
+        /// <summary>
+        /// 업체정보 삭제
+        /// </summary>
+        private async Task OnRemove(int Aid)
+        {
+            if (LevelCount > 5)
+            {
+                bool isDelete = await JSRuntime.InvokeAsync<bool>("confirm", $"{Aid}번 글을 정말로 삭제하시겠습니까?");
+                if (isDelete)
+                {
+                    await company_Lib.ByDelete_Company(Aid);
+                    await DatailsView(Work_Year);
+                }
+            }
+            else
+            {
+                await JSRuntime.InvokeVoidAsync("exampleJsFunctions.ShowMsg", "삭제 권한이 없습니다. \n 삭제를 원하시면 관리자에게 문의하세요.");
+            }
         }
 
         /// <summary>
@@ -212,7 +243,31 @@ namespace Plan_Web.Pages.Company
             }
         }
 
+        /// <summary>
+        /// 업체정보 입력 닫기
+        /// </summary>
+        private void btnCloseA()
+        {
+            InsertViews = "A";
+        }
 
+        /// <summary>
+        /// 업체정보 입력 닫기
+        /// </summary>
+        private void btnCloseB()
+        {
+            ViewsCompany = "A";
+        }
+
+        /// <summary>
+        /// 업체 정보 상세
+        /// </summary>
+        private async Task OnByDetails(Company_Entity_Etc ar)
+        {
+            dnn = ar;
+            rrnn = await repair_Record_Lib.List_Apt_all(dnn.Company_Code);
+            ViewsCompany = "B";
+        }
 
         /// <summary>
         /// 사업자 번호 바 넣기
@@ -424,7 +479,24 @@ namespace Plan_Web.Pages.Company
                 strCorporRate_Number = bnn.CorporRate_Number;
                 InsertViews = "A";
             }
-        } 
+        }
         #endregion
+
+        /// <summary>
+        /// 업체 정보 수정
+        /// </summary>
+        private void btnCompanyEdit(Company_Entity_Etc ar)
+        {
+            bnn.Company_Code = ar.Company_Code;
+            bnn.Company_Etc = ar.Company_Etc;
+            bnn.Company_Name = ar.Company_Name;
+
+
+            cnn.Capital = ar.Capital;
+            cnn.Ceo_Name = ar.Ceo_Name;
+            cnn.Ceo_Mobile = ar.Ceo_Mobile;
+            InsertViews = "B";
+
+        }
     }
 }

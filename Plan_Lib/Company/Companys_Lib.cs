@@ -417,6 +417,15 @@ namespace Plan_Lib.Company
             }
             //return this.ctx.Query<Company_Entity_Etc>("Select Top 1 * From Company a Join Company_Etc b on a.Company_Code = b.Company_Code Where a.CorporRate_Number = @CorporRate_Number Order By a.Aid Desc", new { CorporRate_Number }).SingleOrDefault();
         }
+
+        /// <summary>
+        /// 업체 정보 삭제
+        /// </summary>
+        public async Task ByDelete_Company(int Aid)
+        {
+            using var db = new SqlConnection(_db.GetConnectionString("Khmais_db_Connection"));
+            await db.ExecuteAsync("Delete Company Where Aid = @Aid", new { Aid });
+        }
     }
 
     /// <summary>
@@ -628,7 +637,7 @@ namespace Plan_Lib.Company
         {
             using (var ctx = new SqlConnection(_db.GetConnectionString("Khmais_db_Connection")))
             {
-                await ctx.ExecuteAsync("Delete From BusiList Where Aid = @Aid", new { Aid }, commandType: CommandType.Text);
+                await ctx.ExecuteAsync("Delete BusiList Where Aid = @Aid", new { Aid }, commandType: CommandType.Text);
             }
             //this.ctx.Execute("Delete From BusiList Where Aid = @Aid", new { Aid });
         }
@@ -706,7 +715,7 @@ namespace Plan_Lib.Company
         {
             using (var ctx = new SqlConnection(_db.GetConnectionString("Khmais_db_Connection")))
             {
-                await ctx.ExecuteAsync("Delete From Apt_Company Where Aid = @Aid", new { Aid }, commandType: CommandType.Text);
+                await ctx.ExecuteAsync("Delete Apt_Company Where Aid = @Aid", new { Aid }, commandType: CommandType.Text);
             }
             //this.ctx.Execute("Delete From Apt_Company Where Aid = @Aid", new { Aid });
         }

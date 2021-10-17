@@ -18,6 +18,17 @@ namespace Plan_Blazor_Lib.Record
         public string Apt_Code { get; set; }
 
         /// <summary>
+        /// 공동주택 명
+        /// </summary>
+        public string Apt_Name { get; set; }
+
+        /// <summary>
+        /// 공동주택 시도명
+        /// </summary>
+        public string Apt_Adress_sido { get; set; }
+
+        
+        /// <summary>
         /// 장기수선계획코드
         /// </summary>
         public string Repair_Plan_Code { get; set; }

@@ -87,6 +87,11 @@ namespace Plan_Lib.Company
         /// 업체 및 상세 정보 리스트(all) 검색된 수
         /// </summary>
         Task<int> List_Page_Company_Count_Search(string Field, string Query);
+
+        /// <summary>
+        /// 업체 정보 삭제
+        /// </summary>
+        Task ByDelete_Company(int Aid);
     }
 
     /// <summary>

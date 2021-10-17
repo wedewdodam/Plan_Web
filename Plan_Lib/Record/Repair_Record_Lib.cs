@@ -124,6 +124,21 @@ namespace Plan_Blazor_Lib.Record
         }
 
         /// <summary>
+        /// 해당 업체의 수선이력 리스트
+        /// </summary>
+        public async Task<List<Repair_Record_Entity>> List_Apt_all(string Company_Code)
+        {
+            using (var ctx = new SqlConnection(_db.GetConnectionString("Khmais_db_Connection")))
+            {
+                var Lst = await ctx.QueryAsync<Repair_Record_Entity>("Select a.Aid, a.Apt_Code, a.Repair_Plan_Code, a.Sort_A_Code, a.Sort_A_Name, a.Sort_B_Code, a.Sort_B_Name, a.Sort_C_Code, a.Sort_C_Name, a.Repair_Article_Code, a.Repair_Article_Name, a.Repair_Division, a.Repair_Plan_Cost, a.Repair_contract_Cost, a.Repair_Cost_Complete, a.Repair_Start_Date, a.Repair_Year, a.Repair_Month, a.Repair_Day, a.Repair_End_Date, a.Repair_laver_Count, a.Company_Code, a.CorporRate_Number, a.Tender_Mothed, a.Tender_bid, a.Cost_Division, a.Charge_Man, a.ChargeMan_mobile, a.Work_Division, a.Repair_Record_Etc, a.Staff_Code, a.PostDate, a.PostIP, a.Repair_End_Year, b.Apt_Name, b.Apt_Adress_sido From Repair_Record as a Join Apt as b On a.Apt_Code = b.Apt_Code Where a.Company_Code = @Company_Code Order By a.Repair_Start_Date Desc", new { Company_Code });
+                return Lst.ToList();
+            }
+        }
+
+        //Select* From Repair_Record Where Apt_Code = @Apt_Code Order By Repair_Start_Date Desc
+
+
+        /// <summary>
         /// 수선이력에서 년간 사용 총액
         /// </summary>
         public async Task<double> Year_Sum(string apt_Code, string _Start)

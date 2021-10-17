@@ -42,6 +42,11 @@ namespace Plan_Blazor_Lib.Record
         Task<Balance_Year_Entity> balance_Year(string Apt_Code, string Reset_Year);
 
         Task<double> Using_Cost(string Apt_Code, string Repair_Reset_Date, string Repair_End_Date);
+
+        /// <summary>
+        /// 해당 공동주택의 수선이력 리스트
+        /// </summary>
+        Task<List<Repair_Record_Entity>> List_Apt_all(string Apt_Code);
     }
 
     /// <summary>

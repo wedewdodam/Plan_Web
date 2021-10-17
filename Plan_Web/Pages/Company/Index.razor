@@ -126,35 +126,38 @@
                 @foreach (var st in ann)
                 {
                     <tr>
-                        <td style="vertical-align: middle; text-align:center">
+                        <td style="vertical-align: middle; text-align:center" @onclick="() => OnByDetails(st)">
                             @st.Company_Name
                         </td>
-                        <td style="vertical-align: middle; text-align:center">
+                        <td style="vertical-align: middle; text-align:center" @onclick="() => OnByDetails(st)">
                             @st.Company_Code
                         </td>
-                        <td style="vertical-align: middle; text-align:center">
+                        <td style="vertical-align: middle; text-align:center" @onclick="() => OnByDetails(st)">
                             @cnr(st.CorporRate_Number)
                         </td>
-                        <td style="vertical-align: middle; text-align:center">
+                        <td style="vertical-align: middle; text-align:center" @onclick="() => OnByDetails(st)">
                             @st.SortA_Name <span class="bi-chevron-double-right"></span> @st.SortB_Name
                         </td>
-                        <td style="vertical-align: middle; text-align:center">
+                        <td style="vertical-align: middle; text-align:center" @onclick="() => OnByDetails(st)">
                             @st.Cor_Sido <span class="bi-chevron-double-right"></span> @st.Cor_Gun
                         </td>
-                        <td style="vertical-align: middle; text-align:center">
+                        <td style="vertical-align: middle; text-align:center" @onclick="() => OnByDetails(st)">
                             @st.Ceo_Name
                         </td>
-                        <td style="vertical-align: middle; text-align:center">
+                        <td style="vertical-align: middle; text-align:center" @onclick="() => OnByDetails(st)">
                             @st.Cor_Tel
                         </td>
-                        <td style="vertical-align: middle; text-align:center">
+                        <td style="vertical-align: middle; text-align:center" @onclick="() => OnByDetails(st)">
                             @st.PostDate.ToShortDateString()
                         </td>
-                        <td style="vertical-align: middle; text-align:center">
+                        <td style="vertical-align: middle; text-align:center" @onclick="() => OnByDetails(st)">
                             @st.Staff_Code
                         </td>
-                        <button @onclick="() => OnByEdit(st)" class="btn btn-link btn-sm">수정</button>
-                        @*<button @onclick="() => OnRemove(st.Aid)" class="btn btn-link btn-sm">삭제</button>*@
+                        <td style="vertical-align: middle; text-align:center">
+                            <button @onclick="() => OnByEdit(st)" class="btn btn-link btn-sm">수정</button>
+                            <button @onclick="() => OnRemove(st.Aid)" class="btn btn-link btn-sm">삭제</button>
+                        </td>
+                        
                     </tr>
                 }
 
@@ -400,213 +403,132 @@
                 </div>
 
                 <div class="modal-body">
-                    <table class="table table-sm" style="font-size: 0.9em; margin-bottom: 0px">
-                        <thead>
-                            <tr style="background-color: whitesmoke">
-                                <th class="text-center">
-                                    <div class="input-group">
-                                        <div class="input-group-prepend"><span class="input-group-text" style="font-size: 0.9em"><span class="bi-pencil-square"></span>&nbsp;상위분류<span style="color: red">*</span></span></div>
-                                        <select id="Sort_A_Code" class="custom-select" value="@strCompSortA" style="font-size: 0.9em" @onchange="onCompSortA" required>
-                                            <option value="Z">=업체 상위분류 선택=</option>
-                                            @foreach (var it in CsnnA)
-                                            {
-                                                <option value="@it.Company_Sort_Code">@it.Company_Sort_Name</option>
-                                            }
-                                        </select>
-                                    </div>
-                                </th>
-                                <th class="text-center">
-                                    <div class="input-group">
-                                        <div class="input-group-prepend"><span class="input-group-text" style="font-size: 0.9em"><span class="bi-pencil-square"></span>&nbsp;하위분류<span style="color: red">*</span></span></div>
-                                        <select id="Sort_B_Code" class="custom-select" value="@strCompSortB" style="font-size: 0.9em" @onchange="onCompSortB" required>
-                                            <option value="Z">=업체 하위분류 선택=</option>
-                                            @foreach (var it in CsnnB)
-                                            {
-                                                <option value="@it.Company_Sort_Code">@it.Company_Sort_Name</option>
-                                            }
-                                        </select>
-                                    </div>
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody>
+                    <div style="height: 500px; overflow-y:scroll">
+                        <div>
+                            <img src="/images/sub/board_tit_bullet.png" alt="" /> 업체 상세 정보
+                        </div>
+                        <table class="table table-sm" style="font-size: 0.9em; margin-bottom: 10px; border-bottom:solid; border-bottom-width: 1px">
                             <tr>
-                                <td style="text-align: center; vertical-align:middle">
-                                    <div class="input-group">
-                                        <div class="input-group-prepend"><span class="input-group-text" style="font-size: 0.9em"><span class="bi-pencil-square"></span>&nbsp;번호<span style="color: red">*</span></span></div>
-                                        <input id="CorporRate_Num" name="CorporRate_Num" placeholder="사업자 등록번호를 입력하세요." style="font-size: 0.9em; text-align: center" value="@CorporRate_Num" class="form-control" maxlength="13" type="text" @onchange="btnCompanySearchOn" />
-                                        <div class="input-group-append">
-                                            <button type="button" class="btn btn-dark btn-sm"><span class="bi-search">&nbsp;검색</span></button>
-                                        </div>
-                                    </div>
+                                <td style="vertical-align:middle">
+                                    업체명 : @dnn.Company_Name
                                 </td>
-                                <td style="text-align: center; vertical-align:middle">
-                                    <div class="input-group">
-                                        <div class="input-group-prepend"><span class="input-group-text" style="font-size: 0.9em"><span class="bi-pencil-square"></span>&nbsp;업체명<span style="color: red">*</span></span></div>
-                                        <input id="Company_Name" name="Company_Name" style="font-size: 0.9em; text-align: center" @bind="bnn.Company_Name" class="form-control" type="text" />
-                                    </div>
+                                <td style="vertical-align:middle">
+                                    상위분류 : @dnn.SortA_Name
+                                </td>
+                                <td style="vertical-align:middle">
+                                    하위분류 : @dnn.SortB_Name
                                 </td>
                             </tr>
 
                             <tr>
-                                <td style="text-align: center; vertical-align:middle">
-                                    <div class="input-group">
-                                        <div class="input-group-prepend"><span class="input-group-text" style="font-size: 0.9em"><span class="bi-pencil-square"></span>&nbsp;대표자명<span style="color: red">*</span></span></div>
-                                        <input id="Ceo_Name" name="Ceo_Name" style="font-size: 0.9em; text-align: center" @bind="cnn.Ceo_Name" class="form-control" type="text" />
-                                    </div>
+                                <td style="vertical-align:middle">
+                                    사업자번호 : @cnr(dnn.CorporRate_Number)
                                 </td>
-                                <td style="text-align: center; vertical-align:middle">
-                                    <div class="input-group">
-                                        <div class="input-group-prepend"><span class="input-group-text" style="font-size: 0.9em"><span class="bi-pencil-square"></span>&nbsp;대표자모바일</span></div>
-                                        <input id="Ceo_Mobile" name="Ceo_Mobile" style="font-size: 0.9em; text-align: center" @bind="cnn.Ceo_Mobile" class="form-control" type="tel" />
-                                    </div>
+                                <td style="vertical-align:middle">
+                                    대표자명 : @dnn.Ceo_Name
+                                </td>
+                                <td style="vertical-align:middle">
+                                    대표자연락처 : @dnn.Ceo_Mobile
                                 </td>
                             </tr>
                             <tr>
-                                <td style="text-align: center; vertical-align:middle">
-                                    <div class="input-group">
-                                        <div class="input-group-prepend"><span class="input-group-text" style="font-size: 0.9em"><span class="bi-pencil-square"></span>&nbsp;대표연락처<span style="color: red">*</span></span></div>
-                                        <input id="Cor_Tel" name="Cor_Tel" style="font-size: 0.9em; text-align: center" @bind="cnn.Cor_Tel" class="form-control" type="tel" />
-                                    </div>
+                                <td style="vertical-align:middle">
+                                    주소 : @dnn.Cor_Sido @dnn.Cor_Gun @dnn.Cor_Adress
                                 </td>
-                                <td style="text-align: center; vertical-align:middle">
-                                    <div class="input-group">
-                                        <div class="input-group-prepend"><span class="input-group-text" style="font-size: 0.9em"><span class="bi-pencil-square"></span>&nbsp;팩스번호</span></div>
-                                        <input id="Cor_Fax" name="Cor_Fax" style="font-size: 0.9em; text-align: center" @bind="cnn.Cor_Fax" class="form-control" type="tel" />
-                                    </div>
+                                <td style="vertical-align:middle">
+                                    대표전화 : @dnn.Cor_Tel
+                                </td>
+                                <td style="vertical-align:middle">
+                                    팩스번호 : @dnn.Cor_Fax
                                 </td>
                             </tr>
                             <tr>
-                                <td>
-                                    <div class="input-group">
-                                        <div class="input-group-prepend"><span class="input-group-text" style="font-size: 0.9em"><span class="bi-file-earmark-binary"></span> 시도<span style="color: red">*</span></span></div>
-                                        <select id="Sido_Code" style="font-size: 0.9em" value="@Sido_Code" class="custom-select" @onchange="OnSido">
-                                            <option value="">::시도선택::</option>
-                                            <option value="A">서울특별시</option>
-                                            <option value="B">경기도</option>
-                                            <option value="C">부산광역시</option>
-                                            <option value="D">대구광역시</option>
-                                            <option value="E">인천광역시</option>
-                                            <option value="F">광주광역시</option>
-                                            <option value="G">대전광역시</option>
-                                            <option value="H">울산광역시</option>
-                                            <option value="I">세종특별자치시</option>
-                                            <option value="J">충청남도</option>
-                                            <option value="K">충청북도</option>
-                                            <option value="L">경상남도</option>
-                                            <option value="M">경상북도</option>
-                                            <option value="N">전라남도</option>
-                                            <option value="O">전라북도</option>
-                                            <option value="P">강원도</option>
-                                            <option value="Q">제주특별자치도</option>
-                                        </select>
-                                    </div>
-
+                                <td style="vertical-align:middle">
+                                    이메일 : @dnn.Cor_Email
                                 </td>
-                                <td>
-                                    <div class="input-group">
-                                        <div class="input-group-prepend"><span class="input-group-text" style="font-size: 0.9em"><span class="bi-clipboard-check"></span> 시군구<span style="color: red">*</span></span></div>
-                                        <select id="Cor_Gun" class="custom-select" value="@cnn.Cor_Gun" @onchange="onGunGu" style="font-size: 0.9em" required>
-                                            <option value="Z">=시군구 선택=</option>
-
-                                            @foreach (var it in sidos)
-                                            {
-                                                <option value="@it.Region">@it.Region</option>
-                                            }
-                                        </select>
-                                    </div>
+                                <td style="vertical-align:middle">
+                                    담당자 : @dnn.Charge_Man
+                                </td>
+                                <td style="vertical-align:middle">
+                                    담당자 모바일 : @dnn.ChargeMan_Mobile
                                 </td>
                             </tr>
                             <tr>
-                                <td style="text-align: center; vertical-align:middle">
-                                    <div class="input-group">
-                                        <div class="input-group-prepend"><span class="input-group-text" style="font-size: 0.9em"><span class="bi-pencil-square"></span>&nbsp;상세 주소<span style="color: red">*</span></span></div>
-                                        <input id="Cor_Adress" name="Cor_Adress" style="font-size: 0.9em; text-align: center" @bind="cnn.Cor_Adress" class="form-control" type="text" />
-                                    </div>
+                                <td style="vertical-align:middle">
+                                    자본금 : @dnn.Cor_Email
                                 </td>
-                                <td style="text-align: center; vertical-align:middle">
-                                    <div class="input-group">
-                                        <div class="input-group-prepend"><span class="input-group-text" style="font-size: 0.9em"><span class="bi-file-earmark-binary"></span> 법인여부<span style="color: red">*</span></span></div>
-                                        <select id="Corporation" style="font-size: 0.9em" @bind="cnn.Corporation" class="custom-select">
-                                            <option value="">::법인여부선택::</option>
-                                            <option value="A">법인</option>
-                                            <option value="B">개인</option>
-                                            <option value="C">공법인</option>
-                                            <option value="D">관공서</option>
-                                            <option value="E">기타</option>
-                                        </select>
-                                    </div>
+                                <td style="vertical-align:middle">
+                                    신용등급 : @dnn.Charge_Man
+                                </td>
+                                <td style="vertical-align:middle">
+                                    상세설명 : @dnn.Company_Etc
                                 </td>
                             </tr>
-                            <tr>
-                                <td style="text-align: center; vertical-align:middle">
-                                    <div class="input-group">
-                                        <div class="input-group-prepend"><span class="input-group-text" style="font-size: 0.9em"><span class="bi-pencil-square"></span>&nbsp;담당자모바일</span></div>
-                                        <input id="ChargeMan_Mobile" name="ChargeMan_Mobile" style="font-size: 0.9em; text-align: center" @bind="cnn.ChargeMan_Mobile" class="form-control" type="text" />
-                                    </div>
-                                </td>
-                                <td style="text-align: center; vertical-align:middle">
-                                    <div class="input-group">
-                                        <div class="input-group-prepend"><span class="input-group-text" style="font-size: 0.9em"><span class="bi-pencil-square"></span>&nbsp;이메일</span></div>
-                                        <input id="Cor_Email" name="Cor_Email" style="font-size: 0.9em; text-align: center" @bind="cnn.Cor_Email" class="form-control" type="text" />
-                                    </div>
-                                </td>
-
-                            </tr>
-
-                            <tr>
-                                <td style="text-align: center; vertical-align: middle">
-                                    <div class="input-group">
-                                        <div class="input-group-prepend"><span class="input-group-text" style="font-size: 0.9em"><span class="bi-pencil-square"></span>&nbsp;자본금</span></div>
-                                        <input id="Capital" name="Capital" style="font-size: 0.9em; text-align: center" @bind="cnn.Capital" class="form-control" type="number" />
-                                    </div>
-                                </td>
-                                <td style="text-align: center; vertical-align: middle">
-                                    <div class="input-group">
-                                        <div class="input-group-prepend"><span class="input-group-text" style="font-size: 0.9em"><span class="bi-pencil-square"></span>&nbsp;신용등급</span></div>
-                                        <input id="Credit_Rate" name="Credit_Rate" style="font-size: 0.9em; text-align: center" @bind="cnn.Credit_Rate" class="form-control" type="text" />
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td style="text-align: center; vertical-align: middle">
-                                    <div class="input-group">
-                                        <div class="input-group-prepend"><span class="input-group-text" style="font-size: 0.9em"><span class="bi-pencil-square"></span>&nbsp;담당자</span></div>
-                                        <input id="Charge_Man" name="Charge_Man" style="font-size: 0.9em; text-align: right" @bind="cnn.Charge_Man" class="form-control" type="text" />
-                                    </div>
-                                </td>
-                                <td style="text-align: center; vertical-align: middle">
-                                    <div class="input-group">
-                                        <div class="input-group-prepend"><span class="input-group-text" style="font-size: 0.9em"><span class="bi-pencil-square"></span>&nbsp;담당연락처</span></div>
-                                        <input id="ChargeMan_mobile" name="ChargeMan_mobile" style="font-size: 0.9em; text-align: right" @bind="cnn.ChargeMan_Mobile" class="form-control" type="text" />
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td style="text-align: center; vertical-align: middle" colspan="2">
-                                    <textarea id="Company_Etc" name="Company_Etc" title="최대 4,000자 이내 입력 가능" placeholder="업체 소개 입력하는 곳" rows="3" style="font-size: 0.9em" @bind="bnn.Company_Etc" class="form-control" type="text" />
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
+                        </table>
+                        <div>
+                            <img src="/images/sub/board_tit_bullet.png" alt="" /> 공사이력 정보 목록
+                        </div>
+                        <table class="table table-sm" style="font-size: 0.9em; margin-bottom: 0px">
+                            <thead>
+                                <tr style="background-color: whitesmoke">
+                                    <th class="text-center" style="width: 20%">
+                                        공동주택명
+                                    </th>
+                                    <th class="text-center" style="width: 20%">
+                                        지역
+                                    </th>
+                                    <th class="text-center" style="width: 20%">
+                                        분류
+                                    </th>
+                                    <th class="text-center" style="width: 20%">
+                                        계약일
+                                    </th>
+                                    <th class="text-center" style="width: 20%">
+                                        계약금액
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (rrnn.Count > 0)
+                                {
+                                    @foreach (var st in rrnn)
+                                    {
+                                        <tr>
+                                            <td style="text-align: center; vertical-align: middle">
+                                                @st.Apt_Name
+                                            </td>
+                                            <td style="text-align: center; vertical-align: middle">
+                                                <span title="@st.Apt_Adress_sido">@Dul.StringLibrary.CutString(st.Apt_Adress_sido, 15)</span>
+                                            </td>
+                                            <td style="text-align: center; vertical-align: middle">
+                                                <span title="@st.Sort_A_Name">@Dul.StringLibrary.CutString(st.Sort_A_Name, 10)</span><span title="@st.Sort_B_Name">@Dul.StringLibrary.CutString(st.Sort_B_Name, 10)</span>
+                                            </td>
+                                            <td style="text-align: center; vertical-align: middle">
+                                                @st.Repair_Start_Date.ToShortDateString()
+                                            </td>
+                                            <td style="text-align: center; vertical-align: middle">
+                                                @string.Format("{0: ###,###}", st.Repair_Cost_Complete)<span>원</span>
+                                            </td>
+                                        </tr>
+                                    }
+                                }
+                                else
+                                {
+                                    <tr>
+                                        <td style="text-align: center; vertical-align: middle; font-weight: bold; color:red" colspan="5">
+                                            입력된 정보가 없음.
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                    
                 </div>
 
                 <div class="modal-footer">
-                    @if (InOutWork == "A")
-                    {
-                        <button type="button" class="btn btn-info btn-sm" data-dismiss="modal" @onclick="btnInWork">
-                            <span class="bi-door-open">&nbsp;내부작업으로</span>
-                        </button>
-                    }
-                    else
-                    {
-                        <button type="button" class="btn btn-info btn-sm" data-dismiss="modal" @onclick="btnOutWork">
-                            <span class="bi-door-open">&nbsp;외주작업으로</span>
-                        </button>
-                    }
-
-                    &nbsp; &nbsp; &nbsp;
-                    <button type="button" class="btn btn-primary btn-sm" @onclick="btnCompanyEdit"><span class="bi-save-fill">&nbsp;저장</span></button> &nbsp; &nbsp; &nbsp;
+                    
+                    <button type="button" class="btn btn-warning btn-sm" @onclick="() => btnCompanyEdit(dnn)"><span class="bi-save-fill">&nbsp;수정</span></button> &nbsp; &nbsp; &nbsp;
                     <button type="button" class="btn btn-secondary btn-sm" @onclick="btnCloseB"><span class="bi-x-square">&nbsp;닫기</span></button>
                 </div>
 
