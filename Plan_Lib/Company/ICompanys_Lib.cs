@@ -48,7 +48,6 @@ namespace Plan_Lib.Company
         /// </summary>
         Task<Company_Entity> ByDetails_Company(string CorporRate_Number);
 
-
         Task<List<Company_Entity>> GetList_Company(string SortA_Code, string SortB_Code);
 
         Task<List<Company_Entity>> List_Company();
@@ -68,6 +67,26 @@ namespace Plan_Lib.Company
         Task<Company_Entity> Detail_Company_Detail(string Company_Code);
 
         Task<Company_Entity_Etc> Company_View(string CorporRate_Number);
+
+        /// <summary>
+        /// 업체 및 상세 정보 리스트(all)
+        /// </summary>
+        Task<List<Company_Entity_Etc>> List_Page_Company(int Page);
+
+        /// <summary>
+        /// 업체 및 상세 정보 리스트(all) 수
+        /// </summary>
+        Task<int> List_Page_Company_Count();
+
+        /// <summary>
+        /// 업체 및 상세 정보 리스트(all) 검색 목록
+        /// </summary>
+        Task<List<Company_Entity_Etc>> List_Page_Company_Search(int Page, string Field, string Query);
+
+        /// <summary>
+        /// 업체 및 상세 정보 리스트(all) 검색된 수
+        /// </summary>
+        Task<int> List_Page_Company_Count_Search(string Field, string Query);
     }
 
     /// <summary>
@@ -79,9 +98,7 @@ namespace Plan_Lib.Company
 
         Task<Company_Etc_Entity> Edit_CompanyEtc(Company_Etc_Entity Sort);
 
-        Task<int> Last_Number();
-
-        
+        Task<int> Last_Number();        
 
         Task<List<Company_Etc_Entity>> GetList_CompanyEtc(string Company_Code);
 

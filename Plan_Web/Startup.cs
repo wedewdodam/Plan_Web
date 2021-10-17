@@ -25,6 +25,7 @@ using Plan_Lib.Pund;
 using Plan_Web.Areas.Identity;
 using Plan_Web.Data;
 using System;
+using static Plan_Blazor_Lib.Common_Lib;
 
 namespace Plan_Web
 {
@@ -51,14 +52,9 @@ namespace Plan_Web
             services.AddDbContext<ApplicationDbContext>(options =>
                  options.UseSqlServer(
                      Configuration.GetConnectionString("Khmais_db_Connection")));
-
-            //services.AddBlazoredLocalStorage(); //세션 사용
-            //services.AddBlazoredSessionStorage();
-            //services.AddSingleton<LocalStorage>(); //쿠키 사용
-            //services.AddStorage();
+                        
             services.AddProtectedBrowserStorage();//상태관리
-            //services.AddScoped<StateContainer>();
-
+            
             services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
                 .AddEntityFrameworkStores<ApplicationDbContext>();
 
@@ -95,7 +91,7 @@ namespace Plan_Web
         private void Class_lib(IServiceCollection services)
         {
             services.AddTransient<IkhmaInfor_Lib, khmaInfor_Lib>();
-
+            services.AddTransient<ISido_Lib, Sido_Lib>();
             services.AddTransient<IFacility_Lib, Facility_Lib>();
             services.AddTransient<IFacility_Sort_Lib, Facility_Sort_Lib>();
             services.AddTransient<IFacility_Detail_Lib, Facility_Detail_Lib>();

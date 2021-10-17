@@ -99,7 +99,7 @@
                             @st.Work_Division
                         </td>
                         <td style="vertical-align: middle; text-align: center">
-                            @st.Repair_contract_Cost<span>원</span>
+                            @string.Format("{0: ###,###}", st.Repair_contract_Cost)<span>원</span>
                         </td>
                         <td style="vertical-align: middle; text-align: center">
                             @st.Repair_Start_Date.ToShortDateString()
@@ -122,272 +122,585 @@
 @*이력정보 입력 모달*@
 @if (InsertRecord == "B")
 {
-<div class="modal fade show d-block" tabindex="-1" role="dialog">
-    <div class="modal-dialog modal-xl" role="document">
-        <div class="modal-content">
-            <div class="modal-header" style="background-color: cornflowerblue; color: white; height: 50px; vertical-align: middle">
-                <h6 class="modal-title"><span class="bi-house-door"></span>&nbsp;장기수선계획 @strTitle 등록</h6>
-                <button type="button" class="btn btn-primary btn-sm" data-dismiss="modal" @onclick="btnInWork">
-                    <span class="bi-door-open">&nbsp;내부작업으로</span>
-                </button>
-                <button type="button" class="btn btn-primary btn-sm" data-dismiss="modal" @onclick="btnOutWork">
-                    <span class="bi-door-open">&nbsp;외주작업으로</span>
-                </button>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close" @onclick="btnClose">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
+    <div class="modal fade show d-block" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-xl" role="document">
+            <div class="modal-content">
+                <div class="modal-header" style="background-color: burlywood; color: white; height: 50px; vertical-align: middle">
+                    <h6 class="modal-title"><span class="bi-house-door"></span>&nbsp;장기수선계획 @strTitle 등록</h6>
 
-            <div class="modal-body">
-                <table width="100%" style="margin-bottom: 5px">
-                    <tr>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" @onclick="btnClose">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
 
-                        <td style="width: 25%">
-                            <div class="input-group">
-                                <div class="input-group-prepend"><span class="input-group-text" style="font-size: 0.9em"><span class="bi-pencil-square"></span>&nbsp;대분류</span></div>
-                                <select id="Sort_A_Code" class="custom-select" value="@strSortA" style="font-size: 0.9em" @onchange="onSortA" required>
-                                    <option value="Z">=대분류 선택=</option>
-                                    @foreach (var it in fnnA)
-                                    {
-                                        <option value="@it.Aid">@it.Sort_Name</option>
-                                    }
-                                </select>
-                            </div>
-                        </td>
-                        <td style="width: 20%">
-                            <div class="input-group">
-                                <div class="input-group-prepend"><span class="input-group-text" style="font-size: 0.9em"><span class="bi-pencil-square"></span>&nbsp;중분류</span></div>
-                                <select id="Sort_B_Code" class="custom-select" value="@strSortB" style="font-size: 0.9em" @onchange="onSortB" required>
-                                    <option value="Z">=중분류 선택=</option>
-                                    @foreach (var it in fnnB)
-                                    {
-                                        <option value="@it.Aid">@it.Sort_Name</option>
-                                    }
-                                </select>
-                            </div>
-                        </td>
-                        <td style="width: 25%">
-                            <div class="input-group">
-                                <div class="input-group-prepend"><span class="input-group-text" style="font-size: 0.9em"><span class="bi-pencil-square"></span>&nbsp;소분류</span></div>
-                                <select id="Sort_C_Code" class="custom-select" value="@strSortC" style="font-size: 0.9em" @onchange="onSortC" required>
-                                    <option value="Z">=소분류 선택=</option>
-                                    @foreach (var it in fnnC)
-                                    {
-                                        <option value="@it.Aid">@it.Sort_Name</option>
-                                    }
-                                    <option value="예외지출">예외지출</option>
-                                </select>
-                            </div>
-                        </td>
-                        <td style="width: 30%">
-                            <div class="input-group">
-                                <div class="input-group-prepend"><span class="input-group-text" style="font-size: 0.9em"><span class="bi-pencil-square"></span>&nbsp;시설명</span></div>
-                                <select id="Sort_Code" class="custom-select" value="@strSortD" style="font-size: 0.9em" @onchange="onSortD" required>
-                                    <option value="Z">=시설명 선택=</option>
-                                    @foreach (var it in Arnn)
-                                    {
-                                        <option value="@it.Aid">@it.Repair_Article_Name</option>
-                                    }
-                                    <option value="소액지출">소액지출</option>
-                                    <option value="긴급공사">긴급공사</option>
-                                    <option value="하자비용">하지비용</option>
-                                </select>
-                            </div>
-                        </td>
-                    </tr>
-                </table>
+                <div class="modal-body">
+                    <table width="100%" style="margin-bottom: 5px">
+                        <tr>
 
-                @if (InOutWork == "A")
-                {
-            <table width="100%" style="margin-bottom: 5px">
-                <thead>
-                    <tr style="background-color: whitesmoke">
-                        <th class="text-center">
-                            사업자번호 검색
-                        </th>
-                        <th class="text-center">
-                            업체명
-                        </th>
-                        <th class="text-center">
-                            사업번호
-                        </th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td style="text-align: center; vertical-align:middle">
-                            <div class="input-group">
-                                <div class="input-group-prepend"><span class="input-group-text" style="font-size: 0.9em"><span class="bi-pencil-square"></span>&nbsp;번호</span></div>
-                                <input id="Repair_Start_Date" name="Repair_Start_Date" style="font-size: 0.9em; text-align: center" value="" class="form-control" type="text" @onchange="btnCompanySearch" />
-                                <div class="input-group-append">
-                                    <button type="button" class="btn btn-dark btn-sm"><span class="bi-save-fill">&nbsp;검색</span></button>
-                                </div>
-                            </div>
-                        </td>
-                        <td style="text-align: center; vertical-align:middle">
-                            @dnn.Company_Name
-                        </td>
-                        <td style="text-align: center; vertical-align:middle">
-                            @dnn.CorporRate_Number
-                        </td>
-                    </tr>
-                    <tr>
-                        <td style="text-align: center; vertical-align:middle">
-                            <div class="input-group">
-                                <div class="input-group-prepend"><span class="input-group-text" style="font-size: 0.9em"><span class="bi-pencil-square"></span>&nbsp;입찰방법</span></div>
-                                <div class="input-group-append">
-                                    <select id="Cost_Division" style="font-size: 0.9em" class="custom-select" @bind="dnn.Tender_Mothed">
-                                        <option Value="">::입찰방법선택::</option>
-                                        <option Value="일반경쟁입찰">계획금액</option>
-                                        <option Value="제한경쟁입찰">긴급지출</option>
-                                        <option Value="부대입찰">소액지출</option>
-                                        <option Value="수의계약">하자지출</option>
-                                        <option Value="기타">기타</option>
+                            <td style="width: 25%">
+                                <div class="input-group">
+                                    <div class="input-group-prepend"><span class="input-group-text" style="font-size: 0.9em"><span class="bi-pencil-square"></span>&nbsp;대분류<span style="color: red">*</span></span></div>
+                                    <select id="Sort_A_Code" class="custom-select" value="@strSortA" style="font-size: 0.9em" @onchange="onSortA" required>
+                                        <option value="Z">=대분류 선택=</option>
+                                        @foreach (var it in fnnA)
+                                        {
+                                            <option value="@it.Aid">@it.Sort_Name</option>
+                                        }
                                     </select>
                                 </div>
-                            </div>
-                        </td>
-                        <td style="text-align: center; vertical-align:middle">
-                            <div class="input-group">
-                                <div class="input-group-prepend"><span class="input-group-text" style="font-size: 0.9em"><span class="bi-pencil-square"></span>&nbsp;낙찰방법</span></div>
-                                <div class="input-group-append">
-                                    <select id="Cost_Division" style="font-size: 0.9em" class="custom-select" @bind="dnn.Tender_bid">
-                                        <option Value="">::낙찰방법선택::</option>
-                                        <option Value="최저가(전자)">최저가(전자)</option>
-                                        <option Value="최고가(전자)">최고가(전자)</option>
-                                        <option Value="적격심사제">적격심사제</option>
-                                        <option Value="기타">기타</option>
+                            </td>
+                            <td style="width: 20%">
+                                <div class="input-group">
+                                    <div class="input-group-prepend"><span class="input-group-text" style="font-size: 0.9em"><span class="bi-pencil-square"></span>&nbsp;중분류<span style="color: red">*</span></span></div>
+                                    <select id="Sort_B_Code" class="custom-select" value="@strSortB" style="font-size: 0.9em" @onchange="onSortB" required>
+                                        <option value="Z">=중분류 선택=</option>
+                                        @foreach (var it in fnnB)
+                                        {
+                                            <option value="@it.Aid">@it.Sort_Name</option>
+                                        }
                                     </select>
                                 </div>
-                            </div>
-                        </td>
-                        <td style="text-align: center; vertical-align:middle">
-                            <div class="input-group">
-                                <div class="input-group-prepend"><span class="input-group-text" style="font-size: 0.9em"><span class="bi-pencil-square"></span>&nbsp;장충금</span></div>
-                                <div class="input-group-append">
-                                    <select id="Cost_Division" style="font-size: 0.9em" class="custom-select" @bind="dnn.Cost_Division">
-                                        <option Value="">::지출기준::</option>
-                                        <option Value="계획금액">계획금액</option>
-                                        <option Value="긴급지출">긴급지출</option>
-                                        <option Value="소액지출">소액지출</option>
-                                        <option Value="하자지출">하자지출</option>
-                                        <option Value="기타">기타</option>
+                            </td>
+                            <td style="width: 25%">
+                                <div class="input-group">
+                                    <div class="input-group-prepend"><span class="input-group-text" style="font-size: 0.9em"><span class="bi-pencil-square"></span>&nbsp;소분류<span style="color: red">*</span></span></div>
+                                    <select id="Sort_C_Code" class="custom-select" value="@strSortC" style="font-size: 0.9em" @onchange="onSortC" required>
+                                        <option value="Z">=소분류 선택=</option>
+                                        @foreach (var it in fnnC)
+                                        {
+                                            <option value="@it.Aid">@it.Sort_Name</option>
+                                        }
+                                        <option value="예외지출">예외지출</option>
                                     </select>
                                 </div>
-                            </div>
-                        </td>
-                    </tr>
-                </tbody>
-                
-            </table>
-
-
-
-
-                }
-                else if (InOutWork == "B")
-                {
-                    <table class="table table-sm" style="font-size: 0.9em">
-                        <thead>
-                            <tr style="background-color: whitesmoke">
-                                <th class="text-center">
-                                    작업시작일
-                                </th>
-                                <th class="text-center">
-                                    작업종료일
-                                </th>
-                                <th class="text-center">
-                                    지출기준
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td style="text-align: center; vertical-align: middle">
-                                    <div class="input-group">
-                                        <div class="input-group-prepend"><span class="input-group-text" style="font-size: 0.9em"><span class="bi-pencil-square"></span>&nbsp;작업 시작일</span></div>
-                                        <input id="Repair_Start_Date" name="Repair_Start_Date" style="font-size: 0.9em; text-align: center" @bind="dnn.Repair_Start_Date" class="form-control" type="date" />
-                                    </div>
-                                </td>
-                                <td style="text-align: center; vertical-align: middle">
-                                    <div class="input-group">
-                                        <div class="input-group-prepend"><span class="input-group-text" style="font-size: 0.9em"><span class="bi-pencil-square"></span>&nbsp;작업 종료일</span></div>
-                                        <input id="Repair_End_Date" name="Repair_End_Date" style="font-size: 0.9em; text-align: center" @bind="dnn.Repair_End_Date" class="form-control" type="date" />
-                                    </div>
-                                </td>
-                                <td style="text-align: center; vertical-align: middle">
-                                    <div class="input-group">
-                                        <div class="input-group-prepend"><span class="input-group-text" style="font-size: 0.9em"><span class="bi-pencil-square"></span>&nbsp;장충금</span></div>
-                                        <div class="input-group-append">
-                                            <select id="Cost_Division" style="font-size: 0.9em" class="custom-select" @bind="dnn.Cost_Division">
-                                                <option Value="">::지출기준::</option>
-                                                <option Value="계획금액">계획금액</option>
-                                                <option Value="긴급지출">긴급지출</option>
-                                                <option Value="소액지출">소액지출</option>
-                                                <option Value="하자지출">하자지출</option>
-                                                <option Value="기타">기타</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                </td>
-                            </tr>
-                        </tbody>
-                        <thead>
-                            <tr style="background-color: whitesmoke">
-                                <th class="text-center">
-                                    예정금액
-                                </th>
-                                <th class="text-center">
-                                    완료비용
-                                </th>
-                                <th class="text-center">
-                                    작업 연인원
-                                </th>
-                            </tr>
-
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td style="text-align: center; vertical-align: middle">
-                                    <div class="input-group">
-                                        <div class="input-group-prepend"><span class="input-group-text" style="font-size: 0.9em"><span class="bi-pencil-square"></span>&nbsp;예정금액</span></div>
-                                        <input id="Repair_Plan_Cost" name="Repair_Plan_Cost" style="font-size: 0.9em; text-align: right" @bind="dnn.Repair_Plan_Cost" class="form-control" type="number" />
-                                        <div class="input-group-append"><span class="input-group-text" style="font-size: 0.9em">원</span></div>
-                                    </div>
-                                </td>
-                                <td style="text-align: center; vertical-align: middle">
-                                    <div class="input-group">
-                                        <div class="input-group-prepend"><span class="input-group-text" style="font-size: 0.9em"><span class="bi-pencil-square"></span>&nbsp;지급금액</span></div>
-                                        <input id="Repair_Cost_Complete" name="Repair_Cost_Complete" style="font-size: 0.9em; text-align: right" @bind="dnn.Repair_Cost_Complete" class="form-control" type="number" />
-                                        <div class="input-group-append"><span class="input-group-text" style="font-size: 0.9em">원</span></div>
-                                    </div>
-                                </td>
-                                <td style="text-align: center; vertical-align: middle">
-                                </td>
-                            </tr>
-                            <tr>
-                                <td colspan="3">
-                                    <div class="input-group">
-                                        <div class="input-group-prepend"><span class="input-group-text" style="font-size: 0.9em"><span class="bi-pencil-square"></span>&nbsp;기타 비고</span></div>
-                                        <textarea id="Tender_Method_Process" name="Repair_Article_Etc" title="최대 4,000자 이내 입력 가능" placeholder="발주방법 및 절자를 입력하는 곳" rows="4" style="font-size: 0.9em" @bind="dnn.Repair_Record_Etc" class="form-control" type="text" />
-                                    </div>
-                                </td>
-                            </tr>
-                        </tbody>
+                            </td>
+                            <td style="width: 30%">
+                                <div class="input-group">
+                                    <div class="input-group-prepend"><span class="input-group-text" style="font-size: 0.9em"><span class="bi-pencil-square"></span>&nbsp;시설명<span style="color: red">*</span></span></div>
+                                    <select id="Repair_Article_Name" class="custom-select" value="@strSortD" style="font-size: 0.9em" @onchange="onSortD" required>
+                                        <option value="Z">=시설명 선택=</option>
+                                        @foreach (var it in Arnn)
+                                        {
+                                            <option value="@it.Aid">@it.Repair_Article_Name</option>
+                                        }
+                                        <option value="소액지출">소액지출</option>
+                                        <option value="긴급공사">긴급공사</option>
+                                        <option value="하자비용">하지비용</option>
+                                    </select>
+                                </div>
+                            </td>
+                        </tr>
                     </table>
-                }
 
+                    @if (InOutWork == "A")
+                    {
+                        <table class="table table-sm" style="margin-bottom: 5px; font-size: 0.9em">
+                            <thead>
+                                <tr style="background-color: whitesmoke">
+                                    <th class="text-center">
+                                        사업자번호 검색
+                                    </th>
+                                    <th class="text-center">
+                                        업체명
+                                    </th>
+                                    <th class="text-center">
+                                        사업번호
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td style="text-align: center; vertical-align:middle">
+                                        <div class="input-group">
+                                            <div class="input-group-prepend"><span class="input-group-text" style="font-size: 0.9em"><span class="bi-pencil-square"></span>&nbsp;번호<span style="color: red">*</span></span></div>
+                                            <input id="strCorporRate_Number" name="strCorporRate_Number" placeholder="사업자 등록번호를 입력하세요." style="font-size: 0.9em; text-align: center" value="@strCorporRate_Number" class="form-control" maxlength="13" type="text" @onchange="btnCompanySearch" />
+                                            <div class="input-group-append">
+                                                <button type="button" class="btn btn-dark btn-sm"><span class="bi-search">&nbsp;검색</span></button>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td style="text-align: center; vertical-align:middle">
+                                        @dnn.Company_Name
+                                    </td>
+                                    <td style="text-align: center; vertical-align:middle">
+                                        @strCorporRate_Number
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="text-align: center; vertical-align:middle">
+                                        <div class="input-group">
+                                            <div class="input-group-prepend"><span class="input-group-text" style="font-size: 0.9em"><span class="bi-pencil-square"></span>&nbsp;입찰방법<span style="color: red">*</span></span></div>
+                                            <div class="input-group-append">
+                                                <select id="Cost_Division" style="font-size: 0.9em" class="form-control" @bind="dnn.Tender_Mothed">
+                                                    <option Value="">::: 입찰 방법 선택 :::</option>
+                                                    <option Value="일반경쟁입찰">일반경쟁입찰</option>
+                                                    <option Value="제한경쟁입찰">제한경쟁입찰</option>
+                                                    <option Value="부대입찰">부대입찰</option>
+                                                    <option Value="수의계약">수의계약</option>
+                                                    <option Value="기타">기타</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td style="text-align: center; vertical-align:middle">
+                                        <div class="input-group">
+                                            <div class="input-group-prepend"><span class="input-group-text" style="font-size: 0.9em"><span class="bi-pencil-square"></span>&nbsp;낙찰방법<span style="color: red">*</span></span></div>
+                                            <div class="input-group-append">
+                                                <select id="Cost_Division" style="font-size: 0.9em" class="form-control" @bind="dnn.Tender_bid">
+                                                    <option Value="">::: 낙찰 방법 선택 :::</option>
+                                                    <option Value="최저가(전자)">최저가(전자)</option>
+                                                    <option Value="최고가(전자)">최고가(전자)</option>
+                                                    <option Value="적격심사제">적격심사제</option>
+                                                    <option Value="기타">기타</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td rowspan="2" style="width: 40%; vertical-align: top">
+                                        <textarea id="Tender_Method_Process" name="Repair_Article_Etc" title="최대 4,000자 이내 입력 가능" placeholder="장기수선계획에 따른 이력에 대한 기타 사항 입력하는 곳" rows="3" style="font-size: 0.9em" @bind="dnn.Repair_Record_Etc" class="form-control" type="text" />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="text-align: center; vertical-align:middle">
+                                        <div class="input-group">
+                                            <div class="input-group-prepend"><span class="input-group-text" style="font-size: 0.9em"><span class="bi-pencil-square"></span>&nbsp; 장 충 금<span style="color: red">*</span></span></div>
+                                            <div class="input-group-append">
+                                                <select id="Cost_Division" style="font-size: 0.9em" class="form-control" @bind="dnn.Cost_Division">
+                                                    <option Value="">::: 지출 기준 선택 :::</option>
+                                                    <option Value="계획금액">계획금액</option>
+                                                    <option Value="긴급지출">긴급지출</option>
+                                                    <option Value="소액지출">소액지출</option>
+                                                    <option Value="하자지출">하자지출</option>
+                                                    <option Value="기타">기타</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td style="text-align: center; vertical-align:middle">
+                                        <div class="input-group">
+                                            <div class="input-group-prepend"><span class="input-group-text" style="font-size: 0.9em"><span class="bi-pencil-square"></span>&nbsp;작업 총인원</span></div>
+                                            <input id="Repair_End_Date" name="Repair_End_Date" style="font-size: 0.9em; text-align: center" @bind="dnn.Repair_laver_Count" class="form-control" type="number" />
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="text-align: center; vertical-align: middle">
+                                        <div class="input-group">
+                                            <div class="input-group-prepend"><span class="input-group-text" style="font-size: 0.9em"><span class="bi-pencil-square"></span>&nbsp;계 약 일<span style="color: red">*</span></span></div>
+                                            <input id="Repair_Start_Date" name="Repair_Start_Date" style="font-size: 0.9em; text-align: center" @bind="dnn.Repair_Start_Date" class="form-control" type="date" />
+                                        </div>
+                                    </td>
+                                    <td style="text-align: center; vertical-align: middle">
+                                        <div class="input-group">
+                                            <div class="input-group-prepend"><span class="input-group-text" style="font-size: 0.9em"><span class="bi-pencil-square"></span>&nbsp;최종지급일<span style="color: red">*</span></span></div>
+                                            <input id="Repair_End_Date" name="Repair_End_Date" style="font-size: 0.9em; text-align: center" @bind="dnn.Repair_End_Date" class="form-control" type="date" />
+                                        </div>
+                                    </td>
+                                    <td rowspan="3" style="width: 40%; vertical-align: top; font-size: 0.9em">
+                                        <span class="bi-card-checklist" style="font-weight: bold; color: darkcyan">&nbsp; 선택된 업체 정보</span><br />
+                                        @if (intCN > 0)
+                                        {
+                                            <span style="font-weight:bold">업체명:</span> @cnnE.Company_Name <span>&nbsp; &nbsp;</span><span style="font-weight:bold">사업자 변호:</span> @cnnE.CorporRate_Number <span>&nbsp; &nbsp;</span><span style="font-weight:bold">대표자명:</span> @cnnE.Ceo_Name<br />
+                                            <span style="font-weight:bold">대표자 연락처:</span> @cnnE.Ceo_Mobile <span>&nbsp; &nbsp; &nbsp;</span><span style="font-weight:bold">대표전화:</span> @cnnE.Cor_Tel <span>&nbsp; &nbsp; &nbsp;</span><span style="font-weight:bold">팩스번호:</span> @cnnE.Cor_Fax<br />
+                                            <span style="font-weight:bold">주소:</span> @cnnE.Cor_Sido @cnnE.Cor_Gun @cnnE.Cor_Adress <br />
+                                            <span style="font-weight:bold">업체 대분류:</span> @cnnE.SortA_Name <span>&nbsp; &nbsp; &nbsp;</span><span style="font-weight:bold">업체 소분류:</span> @cnnE.SortB_Name <span>&nbsp; &nbsp; &nbsp;</span><span style="font-weight:bold">이메일:</span> @cnnE.Cor_Email<br />
+                                            <span style="font-weight:bold">자본금: </span> @string.Format("{0: ###,###.#}", cnnE.Capital) <span>&nbsp; &nbsp; &nbsp;</span><span style="font-weight:bold">신용등급:</span> @cnnE.Credit_Rate
+
+                                        }
+                                        else
+                                        {
+                                            <span style="color: red"> 아직 선택 안됨. </span>
+                                        }
+
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="text-align: center; vertical-align: middle">
+                                        <div class="input-group">
+                                            <div class="input-group-prepend"><span class="input-group-text" style="font-size: 0.9em"><span class="bi-pencil-square"></span>&nbsp;계약금액<span style="color: red">*</span></span></div>
+                                            <input id="Repair_Plan_Cost" name="Repair_Plan_Cost" style="font-size: 0.9em; text-align: right" @bind="dnn.Repair_contract_Cost" class="form-control" type="number" />
+                                            <div class="input-group-append"><span class="input-group-text" style="font-size: 0.9em">원</span></div>
+                                        </div>
+                                    </td>
+                                    <td style="text-align: center; vertical-align: middle">
+                                        <div class="input-group">
+                                            <div class="input-group-prepend"><span class="input-group-text" style="font-size: 0.9em"><span class="bi-pencil-square"></span>&nbsp;지급금액<span style="color: red">*</span></span></div>
+                                            <input id="Repair_Cost_Complete" name="Repair_Cost_Complete" style="font-size: 0.9em; text-align: right" @bind="dnn.Repair_Cost_Complete" class="form-control" type="number" />
+                                            <div class="input-group-append"><span class="input-group-text" style="font-size: 0.9em">원</span></div>
+                                        </div>
+                                    </td>
+
+                                </tr>
+                                <tr>
+                                    <td style="text-align: center; vertical-align: middle">
+                                        <div class="input-group">
+                                            <div class="input-group-prepend"><span class="input-group-text" style="font-size: 0.9em"><span class="bi-pencil-square"></span>&nbsp;담당자</span></div>
+                                            <input id="Charge_Man" name="Charge_Man" style="font-size: 0.9em; text-align: right" @bind="dnn.Charge_Man" class="form-control" type="text" />
+                                        </div>
+                                    </td>
+                                    <td style="text-align: center; vertical-align: middle">
+                                        <div class="input-group">
+                                            <div class="input-group-prepend"><span class="input-group-text" style="font-size: 0.9em"><span class="bi-pencil-square"></span>&nbsp;담당연락처</span></div>
+                                            <input id="ChargeMan_mobile" name="ChargeMan_mobile" style="font-size: 0.9em; text-align: right" @bind="dnn.ChargeMan_mobile" class="form-control" type="text" />
+                                        </div>
+                                    </td>
+
+                                </tr>
+                            </tbody>
+                        </table>
+
+                    }
+                    else if (InOutWork == "B")
+                    {
+                        <table class="table table-sm" style="font-size: 0.9em">
+                            <thead>
+                                <tr style="background-color: whitesmoke">
+                                    <th class="text-center">
+                                        작업시작일
+                                    </th>
+                                    <th class="text-center">
+                                        작업종료일
+                                    </th>
+                                    <th class="text-center">
+                                        지출기준
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td style="text-align: center; vertical-align: middle">
+                                        <div class="input-group">
+                                            <div class="input-group-prepend"><span class="input-group-text" style="font-size: 0.9em"><span class="bi-pencil-square"></span>&nbsp;작업 시작일</span></div>
+                                            <input id="Repair_Start_Date" name="Repair_Start_Date" style="font-size: 0.9em; text-align: center" @bind="dnn.Repair_Start_Date" class="form-control" type="date" />
+                                        </div>
+                                    </td>
+                                    <td style="text-align: center; vertical-align: middle">
+                                        <div class="input-group">
+                                            <div class="input-group-prepend"><span class="input-group-text" style="font-size: 0.9em"><span class="bi-pencil-square"></span>&nbsp;작업 종료일</span></div>
+                                            <input id="Repair_End_Date" name="Repair_End_Date" style="font-size: 0.9em; text-align: center" @bind="dnn.Repair_End_Date" class="form-control" type="date" />
+                                        </div>
+                                    </td>
+                                    <td style="text-align: center; vertical-align: middle">
+                                        <div class="input-group">
+                                            <div class="input-group-prepend"><span class="input-group-text" style="font-size: 0.9em"><span class="bi-pencil-square"></span>&nbsp;장충금</span></div>
+                                            <div class="input-group-append">
+                                                <select id="Cost_Division" style="font-size: 0.9em" class="custom-select" @bind="dnn.Cost_Division">
+                                                    <option Value="">::지출기준::</option>
+                                                    <option Value="계획금액">계획금액</option>
+                                                    <option Value="긴급지출">긴급지출</option>
+                                                    <option Value="소액지출">소액지출</option>
+                                                    <option Value="하자지출">하자지출</option>
+                                                    <option Value="기타">기타</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                            <thead>
+                                <tr style="background-color: whitesmoke">
+                                    <th class="text-center">
+                                        예정금액
+                                    </th>
+                                    <th class="text-center">
+                                        완료비용
+                                    </th>
+                                    <th class="text-center">
+                                        작업 연인원
+                                    </th>
+                                </tr>
+
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td style="text-align: center; vertical-align: middle">
+                                        <div class="input-group">
+                                            <div class="input-group-prepend"><span class="input-group-text" style="font-size: 0.9em"><span class="bi-pencil-square"></span>&nbsp;예정금액</span></div>
+                                            <input id="Repair_Plan_Cost" name="Repair_Plan_Cost" style="font-size: 0.9em; text-align: right" @bind="dnn.Repair_Plan_Cost" class="form-control" type="number" />
+                                            <div class="input-group-append"><span class="input-group-text" style="font-size: 0.9em">원</span></div>
+                                        </div>
+                                    </td>
+                                    <td style="text-align: center; vertical-align: middle">
+                                        <div class="input-group">
+                                            <div class="input-group-prepend"><span class="input-group-text" style="font-size: 0.9em"><span class="bi-pencil-square"></span>&nbsp;지급금액</span></div>
+                                            <input id="Repair_Cost_Complete" name="Repair_Cost_Complete" style="font-size: 0.9em; text-align: right" @bind="dnn.Repair_Cost_Complete" class="form-control" type="number" />
+                                            <div class="input-group-append"><span class="input-group-text" style="font-size: 0.9em">원</span></div>
+                                        </div>
+                                    </td>
+                                    <td style="text-align: center; vertical-align:middle">
+                                        <div class="input-group">
+                                            <div class="input-group-prepend"><span class="input-group-text" style="font-size: 0.9em"><span class="bi-pencil-square"></span>&nbsp;작업 총인원</span></div>
+                                            <input id="Repair_End_Date" name="Repair_End_Date" style="font-size: 0.9em; text-align: center" @bind="dnn.Repair_laver_Count" class="form-control" type="number" />
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="3">
+                                        <div class="input-group">
+                                            <div class="input-group-prepend"><span class="input-group-text" style="font-size: 0.9em"><span class="bi-pencil-square"></span>&nbsp;기타 비고</span></div>
+                                            <textarea id="Tender_Method_Process" name="Repair_Article_Etc" title="최대 4,000자 이내 입력 가능" placeholder="발주방법 및 절자를 입력하는 곳" rows="5" style="font-size: 0.9em" @bind="dnn.Repair_Record_Etc" class="form-control" type="text" />
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    }
+                </div>
 
                 <div class="modal-footer">
+                    @if (InOutWork == "A")
+                    {
+                        <button type="button" class="btn btn-info btn-sm" data-dismiss="modal" @onclick="btnInWork">
+                            <span class="bi-door-open">&nbsp;내부작업으로</span>
+                        </button>
+                    }
+                    else
+                    {
+                        <button type="button" class="btn btn-info btn-sm" data-dismiss="modal" @onclick="btnOutWork">
+                            <span class="bi-door-open">&nbsp;외주작업으로</span>
+                        </button>
+                    }
+
+                    &nbsp; &nbsp; &nbsp;
                     <button type="button" class="btn btn-primary btn-sm" @onclick="btnSave"><span class="bi-save-fill">&nbsp;저장</span></button> &nbsp; &nbsp; &nbsp;
-                    <button type="button" class="btn btn-info btn-sm" @onclick="btnSave"><span class="bi-save-fill">&nbsp;업체 등록</span></button> &nbsp; &nbsp; &nbsp;
+                    <button type="button" class="btn btn-info btn-sm" @onclick="btnCompanyOpen"><span class="bi-door-open">&nbsp;업체 등록</span></button> &nbsp; &nbsp; &nbsp;
                     <button type="button" class="btn btn-secondary btn-sm" @onclick="btnClose"><span class="bi-x-square">&nbsp;닫기</span></button>
                 </div>
+
             </div>
         </div>
     </div>
-</div>
     <div class="modal-backdrop show"></div>
 }
 
 
+@*업체정보 입력 모달*@
+@if (InsertCompany == "B")
+{
+    <div class="modal fade show d-block" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header" style="background-color: burlywood; color: white; height: 50px; vertical-align: middle">
+                    <h6 class="modal-title"><span class="bi-house-door"></span>&nbsp; @strTitle_Company</h6>
+
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" @onclick="btnCloseA">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+
+                <div class="modal-body">  
+                    <table class="table table-sm" style="font-size: 0.9em; margin-bottom: 0px">
+                        <thead>
+                            <tr style="background-color: whitesmoke">
+                                <th class="text-center">
+                                    <div class="input-group">
+                                        <div class="input-group-prepend"><span class="input-group-text" style="font-size: 0.9em"><span class="bi-pencil-square"></span>&nbsp;상위분류<span style="color: red">*</span></span></div>
+                                        <select id="Sort_A_Code" class="custom-select" value="@strCompSortA" style="font-size: 0.9em" @onchange="onCompSortA" required>
+                                            <option value="Z">=업체 상위분류 선택=</option>
+                                            @foreach (var it in CsnnA)
+                                            {
+                                                <option value="@it.Company_Sort_Code">@it.Company_Sort_Name</option>
+                                            }
+                                        </select>
+                                    </div>
+                                </th>
+                                <th class="text-center">
+                                    <div class="input-group">
+                                        <div class="input-group-prepend"><span class="input-group-text" style="font-size: 0.9em"><span class="bi-pencil-square"></span>&nbsp;하위분류<span style="color: red">*</span></span></div>
+                                        <select id="Sort_B_Code" class="custom-select" value="@strCompSortB" style="font-size: 0.9em" @onchange="onCompSortB" required>
+                                            <option value="Z">=업체 하위분류 선택=</option>
+                                            @foreach (var it in CsnnB)
+                                            {
+                                                <option value="@it.Company_Sort_Code">@it.Company_Sort_Name</option>
+                                            }
+                                        </select>
+                                    </div>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td style="text-align: center; vertical-align:middle">
+                                    <div class="input-group">
+                                        <div class="input-group-prepend"><span class="input-group-text" style="font-size: 0.9em"><span class="bi-pencil-square"></span>&nbsp;번호<span style="color: red">*</span></span></div>
+                                        <input id="CorporRate_Num" name="CorporRate_Num" placeholder="사업자 등록번호를 입력하세요." style="font-size: 0.9em; text-align: center" value="@CorporRate_Num" class="form-control" maxlength="13" type="text" @onchange="btnCompanySearchOn" />
+                                        <div class="input-group-append">
+                                            <button type="button" class="btn btn-dark btn-sm"><span class="bi-search">&nbsp;검색</span></button>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td style="text-align: center; vertical-align:middle">
+                                    <div class="input-group">
+                                        <div class="input-group-prepend"><span class="input-group-text" style="font-size: 0.9em"><span class="bi-pencil-square"></span>&nbsp;업체명<span style="color: red">*</span></span></div>
+                                        <input id="Company_Name" name="Company_Name" style="font-size: 0.9em; text-align: center" @bind="bnn.Company_Name" class="form-control" type="text" />
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td style="text-align: center; vertical-align:middle">
+                                    <div class="input-group">
+                                        <div class="input-group-prepend"><span class="input-group-text" style="font-size: 0.9em"><span class="bi-pencil-square"></span>&nbsp;대표자명<span style="color: red">*</span></span></div>
+                                        <input id="Ceo_Name" name="Ceo_Name" style="font-size: 0.9em; text-align: center" @bind="cnn.Ceo_Name" class="form-control" type="text" />
+                                    </div>
+                                </td>
+                                <td style="text-align: center; vertical-align:middle">
+                                    <div class="input-group">
+                                        <div class="input-group-prepend"><span class="input-group-text" style="font-size: 0.9em"><span class="bi-pencil-square"></span>&nbsp;대표자모바일</span></div>
+                                        <input id="Ceo_Mobile" name="Ceo_Mobile" style="font-size: 0.9em; text-align: center" @bind="cnn.Ceo_Mobile" class="form-control" type="tel" />
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="text-align: center; vertical-align:middle">
+                                    <div class="input-group">
+                                        <div class="input-group-prepend"><span class="input-group-text" style="font-size: 0.9em"><span class="bi-pencil-square"></span>&nbsp;대표연락처<span style="color: red">*</span></span></div>
+                                        <input id="Cor_Tel" name="Cor_Tel" style="font-size: 0.9em; text-align: center" @bind="cnn.Cor_Tel" class="form-control" type="tel" />
+                                    </div>
+                                </td>
+                                <td style="text-align: center; vertical-align:middle">
+                                    <div class="input-group">
+                                        <div class="input-group-prepend"><span class="input-group-text" style="font-size: 0.9em"><span class="bi-pencil-square"></span>&nbsp;팩스번호</span></div>
+                                        <input id="Cor_Fax" name="Cor_Fax" style="font-size: 0.9em; text-align: center" @bind="cnn.Cor_Fax" class="form-control" type="tel" />
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend"><span class="input-group-text" style="font-size: 0.9em"><span class="bi-file-earmark-binary"></span> 시도<span style="color: red">*</span></span></div>
+                                        <select id="Sido_Code" style="font-size: 0.9em" value="@Sido_Code" class="custom-select" @onchange="OnSido">
+                                            <option value="">::시도선택::</option>
+                                            <option value="A">서울특별시</option>
+                                            <option value="B">경기도</option>
+                                            <option value="C">부산광역시</option>
+                                            <option value="D">대구광역시</option>
+                                            <option value="E">인천광역시</option>
+                                            <option value="F">광주광역시</option>
+                                            <option value="G">대전광역시</option>
+                                            <option value="H">울산광역시</option>
+                                            <option value="I">세종특별자치시</option>
+                                            <option value="J">충청남도</option>
+                                            <option value="K">충청북도</option>
+                                            <option value="L">경상남도</option>
+                                            <option value="M">경상북도</option>
+                                            <option value="N">전라남도</option>
+                                            <option value="O">전라북도</option>
+                                            <option value="P">강원도</option>
+                                            <option value="Q">제주특별자치도</option>
+                                        </select>
+                                    </div>
+
+                                </td>
+                                <td>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend"><span class="input-group-text" style="font-size: 0.9em"><span class="bi-clipboard-check"></span> 시군구<span style="color: red">*</span></span></div>
+                                        <select id="Cor_Gun" class="custom-select" value="@cnn.Cor_Gun" @onchange="onGunGu" style="font-size: 0.9em" required>
+                                            <option value="Z">=시군구 선택=</option>
+
+                                            @foreach (var it in sidos)
+                                            {
+                                                <option value="@it.Region">@it.Region</option>
+                                            }
+                                        </select>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="text-align: center; vertical-align:middle">
+                                    <div class="input-group">
+                                        <div class="input-group-prepend"><span class="input-group-text" style="font-size: 0.9em"><span class="bi-pencil-square"></span>&nbsp;상세 주소<span style="color: red">*</span></span></div>
+                                        <input id="Cor_Adress" name="Cor_Adress" style="font-size: 0.9em; text-align: center" @bind="cnn.Cor_Adress" class="form-control" type="text" />
+                                    </div>
+                                </td>
+                                <td style="text-align: center; vertical-align:middle">
+                                    <div class="input-group">
+                                        <div class="input-group-prepend"><span class="input-group-text" style="font-size: 0.9em"><span class="bi-file-earmark-binary"></span> 법인여부<span style="color: red">*</span></span></div>
+                                        <select id="Corporation" style="font-size: 0.9em" @bind="cnn.Corporation" class="custom-select">
+                                            <option value="">::법인여부선택::</option>
+                                            <option value="A">법인</option>
+                                            <option value="B">개인</option>
+                                            <option value="C">공법인</option>
+                                            <option value="D">관공서</option>
+                                            <option value="E">기타</option>
+                                        </select>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="text-align: center; vertical-align:middle">
+                                    <div class="input-group">
+                                        <div class="input-group-prepend"><span class="input-group-text" style="font-size: 0.9em"><span class="bi-pencil-square"></span>&nbsp;담당자모바일</span></div>
+                                        <input id="ChargeMan_Mobile" name="ChargeMan_Mobile" style="font-size: 0.9em; text-align: center" @bind="cnn.ChargeMan_Mobile" class="form-control" type="text" />
+                                    </div>
+                                </td>
+                                <td style="text-align: center; vertical-align:middle">
+                                    <div class="input-group">
+                                        <div class="input-group-prepend"><span class="input-group-text" style="font-size: 0.9em"><span class="bi-pencil-square"></span>&nbsp;이메일</span></div>
+                                        <input id="Cor_Email" name="Cor_Email" style="font-size: 0.9em; text-align: center" @bind="cnn.Cor_Email" class="form-control" type="text" />
+                                    </div>
+                                </td>
+
+                            </tr>
+                            
+                            <tr>
+                                <td style="text-align: center; vertical-align: middle">
+                                    <div class="input-group">
+                                        <div class="input-group-prepend"><span class="input-group-text" style="font-size: 0.9em"><span class="bi-pencil-square"></span>&nbsp;자본금</span></div>
+                                        <input id="Capital" name="Capital" style="font-size: 0.9em; text-align: center" @bind="cnn.Capital" class="form-control" type="number" />
+                                    </div>
+                                </td>
+                                <td style="text-align: center; vertical-align: middle">
+                                    <div class="input-group">
+                                        <div class="input-group-prepend"><span class="input-group-text" style="font-size: 0.9em"><span class="bi-pencil-square"></span>&nbsp;신용등급</span></div>
+                                        <input id="Credit_Rate" name="Credit_Rate" style="font-size: 0.9em; text-align: center" @bind="cnn.Credit_Rate" class="form-control" type="text" />
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="text-align: center; vertical-align: middle">
+                                    <div class="input-group">
+                                        <div class="input-group-prepend"><span class="input-group-text" style="font-size: 0.9em"><span class="bi-pencil-square"></span>&nbsp;담당자</span></div>
+                                        <input id="Charge_Man" name="Charge_Man" style="font-size: 0.9em; text-align: right" @bind="cnn.Charge_Man" class="form-control" type="text" />
+                                    </div>
+                                </td>
+                                <td style="text-align: center; vertical-align: middle">
+                                    <div class="input-group">
+                                        <div class="input-group-prepend"><span class="input-group-text" style="font-size: 0.9em"><span class="bi-pencil-square"></span>&nbsp;담당연락처</span></div>
+                                        <input id="ChargeMan_mobile" name="ChargeMan_mobile" style="font-size: 0.9em; text-align: right" @bind="cnn.ChargeMan_Mobile" class="form-control" type="text" />
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="text-align: center; vertical-align: middle" colspan="2">
+                                    <textarea id="Company_Etc" name="Company_Etc" title="최대 4,000자 이내 입력 가능" placeholder="업체 소개 입력하는 곳" rows="3" style="font-size: 0.9em" @bind="bnn.Company_Etc" class="form-control" type="text" />
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>                    
+                </div>
+
+                <div class="modal-footer">
+                    @if (InOutWork == "A")
+                    {
+                        <button type="button" class="btn btn-info btn-sm" data-dismiss="modal" @onclick="btnInWork">
+                            <span class="bi-door-open">&nbsp;내부작업으로</span>
+                        </button>
+                    }
+                    else
+                    {
+                        <button type="button" class="btn btn-info btn-sm" data-dismiss="modal" @onclick="btnOutWork">
+                            <span class="bi-door-open">&nbsp;외주작업으로</span>
+                        </button>
+                    }
+
+                    &nbsp; &nbsp; &nbsp;
+                    <button type="button" class="btn btn-primary btn-sm" @onclick="btnCompanySave"><span class="bi-save-fill">&nbsp;저장</span></button> &nbsp; &nbsp; &nbsp;
+                    <button type="button" class="btn btn-secondary btn-sm" @onclick="btnCloseA"><span class="bi-x-square">&nbsp;닫기</span></button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <div class="modal-backdrop show"></div>
+}

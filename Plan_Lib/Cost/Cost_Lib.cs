@@ -40,11 +40,9 @@ namespace Plan_Blazor_Lib.Cost
         public async Task<Cost_Entity> Update_Cost(Cost_Entity Cost)
         {
             var sql = "Update Repair_Cost Set Price_Sort = @Price_Sort, Repair_Amount = @Repair_Amount, Repair_All_Cost = @Repair_All_Cost, Repair_Part_Cost = @Repair_Part_Cost, Repair_Rate = @Repair_Rate, Staff_Code = @Staff_Code, Cost_Etc = @Cost_Etc, PostDate = getdate() Where Repair_Cost_Code = @Repair_Cost_Code";
-            using (var ctx = new SqlConnection(_db.GetConnectionString("Khmais_db_Connection")))
-            {
-                await ctx.ExecuteAsync(sql, Cost);
-                return Cost;
-            }
+            using var ctx = new SqlConnection(_db.GetConnectionString("Khmais_db_Connection"));
+            await ctx.ExecuteAsync(sql, Cost);
+            return Cost;
         }
 
         /// <summary>
@@ -528,7 +526,7 @@ namespace Plan_Blazor_Lib.Cost
         {
             using (var ctx = new SqlConnection(_db.GetConnectionString("Khmais_db_Connection")))
             {
-                return await ctx.QuerySingleOrDefaultAsync<Cost_Entity>("Select  Repair_Cost_Code, Repair_Cost_CodeA, Apt_Code, Repair_Plan_Code, Sort_A_Code, Sort_B_Code, Sort_C_Code, Sort_A_Name, Sort_B_Name, Sort_C_Name, Repair_Article_Code, Price_Sort, Repair_Amount, Repair_All_Cost, Repair_Part_Cost, Repair_Rate, PostDate, Staff_Code, Cost_Etc From Repair_Cost Where Apt_Code = @Apt_Code And Repair_Plan_Code = @Repair_Plan_Code And Repair_Article_Code = @Repair_Article_Code", new { Apt_Code, Repair_Plan_Code, Repair_Article_Code }, commandType: CommandType.Text);
+                return await ctx.QuerySingleOrDefaultAsync<Cost_Entity>("Select Repair_Cost_Code, Repair_Cost_CodeA, Apt_Code, Repair_Plan_Code, Sort_A_Code, Sort_B_Code, Sort_C_Code, Sort_A_Name, Sort_B_Name, Sort_C_Name, Repair_Article_Code, Price_Sort, Repair_Amount, Repair_All_Cost, Repair_Part_Cost, Repair_Rate, PostDate, Staff_Code, Cost_Etc From Repair_Cost Where Apt_Code = @Apt_Code And Repair_Plan_Code = @Repair_Plan_Code And Repair_Article_Code = @Repair_Article_Code", new { Apt_Code, Repair_Plan_Code, Repair_Article_Code }, commandType: CommandType.Text);
             }
         }
 
@@ -570,10 +568,8 @@ namespace Plan_Blazor_Lib.Cost
         /// </summary>
         public async Task<double> Sort_total_Part_cost(string Apt_Code, string Repair_Plan_Code, string Sort_A_Code)
         {
-            using (var ctx = new SqlConnection(_db.GetConnectionString("Khmais_db_Connection")))
-            {
-                return await ctx.QuerySingleOrDefaultAsync<double>("Select ISNULL(sum(a.Repair_Part_Cost * b.Part_Cycle_Num), 0) as Part_Cost from Repair_Cost as a Join Repair_Cycle as b on a.Repair_Article_Code = b.Repair_Article_Code Where a.Sort_A_Code = @Sort_A_Code  and a.Apt_Code = @Apt_Code and a.Repair_Plan_Code = @Repair_Plan_Code", new { Apt_Code, Repair_Plan_Code, Sort_A_Code }, commandType: CommandType.Text);
-            }
+            using var ctx = new SqlConnection(_db.GetConnectionString("Khmais_db_Connection"));
+            return await ctx.QuerySingleOrDefaultAsync<double>("Select ISNULL(sum(a.Repair_Part_Cost * b.Part_Cycle_Num), 0) as Part_Cost from Repair_Cost as a Join Repair_Cycle as b on a.Repair_Article_Code = b.Repair_Article_Code Where a.Sort_A_Code = @Sort_A_Code  and a.Apt_Code = @Apt_Code and a.Repair_Plan_Code = @Repair_Plan_Code", new { Apt_Code, Repair_Plan_Code, Sort_A_Code }, commandType: CommandType.Text);
         }
 
         /// <summary>
@@ -616,13 +612,20 @@ namespace Plan_Blazor_Lib.Cost
         /// </summary>
         public async Task<List<Cost_Entity>> GetList_Cost_Ago(string Apt_Code, string Now_Code, string Ago_Code)
         {
-            using (var ctx = new SqlConnection(_db.GetConnectionString("Khmais_db_Connection")))
-            {
-                var aa = await ctx.QueryAsync<Cost_Entity>("Select a.Repair_Cost_Code, a.Repair_Cost_CodeA, a.Apt_Code, a.Repair_Plan_Code, a.Sort_A_Code, a.Sort_B_Code, a.Sort_C_Code, a.Sort_A_Name, a.Sort_B_Name, a.Sort_C_Name, a.Repair_Article_Code, a.Price_Sort, a.Repair_Amount, a.Repair_All_Cost, a.Repair_Part_Cost, a.Repair_Rate, a.Cost_Etc, b.Repair_Article_Name, b.Unit, c.All_Cycle_Num, c.Part_Cycle_Num From Repair_Cost as a Join Repair_Article as b on a.Repair_Article_Code = b.Aid Join Repair_Cycle as c on c.Repair_Article_Code = a.Repair_Article_Code Where a.Apt_Code = @Apt_Code And a.Repair_Plan_Code = @Ago_Code And b.Repair_Article_Name = (Select Repair_Article_Name From Repair_Article Where Apt_Code = @Apt_Code And Repair_Plan_Code = @Now_Code And Repair_Article_Name = b.Repair_Article_Name) Order By a.Sort_A_Code Asc, Convert(int, a.Sort_B_Code) Asc, Convert(int, a.Sort_C_Code) Asc", new { Apt_Code, Now_Code, Ago_Code });
-                return aa.ToList();
-
-            }
+            using var ctx = new SqlConnection(_db.GetConnectionString("Khmais_db_Connection"));
+            var aa = await ctx.QueryAsync<Cost_Entity>("Select a.Repair_Cost_Code, a.Repair_Cost_CodeA, a.Apt_Code, a.Repair_Plan_Code, a.Sort_A_Code, a.Sort_B_Code, a.Sort_C_Code, a.Sort_A_Name, a.Sort_B_Name, a.Sort_C_Name, a.Repair_Article_Code, a.Price_Sort, a.Repair_Amount, a.Repair_All_Cost, a.Repair_Part_Cost, a.Repair_Rate, a.Cost_Etc, b.Repair_Article_Name, b.Unit, c.All_Cycle_Num, c.Part_Cycle_Num From Repair_Cost as a Join Repair_Article as b on a.Repair_Article_Code = b.Aid Join Repair_Cycle as c on c.Repair_Article_Code = a.Repair_Article_Code Where a.Apt_Code = @Apt_Code And a.Repair_Plan_Code = @Ago_Code And b.Repair_Article_Name = (Select Repair_Article_Name From Repair_Article Where Apt_Code = @Apt_Code And Repair_Plan_Code = @Now_Code And Repair_Article_Name = b.Repair_Article_Name) Order By a.Sort_A_Code Asc, Convert(int, a.Sort_B_Code) Asc, Convert(int, a.Sort_C_Code) Asc", new { Apt_Code, Now_Code, Ago_Code });
+            return aa.ToList();
         }
 
+        /// <summary>
+        ///  해당 장기수선계획에서 수선항목코드로 수선금액 정보 불러오기
+        /// </summary>
+        public async Task<Cost_Entity> Detail_Cost_Article_Year(string Apt_Code, string Repair_Plan_Code, string Repair_Article_Code, string Year)
+        {
+            using (var ctx = new SqlConnection(_db.GetConnectionString("Khmais_db_Connection")))
+            {
+                return await ctx.QuerySingleOrDefaultAsync<Cost_Entity>("Select a.Repair_Cost_Code, a.Repair_Cost_CodeA, a.Apt_Code, a.Repair_Plan_Code, a.Sort_A_Code, a.Sort_B_Code, a.Sort_C_Code, a.Sort_A_Name, a.Sort_B_Name, a.Sort_C_Name, a.Repair_Article_Code, a.Price_Sort, a.Repair_Amount, a.Repair_All_Cost, a.Repair_Part_Cost, a.Repair_Rate, a.PostDate, a.Staff_Code, a.Cost_Etc From Repair_Cost as a Join Repair_Cycle as b on a.Repair_Article_Code = b.Repair_Article_Code Where a.Apt_Code = @Apt_Code And a.Repair_Plan_Code = @Repair_Plan_Code And a.Repair_Article_Code = @Repair_Article_Code And (b.Repair_Plan_Year_All = @Year or b.Repair_Plan_Year_Part = @Year)", new { Apt_Code, Repair_Plan_Code, Repair_Article_Code, Year }, commandType: CommandType.Text);
+            }
+        }
     }
 }

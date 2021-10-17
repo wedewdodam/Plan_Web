@@ -241,7 +241,7 @@ namespace Plan_Lib.Company
         {
             using (var ctx = new SqlConnection(_db.GetConnectionString("Khmais_db_Connection")))
             {
-                return await ctx.QuerySingleOrDefaultAsync<Company_Entity>("Select Aid, Apt_Code, Staff_Code, SortA_Code, SortB_Code, SortA_Name, SortB_Name, Company_Code, Company_Name, CorporRate_Number, Company_Etc, PostDate, PostIP From Company Where SortA_Code = @SortA_Code And SortB_Code = @SortB_Code Order By Aid Asc", new { CorporRate_Number });                
+                return await ctx.QuerySingleOrDefaultAsync<Company_Entity>("Select Aid, Apt_Code, Staff_Code, SortA_Code, SortB_Code, SortA_Name, SortB_Name, Company_Code, Company_Name, CorporRate_Number, Company_Etc, PostDate, PostIP From Company Where CorporRate_Number = @CorporRate_Number Order By Aid Asc", new { CorporRate_Number });                
             }
         }
 
@@ -279,8 +279,55 @@ namespace Plan_Lib.Company
             {
                 var apt = await ctx.QueryAsync<Company_Entity_Etc>("Select a.Aid, a.Apt_Code, a.Company_Code, a.Company_Etc, a.Company_Name, a.CorporRate_Number, a.SortA_Code, a.PostDate, a.SortA_Name, a.SortB_Code, a.SortB_Name, b.Capital, b.Ceo_Mobile, b.Ceo_Name, b.Charge_Man, b.ChargeMan_Mobile, b.CompanyEtc_Code, b.Cor_Adress, b.Cor_Email, b.Cor_Etc, b.Cor_Fax, b.Cor_Gun, b.Cor_Sido, b.Cor_Tel, b.Corporation, b.Credit_Rate, b.Staff_Code From Company a Join Company_Etc b on a.Company_Code = b.Company_Code Order By a.Aid Desc", commandType: CommandType.Text);
                 return apt.ToList();
+            }            
+        }
+
+
+        /// <summary>
+        /// 업체 및 상세 정보 리스트(all)
+        /// </summary>
+        public async Task<List<Company_Entity_Etc>> List_Page_Company(int Page)
+        {
+            using (var ctx = new SqlConnection(_db.GetConnectionString("Khmais_db_Connection")))
+            {
+                var apt = await ctx.QueryAsync<Company_Entity_Etc>("Select Top 15 a.Aid, a.Apt_Code, a.Company_Code, a.Company_Etc, a.Company_Name, a.CorporRate_Number, a.SortA_Code, a.PostDate, a.SortA_Name, a.SortB_Code, a.SortB_Name, b.Capital, b.Ceo_Mobile, b.Ceo_Name, b.Charge_Man, b.ChargeMan_Mobile, b.CompanyEtc_Code, b.Cor_Adress, b.Cor_Email, b.Cor_Etc, b.Cor_Fax, b.Cor_Gun, b.Cor_Sido, b.Cor_Tel, b.Corporation, b.Credit_Rate, b.Staff_Code From Company a Join Company_Etc b on a.Company_Code = b.Company_Code Where a.Aid Not In (Select Top (15 * @Page) a.Aid From Company a Join Company_Etc b on a.Company_Code = b.Company_Code Order By a.Aid Desc) Order By a.Aid Desc", new { Page });
+                return apt.ToList();
             }
-            //return this.ctx.Query<Company_Entity_Etc>("Select a.Aid, a.Apt_Code, a.Company_Code, a.Company_Etc, a.Company_Name, a.CorporRate_Number, a.SortA_Code, a.PostDate, a.SortA_Name, a.SortB_Code, a.SortB_Name, b.Capital, b.Ceo_Mobile, b.Ceo_Name, b.Charge_Man, b.ChargeMan_Mobile, b.CompanyEtc_Code, b.Cor_Adress, b.Cor_Email, b.Cor_Etc, b.Cor_Fax, b.Cor_Gun, b.Cor_Sido, b.Cor_Tel, b.Corporation, b.Credit_Rate, b.Staff_Code From Company a Join Company_Etc b on a.Company_Code = b.Company_Code Order By a.Aid Desc", new { }).ToList();
+        }
+
+        /// <summary>
+        /// 업체 및 상세 정보 리스트(all) 수
+        /// </summary>
+        public async Task<int> List_Page_Company_Count()
+        {
+            using (var ctx = new SqlConnection(_db.GetConnectionString("Khmais_db_Connection")))
+            {
+                return await ctx.QuerySingleOrDefaultAsync<int>("Select Count(*) From Company a Join Company_Etc b on a.Company_Code = b.Company_Code");                
+            }
+        }
+
+        /// <summary>
+        /// 업체 및 상세 정보 리스트(all) 검색 목록
+        /// </summary>
+        public async Task<List<Company_Entity_Etc>> List_Page_Company_Search(int Page, string Field, string Query)
+        {
+            using (var ctx = new SqlConnection(_db.GetConnectionString("Khmais_db_Connection")))
+            {
+                var sql = "Select Top 15 a.Aid, a.Apt_Code, a.Company_Code, a.Company_Etc, a.Company_Name, a.CorporRate_Number, a.SortA_Code, a.PostDate, a.SortA_Name, a.SortB_Code, a.SortB_Name, b.Capital, b.Ceo_Mobile, b.Ceo_Name, b.Charge_Man, b.ChargeMan_Mobile, b.CompanyEtc_Code, b.Cor_Adress, b.Cor_Email, b.Cor_Etc, b.Cor_Fax, b.Cor_Gun, b.Cor_Sido, b.Cor_Tel, b.Corporation, b.Credit_Rate, b.Staff_Code From Company a Join Company_Etc b on a.Company_Code = b.Company_Code Where a.Aid Not In (Select Top (15 * " + Page + ") a.Aid From Company a Join Company_Etc b on a.Company_Code = b.Company_Code And " + Field + " Like '%" + Query + "%' Order By a.Aid Desc) And a." + Field + " Like '%" + Query + "%' Order By a.Aid Desc";
+                var apt = await ctx.QueryAsync<Company_Entity_Etc>(sql, new { Page, Field, Query });
+                return apt.ToList();
+            }
+        }
+
+        /// <summary>
+        /// 업체 및 상세 정보 리스트(all) 검색된 수
+        /// </summary>
+        public async Task<int> List_Page_Company_Count_Search(string Field, string Query)
+        {
+            using (var ctx = new SqlConnection(_db.GetConnectionString("Khmais_db_Connection")))
+            {
+                return await ctx.QuerySingleOrDefaultAsync<int>("Select Count(*) From Company a Join Company_Etc b on a.Company_Code = b.Company_Code Where @Field Like '%" + Query + "%'", new { Field, Query });
+            }
         }
 
         /// <summary>
@@ -295,7 +342,7 @@ namespace Plan_Lib.Company
                 var apt = await ctx.QueryAsync<Company_Entity_Etc>("Select a.Aid, a.Apt_Code, a.Company_Code, a.Company_Etc, a.Company_Name, a.CorporRate_Number, a.SortA_Code, a.PostDate, a.SortA_Name, a.SortB_Code, a.SortB_Name, b.Capital, b.Ceo_Mobile, b.Ceo_Name, b.Charge_Man, b.ChargeMan_Mobile, b.CompanyEtc_Code, b.Cor_Adress, b.Cor_Email, b.Cor_Etc, b.Cor_Fax, b.Cor_Gun, b.Cor_Sido, b.Cor_Tel, b.Corporation, b.Credit_Rate, b.Staff_Code From Company a Join Company_Etc b on a.Company_Code = b.Company_Code Where a.Company_Name Like '%" + Name + "%' Order By a.Aid Desc", new { Name }, commandType: CommandType.Text);
                 return apt.ToList();
             }
-            //return this.ctx.Query<Company_Entity_Etc>("Select a.Aid, a.Apt_Code, a.Company_Code, a.Company_Etc, a.Company_Name, a.CorporRate_Number, a.SortA_Code, a.PostDate, a.SortA_Name, a.SortB_Code, a.SortB_Name, b.Capital, b.Ceo_Mobile, b.Ceo_Name, b.Charge_Man, b.ChargeMan_Mobile, b.CompanyEtc_Code, b.Cor_Adress, b.Cor_Email, b.Cor_Etc, b.Cor_Fax, b.Cor_Gun, b.Cor_Sido, b.Cor_Tel, b.Corporation, b.Credit_Rate, b.Staff_Code From Company a Join Company_Etc b on a.Company_Code = b.Company_Code Where a.Company_Name Like '%" + Name + "%' Order By a.Aid Desc", new { Name }).ToList();
+            
         }
 
         /// <summary>

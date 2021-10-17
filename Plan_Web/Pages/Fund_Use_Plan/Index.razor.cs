@@ -17,6 +17,7 @@ namespace Plan_Web.Pages.Fund_Use_Plan
 {
     public partial class Index
     {
+        #region 기본 정보
         [CascadingParameter] public Task<AuthenticationState> AuthenticationStateRef { get; set; }
         [Parameter] public string Aid { get; set; }
         [Inject] public NavigationManager MyNav { get; set; } // Url
@@ -62,7 +63,8 @@ namespace Plan_Web.Pages.Fund_Use_Plan
         private string strTender { get; set; }
         private string strTenderA { get; set; }
         private string strTenderB { get; set; }
-        private string strTenderC { get; set; }
+        private string strTenderC { get; set; } 
+        #endregion
 
 
         protected override async Task OnInitializedAsync()

@@ -133,5 +133,10 @@ namespace Plan_Blazor_Lib.Cost
         /// 수선금액 리스트
         /// </summary>
         Task<List<Cost_Entity>> GetList_Cost_Ago(string Apt_Code, string Now_Code, string Ago_Code);
+
+        /// <summary>
+        ///  해당 장기수선계획에서 수선항목코드로 수선금액 정보 불러오기
+        /// </summary>
+        Task<Cost_Entity> Detail_Cost_Article_Year(string Apt_Code, string Repair_Plan_Code, string Repair_Article_Code, string Year);
     }
 }
