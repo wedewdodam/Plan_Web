@@ -149,6 +149,8 @@ namespace Plan_Web.Pages.Company
         /// </summary>
         private void btnOpen()
         {
+            bnn = new Company_Entity();
+            cnn = new Company_Etc_Entity();
             InsertViews = "B";
         }
 
@@ -159,13 +161,85 @@ namespace Plan_Web.Pages.Company
         {
             if (LevelCount > 5)
             {
-                bnn.Apt_Code = ar.Apt_Code;
-                bnn.Company_Code = ar.Company_Code;
-                bnn.Company_Etc = ar.Company_Etc;
-
-                cnn.Capital = ar.Capital;
-                cnn.Ceo_Mobile = ar.Ceo_Mobile;
-
+                strCompSortA = ar.SortA_Code;
+                strCompSortB = ar.SortB_Code;
+                #region MyRegion
+                if (ar.Cor_Sido == "서울특별시")
+                {
+                    Sido_Code = "A";
+                }
+                else if (ar.Cor_Sido == "경기도")
+                {
+                    Sido_Code = "B";
+                }
+                else if (ar.Cor_Sido == "부산광역시")
+                {
+                    Sido_Code = "C";
+                }
+                else if (ar.Cor_Sido == "대구광역시")
+                {
+                    Sido_Code = "D";
+                }
+                else if (ar.Cor_Sido == "인천광역시")
+                {
+                    Sido_Code = "E";
+                }
+                else if (ar.Cor_Sido == "광주광역시")
+                {
+                    Sido_Code = "F";
+                }
+                else if (ar.Cor_Sido == "대전광역시")
+                {
+                    Sido_Code = "G";
+                }
+                else if (ar.Cor_Sido == "울산광역시")
+                {
+                    Sido_Code = "H";
+                }
+                else if (ar.Cor_Sido == "세종특별자치시")
+                {
+                    Sido_Code = "I";
+                }
+                else if (ar.Cor_Sido == "충청남도")
+                {
+                    Sido_Code = "J";
+                }
+                else if (ar.Cor_Sido == "충청북도")
+                {
+                    Sido_Code = "K";
+                }
+                else if (ar.Cor_Sido == "경상남도")
+                {
+                    Sido_Code = "L";
+                }
+                else if (ar.Cor_Sido == "경상북도")
+                {
+                    Sido_Code = "M";
+                }
+                else if (ar.Cor_Sido == "전라남도")
+                {
+                    Sido_Code = "N";
+                }
+                else if (ar.Cor_Sido == "전라남도")
+                {
+                    Sido_Code = "O";
+                }
+                else if (ar.Cor_Sido == "강원도")
+                {
+                    Sido_Code = "P";
+                }
+                else if (ar.Cor_Sido == "제주특별자치도")
+                {
+                    Sido_Code = "Q";
+                }
+                #endregion
+                CsnnB = await companySort_Lib.GetList_CompanySort(strCompSortA);
+                sidos = await sido_Lib.GetList(ar.Cor_Sido);
+                cnn.Cor_Gun = ar.Cor_Gun;
+                strCorporRate_Number = cnr(ar.CorporRate_Number);
+               
+                bnn = await company_Lib.Detail_Company_Detail(ar.Company_Code);
+                cnn = await company_Etc_Lib.Detail_Company_Detail(ar.Company_Code);
                 InsertViews = "B";
             }
             else
@@ -331,7 +405,7 @@ namespace Plan_Web.Pages.Company
             else
             {
                 await JSRuntime.InvokeVoidAsync("exampleJsFunctions.ShowMsg", bnn.CorporRate_Number + "는 이미 입력된 사업자 등록 번호 입니다. 다시 입력해 주세요...");
-                //ann.CorporateResistration_Num = "";
+                bnn.CorporRate_Number = "";
             }
         }
 
@@ -461,23 +535,32 @@ namespace Plan_Web.Pages.Company
             }
             else
             {
-                if (bnn.Aid < 1)
+                int intBe = await company_Lib.CorporRate_Number(bnn.CorporRate_Number);
+                if (intBe < 1)
                 {
-                    await company_Lib.Add_Company(bnn);
-                    cnn.Company_Code = bnn.Company_Code;
-                    cnn.Cor_Etc = bnn.Company_Etc;
-                    cnn.CompanyEtc_Code = bnn.Company_Code;
-                    await company_Etc_Lib.Add_CompanyEtc(cnn);
+                    if (bnn.Aid < 1)
+                    {
+                        await company_Lib.Add_Company(bnn);
+                        cnn.Company_Code = bnn.Company_Code;
+                        cnn.Cor_Etc = bnn.Company_Etc;
+                        cnn.CompanyEtc_Code = bnn.Company_Code;
+                        await company_Etc_Lib.Add_CompanyEtc(cnn);
+                    }
+                    else
+                    {
+                        await company_Lib.Edit_Company(bnn);
+                        cnn.Cor_Etc = bnn.Company_Etc;
+
+                        await company_Etc_Lib.Edit_CompanyEtc(cnn);
+                    }
+                    await DatailsView(Work_Year);
+                    strCorporRate_Number = bnn.CorporRate_Number;
+                    InsertViews = "A";
                 }
                 else
                 {
-                    await company_Lib.Edit_Company(bnn);
-                    cnn.Cor_Etc = bnn.Company_Etc;
-
-                    await company_Etc_Lib.Edit_CompanyEtc(cnn);
+                    await JSRuntime.InvokeVoidAsync("exampleJsFunctions.ShowMsg", "이미 입력된 사업자 번호를 입력하려 했습니다.");
                 }
-                strCorporRate_Number = bnn.CorporRate_Number;
-                InsertViews = "A";
             }
         }
         #endregion
@@ -485,18 +568,95 @@ namespace Plan_Web.Pages.Company
         /// <summary>
         /// 업체 정보 수정
         /// </summary>
-        private void btnCompanyEdit(Company_Entity_Etc ar)
+        private async Task btnCompanyEdit(Company_Entity_Etc ar)
         {
-            bnn.Company_Code = ar.Company_Code;
-            bnn.Company_Etc = ar.Company_Etc;
-            bnn.Company_Name = ar.Company_Name;
+            if (LevelCount > 5)
+            {
+                strCompSortA = ar.SortA_Code;
+                strCompSortB = ar.SortB_Code;
+                #region MyRegion
+                if (ar.Cor_Sido == "서울특별시")
+                {
+                    Sido_Code = "A";
+                }
+                else if (ar.Cor_Sido == "경기도")
+                {
+                    Sido_Code = "B";
+                }
+                else if (ar.Cor_Sido == "부산광역시")
+                {
+                    Sido_Code = "C";
+                }
+                else if (ar.Cor_Sido == "대구광역시")
+                {
+                    Sido_Code = "D";
+                }
+                else if (ar.Cor_Sido == "인천광역시")
+                {
+                    Sido_Code = "E";
+                }
+                else if (ar.Cor_Sido == "광주광역시")
+                {
+                    Sido_Code = "F";
+                }
+                else if (ar.Cor_Sido == "대전광역시")
+                {
+                    Sido_Code = "G";
+                }
+                else if (ar.Cor_Sido == "울산광역시")
+                {
+                    Sido_Code = "H";
+                }
+                else if (ar.Cor_Sido == "세종특별자치시")
+                {
+                    Sido_Code = "I";
+                }
+                else if (ar.Cor_Sido == "충청남도")
+                {
+                    Sido_Code = "J";
+                }
+                else if (ar.Cor_Sido == "충청북도")
+                {
+                    Sido_Code = "K";
+                }
+                else if (ar.Cor_Sido == "경상남도")
+                {
+                    Sido_Code = "L";
+                }
+                else if (ar.Cor_Sido == "경상북도")
+                {
+                    Sido_Code = "M";
+                }
+                else if (ar.Cor_Sido == "전라남도")
+                {
+                    Sido_Code = "N";
+                }
+                else if (ar.Cor_Sido == "전라남도")
+                {
+                    Sido_Code = "O";
+                }
+                else if (ar.Cor_Sido == "강원도")
+                {
+                    Sido_Code = "P";
+                }
+                else if (ar.Cor_Sido == "제주특별자치도")
+                {
+                    Sido_Code = "Q";
+                }
+                #endregion
+                CsnnB = await companySort_Lib.GetList_CompanySort(strCompSortA);
+                sidos = await sido_Lib.GetList(ar.Cor_Sido);
+                cnn.Cor_Gun = ar.Cor_Gun;
+                strCorporRate_Number = cnr(ar.CorporRate_Number);
 
-
-            cnn.Capital = ar.Capital;
-            cnn.Ceo_Name = ar.Ceo_Name;
-            cnn.Ceo_Mobile = ar.Ceo_Mobile;
-            InsertViews = "B";
-
+                bnn = await company_Lib.Detail_Company_Detail(ar.Company_Code);
+                cnn = await company_Etc_Lib.Detail_Company_Detail(ar.Company_Code);
+                InsertViews = "B";
+            }
+            else
+            {
+                await JSRuntime.InvokeVoidAsync("exampleJsFunctions.ShowMsg", "수정 권한이 없습니다. \n 수정을 원하시면 관리자에게 문의하세요.");
+            }
         }
     }
 }

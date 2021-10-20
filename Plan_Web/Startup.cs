@@ -149,6 +149,7 @@ namespace Plan_Web
             services.AddTransient<IUnitPrice_Rate_Lib, UnitPrice_Rate_Lib>(); // 원가계산서 할증율 관리 입력
             services.AddTransient<IPrime_Cost_Report_Lib, Prime_Cost_Report_Lib>(); // 원가계산서 보고서 작성 메서드
             services.AddTransient<IPlan_Prosess_Lib, Plan_Prosess_Lib>();//장기수선계획 진행 정보
+            services.AddTransient<IRepair_Saving_Using_Pund_Lib, Repair_Saving_Using_Pund_Lib>(); //장기수선충당금 사용 및 적립 현황 클래스
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -91,7 +91,7 @@
             <thead>
                 <tr style="background-color: whitesmoke">
                     <th class="text-center">
-                        업체명
+                        업체명(@string.Format("{0: ###,###}", pager.RecordCount)개)
                     </th>
                     <th class="text-center">
                         업체식별코드
@@ -455,10 +455,10 @@
                             </tr>
                             <tr>
                                 <td style="vertical-align:middle">
-                                    자본금 : @dnn.Cor_Email
+                                    자본금 : @string.Format("{0: ###,###}", dnn.Capital)<span>원</span>
                                 </td>
                                 <td style="vertical-align:middle">
-                                    신용등급 : @dnn.Charge_Man
+                                    신용등급 : @dnn.Credit_Rate
                                 </td>
                                 <td style="vertical-align:middle">
                                     상세설명 : @dnn.Company_Etc

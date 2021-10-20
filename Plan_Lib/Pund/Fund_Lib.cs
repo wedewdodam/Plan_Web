@@ -11,7 +11,7 @@ namespace Plan_Lib.Pund
     /// <summary>
     /// 장기수선충당금 사용 및 적립 현황 클래스
     /// </summary>
-    public class Repair_Saving_Using_Pund_Lib
+    public class Repair_Saving_Using_Pund_Lib : IRepair_Saving_Using_Pund_Lib
     {
         private readonly IConfiguration _db;
 

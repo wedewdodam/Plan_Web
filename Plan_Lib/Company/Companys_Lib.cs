@@ -191,7 +191,7 @@ namespace Plan_Lib.Company
         // 업체 정보 수정하기
         public async Task<Company_Entity> Edit_Company(Company_Entity Sort)
         {
-            var sql = "Update Company_Sort Set SortA_Code = @SortA_Code, SortB_Code = @SortB_Code,  SortA_Name = @SortA_Name, SortB_Name = @SortB_Name, Company_Name = @Company_Name, CorporRate_Number = @CorporRate_Number, Company_Etc = @Company_Etc Where Aid = @Aid;";
+            var sql = "Update Company Set SortA_Code = @SortA_Code, SortB_Code = @SortB_Code,  SortA_Name = @SortA_Name, SortB_Name = @SortB_Name, Company_Name = @Company_Name, CorporRate_Number = @CorporRate_Number, Company_Etc = @Company_Etc Where Aid = @Aid;";
             using (var ctx = new SqlConnection(_db.GetConnectionString("Khmais_db_Connection")))
             {
                 await ctx.ExecuteAsync(sql, Sort);
@@ -457,7 +457,7 @@ namespace Plan_Lib.Company
         // 업체 상세 정보 수정하기
         public async Task<Company_Etc_Entity> Edit_CompanyEtc(Company_Etc_Entity Sort)
         {
-            var sql = "Update Company_Etc Set Corporation = @Corporation, Ceo_Name = @Ceo_Name, Credit_Rate = @Credit_Rate, Capital = @Capital, Cor_Email = @Cor_Email, Cor_Sido = @Cor_Sido, Cor_Gun = @Cor_Gun, Cor_Adress = @Cor_Adress, Ceo_Tel = @Ceo_Tel, Ceo_Fax = @Ceo_Fax, Ceo_Mobile = @Ceo_Mobile, Charge_Man = @Charge_Man, ChargeMan_Mobile = @ChargeMan_Mobile, Cor_Etc = @Cor_Etc Where Aid = @Aid;";
+            var sql = "Update Company_Etc Set Corporation = @Corporation, Ceo_Name = @Ceo_Name, Credit_Rate = @Credit_Rate, Capital = @Capital, Cor_Email = @Cor_Email, Cor_Sido = @Cor_Sido, Cor_Gun = @Cor_Gun, Cor_Adress = @Cor_Adress, Cor_Tel = @Cor_Tel, Cor_Fax = @Cor_Fax, Ceo_Mobile = @Ceo_Mobile, Charge_Man = @Charge_Man, ChargeMan_Mobile = @ChargeMan_Mobile, Cor_Etc = @Cor_Etc Where Aid = @Aid;";
             using (var ctx = new SqlConnection(_db.GetConnectionString("Khmais_db_Connection")))
             {
                 await ctx.ExecuteAsync(sql, Sort);
@@ -490,11 +490,11 @@ namespace Plan_Lib.Company
         }
 
         //// 업체상세정보 상세 불러오기
-        public async Task<Company_Entity> Detail_Company_Detail(string CompanyEtc_Code)
+        public async Task<Company_Etc_Entity> Detail_Company_Detail(string CompanyEtc_Code)
         {
             using (var ctx = new SqlConnection(_db.GetConnectionString("Khmais_db_Connection")))
             {
-                return await ctx.QuerySingleOrDefaultAsync<Company_Entity>("Select  * From Company_Etc Where Company_Code = @Company_Code", new { CompanyEtc_Code }, commandType: CommandType.Text);
+                return await ctx.QuerySingleOrDefaultAsync<Company_Etc_Entity>("Select * From Company_Etc Where Company_Code = @CompanyEtc_Code", new { CompanyEtc_Code }, commandType: CommandType.Text);
             }
             //return this.ctx.Query<Company_Entity>("Select  * From Company_Etc Where Company_Code = @Company_Code", new { CompanyEtc_Code }).SingleOrDefault();
         }
@@ -506,7 +506,7 @@ namespace Plan_Lib.Company
         {
             using (var ctx = new SqlConnection(_db.GetConnectionString("Khmais_db_Connection")))
             {
-                return await ctx.QuerySingleOrDefaultAsync<Company_Entity_Etc>("Select  * From Company, Company_Etc Where Company.Company_Code = Company_Etc.Company_Code and Company.Company_Code = @Company_Code", new { Company_Code }, commandType: CommandType.Text);
+                return await ctx.QuerySingleOrDefaultAsync<Company_Entity_Etc>("Select * From Company, Company_Etc Where Company.Company_Code = Company_Etc.Company_Code and Company.Company_Code = @Company_Code", new { Company_Code }, commandType: CommandType.Text);
             }
             //return this.ctx.Query<Company_Entity_Etc>("Select  * From Company, Company_Etc Where Company.Company_Code = Company_Etc.Company_Code and Company.Company_Code = @Company_Code", new { Company_Code }).SingleOrDefault();
         }
@@ -518,7 +518,7 @@ namespace Plan_Lib.Company
         {
             using (var ctx = new SqlConnection(_db.GetConnectionString("Khmais_db_Connection")))
             {
-                return await ctx.QuerySingleOrDefaultAsync<Company_Entity_Etc>("Select  * From Company, Company_Etc Where Company.Company_Code = Company_Etc.Company_Code and Company.CorporRate_Number = @CorporRate_Number", new { CorporRate_Number }, commandType: CommandType.Text);
+                return await ctx.QuerySingleOrDefaultAsync<Company_Entity_Etc>("Select * From Company, Company_Etc Where Company.Company_Code = Company_Etc.Company_Code and Company.CorporRate_Number = @CorporRate_Number", new { CorporRate_Number }, commandType: CommandType.Text);
             }
             //return this.ctx.Query<Company_Entity_Etc>("Select  * From Company, Company_Etc Where Company.Company_Code = Company_Etc.Company_Code and Company.CorporRate_Number = @CorporRate_Number", new { CorporRate_Number }).SingleOrDefault();
         }

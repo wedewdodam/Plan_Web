@@ -107,7 +107,7 @@ namespace Plan_Lib.Company
 
         Task<List<Company_Etc_Entity>> GetList_CompanyEtc(string Company_Code);
 
-        Task<Company_Entity> Detail_Company_Detail(string CompanyEtc_Code);
+        Task<Company_Etc_Entity> Detail_Company_Detail(string CompanyEtc_Code);
 
         Task<Company_Entity_Etc> Detail_Company_Etc_Detail(string Company_Code);
 
