@@ -188,6 +188,24 @@ namespace Plan_Lib.Pund
         }
 
         /// <summary>
+        /// 부과징수액(년간)
+        /// </summary>
+        public async Task<double> _Year_Plan_Sum(string Apt_Code, int Year, string Account)
+        {
+            using SqlConnection db = new SqlConnection(_db.GetConnectionString("Khmais_db_Connection"));
+            return await db.QuerySingleOrDefaultAsync<double>("Select isNull(Sum(Levy_Month_Sum), 0) From Capital_Levy Where Apt_Code = @Apt_Code And Levy_Year = @Year And Levy_Account = @Account", new { Apt_Code, Year, Account }, commandType: CommandType.Text);
+        }
+
+        /// <summary>
+        /// 잉여금 등 합계액(년간)
+        /// </summary>
+        public async Task<double> _Year_Etc_Sum(string Apt_Code, int Year, string Account)
+        {
+            using SqlConnection db = new SqlConnection(_db.GetConnectionString("Khmais_db_Connection"));
+            return await db.QuerySingleOrDefaultAsync<double>("Select isNull(Sum(Levy_Month_Sum), 0) From Capital_Levy Where Apt_Code = @Apt_Code And Levy_Year = @Year And (Levy_Account = '이익 잉여금' or Levy_Account = '잉여금' or Levy_Account = '기타' or Levy_Account = '잡수입')", new { Apt_Code, Year, Account }, commandType: CommandType.Text);
+        }
+
+        /// <summary>
         /// 부과금액 년간 합계
         /// </summary>
 
@@ -292,6 +310,18 @@ namespace Plan_Lib.Pund
             {
                 return await ctx.QuerySingleOrDefaultAsync<double>("Select IsNull(Sum(Levy_Month_Sum), 0) From Capital_Levy Where Apt_Code = @Apt_Code And Levy_Year > @Frist_Year and (Levy_Date <= @Now_date)", new { Apt_Code, Frist_Year, Now_date }, commandType: CommandType.Text);
             }
+        }
+
+        /// <summary>
+        /// 해당 년도, 월, 계정과목 중복확인
+        /// </summary>
+        public async Task<int> being_Capital_Levy(string Apt_Code, int Levy_Year, int Levy_Month, string Levy_Account)
+        {
+            using (var ctx = new SqlConnection(_db.GetConnectionString("Khmais_db_Connection")))
+            {
+                return await ctx.QuerySingleOrDefaultAsync<int>("Select Count(*) From Capital_Levy Where Apt_Code = @Apt_Code And Levy_Year = @Levy_Year And Levy_Month = @Levy_Month And Levy_Account = @Levy_Account", new { Apt_Code, Levy_Year, Levy_Month, Levy_Account }, commandType: CommandType.Text);
+            }
+            //return dn.ctx.Query<int>("Select Count(*) From Capital_Levy Where Apt_Code = @Apt_Code And Levy_Year = @Levy_Year", new { Apt_Code, Levy_Year });
         }
     }
 
@@ -932,6 +962,79 @@ namespace Plan_Lib.Pund
             dbUseCost = dbLavy_Capital + intBalanceSum - dbUseCost;
 
             return dbUseCost;
+        }
+
+        /// <summary>
+        /// 해당년도 말 잔액 만들기
+        /// </summary>
+        public async Task<Useing_Saving_Report_Entity> BalanceSum_Year(string Apt_Code, int Year)
+        {
+            Useing_Saving_Report_Entity usr = new Useing_Saving_Report_Entity();
+            using var db = new SqlConnection(_db.GetConnectionString("Khmais_db_Connection"));
+
+            var capital = await db.QuerySingleOrDefaultAsync<Repair_Capital_Entity>("Select Top 1 IsNull(Balance_Capital, 0) as Balance_Capital, IsNull(Use_Cost, 0) as Use_Cost From Repair_Capital Where Apt_Code = @Apt_Code Order By Repair_Capital_Code Desc", new { Apt_Code });//초기화 잔액 불러오기
+
+            usr.dbResetBalance = capital.Balance_Capital;
+            usr.dbResetUsing = capital.Use_Cost;
+
+            string strFirst_year = "2016";
+            strFirst_year = ((await db.QuerySingleOrDefaultAsync<DateTime>("Select Top 1 isNull(PostDate, Getdate()) From Repair_Capital Where Apt_Code = @Apt_Code Order By Repair_Capital_Code Desc", new { Apt_Code })).Year - 1).ToString(); // 장기수선충당금 초기화 시에 입력된 기준년도 구하기;
+            if (strFirst_year == "" || strFirst_year == "0")
+            {
+                strFirst_year = "2016";
+            }
+            usr.dbLavyAgoCapital = await db.QuerySingleOrDefaultAsync<double>("Select isNull(Sum(Levy_Month_Sum), 0) From Capital_Levy Where Apt_Code = @Apt_Code And Levy_Year > @strFirst_year And Levy_Year <= @Year", new { Apt_Code, strFirst_year, Year });//초기화 이후 전년도 말까지 징수적립액
+
+            usr.dbLavyNowCapital = await db.QuerySingleOrDefaultAsync<double>("Select isNull(Sum(Levy_Month_Sum), 0) From Capital_Levy Where Apt_Code = @Apt_Code And Levy_Year = @Year", new { Apt_Code, strFirst_year, Year });//해당년도 말까지 징수적립액 
+
+            //strFirst_year = strFirst_year;
+            usr.dbUseingAgoSum = await db.QuerySingleOrDefaultAsync<double>("Select isnull(Sum(Repair_Cost_Complete), 0) From Repair_Record Where Repair_End_Year = @Year And Apt_Code = @Apt_Code", new { Apt_Code, strFirst_year, Year }); //해당 공동주택 장기수선충당금 사용금액 합계(초기화에서 입력 사용액 입력년도 이후 전년도까지 사용한 금액)
+            //strFirst_year = strFirst_year;
+            int AgoYear = (Year - 1);
+            double dbUseingAgoAgoSum = await db.QuerySingleOrDefaultAsync<double>("Select isnull(Sum(Repair_Cost_Complete), 0) From Repair_Record Where Repair_End_Year > @strFirst_year And Repair_End_Year <= @AgoYear And Apt_Code = @Apt_Code", new { Apt_Code, strFirst_year, AgoYear }); //해당 공동주택 장기수선충당금 사용금액 합계(초기화에서 입력 사용액 입력년도 이후 전전년도까지 사용한 금액)
+            double dbLevyAgoAgoCapptal = await db.QuerySingleOrDefaultAsync<double>("Select isNull(Sum(Levy_Month_Sum), 0) From Capital_Levy Where Apt_Code = @Apt_Code And Levy_Year > @strFirst_year And Levy_Year <= @AgoYear", new { Apt_Code, strFirst_year, AgoYear });//초기화 이후 전년도 말까지 징수적립액
+
+            usr.dbBalanceAgoSum = usr.dbLavyAgoCapital + usr.dbResetBalance - usr.dbUseingAgoSum - dbUseingAgoAgoSum; //전년도 말까지 총 잔액
+            usr.dbBalanceAgoAgoSum = dbLevyAgoAgoCapptal + usr.dbResetBalance - dbUseingAgoAgoSum;
+
+            //usr.dbUseingAgoSum = usr.dbUseingAgoSum; //전년말까지 사용 총액
+            usr.dbUseingAgoAgoSum = usr.dbResetUsing + dbUseingAgoAgoSum;
+
+            int Bylaw_Code = await db.QuerySingleOrDefaultAsync<int>("Select Top 1 ISNULL(Bylaw_Code, 0) From Bylaw Where Apt_Code = @Apt_Code Order By Bylaw_Code Desc", new { Apt_Code });
+            if (Bylaw_Code > 0)
+            {
+                int Levy_Rate_Count = await db.QuerySingleOrDefaultAsync<int>("Select Count(*) From Levy_Rate Where Apt_Code = @Apt_Code And Bylaw_Code = @Bylaw_Code And Levy_End_Year >= @Year", new { Apt_Code, Bylaw_Code, Year });
+                if (Levy_Rate_Count > 0)
+                {
+                    Levy_Rate_Entity lr = await db.QuerySingleOrDefaultAsync<Levy_Rate_Entity>("Select Top 1 * From Levy_Rate Where Apt_Code = @Apt_Code And Bylaw_Code = @Bylaw_Code And Levy_Start_Year <= @Year And Levy_End_Year >= @Year Order by Levy_Rate_Code Desc", new { Apt_Code, Bylaw_Code, Year });
+                    if ((lr.Levy_Rate_Accumulate - lr.Levy_Rate) > 0)
+                    {
+                        double dbRest = lr.Levy_Rate_Accumulate - lr.Levy_Rate;
+
+                        int intAdd = ((lr.Levy_End_Year - lr.Levy_Start_Year - 1) * 12) + (13 - lr.Levy_Start_Month) + lr.Levy_End_Month;
+                        //intAdd = lr.Levy_Period_New - intAdd;
+                        double dbRateCount = (lr.Levy_Rate / lr.Levy_Period_New) * intAdd;
+
+                        usr.LevyRateSum = dbRest + dbRateCount;
+                    }
+                    else
+                    {
+                        int intAdd = ((Year - lr.Levy_Start_Year - 1) * 12) + (13 - lr.Levy_Start_Month) + lr.Levy_End_Month;
+                        //intAdd = lr.Levy_Period_New - intAdd;
+                        usr.LevyRateSum = (lr.Levy_Rate / lr.Levy_Period_New) * intAdd;
+                    }
+                }
+                else
+                {
+                    usr.LevyRateSum = 0;
+                }
+            }
+            else
+            {
+                usr.LevyRateSum = 0;
+            }
+
+            return usr;
         }
     }
 

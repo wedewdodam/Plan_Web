@@ -72,7 +72,7 @@ namespace Plan_Web.Pages.Appropriation_fund
 
                 if (strCode != null)
                 {
-                    await DetailsView();
+                    await DetailsView(DateTime.Now.Year);
                 }
                 else
                 {
@@ -87,9 +87,9 @@ namespace Plan_Web.Pages.Appropriation_fund
             }
         }
 
-        private async Task DetailsView()
+        private async Task DetailsView(int Year)
         {
-            dnn.Levy_Year = DateTime.Now.Year;
+            dnn.Levy_Year = Year;
             bnn = await repair_Capital_Lib._detail(Apt_Code);
             CL_List = await capital_Levy_Lib.GetList(Apt_Code, dnn.Levy_Year);
 
@@ -110,6 +110,7 @@ namespace Plan_Web.Pages.Appropriation_fund
         /// </summary>
         public double Sum_Levy_fund { get; set; } = 0;
         public object Bylaw_Code { get; private set; }
+        public int Work_year { get; private set; }
 
         private double Sum_Fund(double intCost)
         {
@@ -137,7 +138,7 @@ namespace Plan_Web.Pages.Appropriation_fund
             if (isDelete)
             {
                 await capital_Levy_Lib.Delete(Aid.ToString());
-                await DetailsView();
+                await DetailsView(Work_year);
             }
         }
 
@@ -161,7 +162,7 @@ namespace Plan_Web.Pages.Appropriation_fund
             if (a.Value != null)
             {
                 int Y = Convert.ToInt32(a.Value);
-                CL_List = await capital_Levy_Lib.GetList(Apt_Code, Y);
+                await DetailsView(Y);
             }
         }
 
@@ -171,6 +172,7 @@ namespace Plan_Web.Pages.Appropriation_fund
         private void OnByYear(ChangeEventArgs a)
         {
             dnn.Levy_Year = Convert.ToInt32(a.Value);
+            Work_year = dnn.Levy_Year;
         }
 
         /// <summary>
@@ -210,6 +212,8 @@ namespace Plan_Web.Pages.Appropriation_fund
             #endregion 아이피 입력
             dnn.Apt_Code = Apt_Code;
             dnn.Staff_Code = User_Code;
+            dnn.Levy_Day = 31;
+            dnn.Levy_Date = Convert.ToDateTime(dnn.Levy_Year + "-" + dnn.Levy_Month + "-" + dnn.Levy_Day);
 
             if (dnn.Levy_Account == "" || dnn.Levy_Account == null)
             {
@@ -231,15 +235,29 @@ namespace Plan_Web.Pages.Appropriation_fund
             {
                 if (dnn.Capital_Levy_Code < 1)
                 {
-                    await capital_Levy_Lib.Add_CL(dnn);
+                    int a = await capital_Levy_Lib.being_Capital_Levy(Apt_Code, dnn.Levy_Year, dnn.Levy_Month, dnn.Levy_Account);
+                    if (a < 1)
+                    {
+                        await capital_Levy_Lib.Add_CL(dnn);
+                        await DetailsView(dnn.Levy_Year);
+                        dnn = new Capital_Levy_Entity();
+
+                        InsertViews = "A";
+                    }
+                    else
+                    {
+                        await JSRuntime.InvokeVoidAsync("exampleJsFunctions.ShowMsg", dnn.Levy_Account + " 계정과목은 이미 입력 되었습니다.");
+                    }
                 }
                 else
                 {
                     await capital_Levy_Lib.Edit(dnn);
+                    await DetailsView(dnn.Levy_Year);
+                    dnn = new Capital_Levy_Entity();
+
+                    InsertViews = "A";
                 }
-                dnn = new Capital_Levy_Entity();
-                await DetailsView();
-                InsertViews = "A";
+                
             }            
         }
 

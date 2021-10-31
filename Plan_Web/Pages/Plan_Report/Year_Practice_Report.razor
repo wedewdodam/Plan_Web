@@ -1,0 +1,38 @@
+﻿@page "/Plan_Report/Year_Practice_Report"
+@using Microsoft.AspNetCore.ProtectedBrowserStorage
+@inject ProtectedSessionStorage ProtectedSessionStore
+
+<div class="card">
+    <div class="card-header">
+        <table width="100%">
+            <tr>
+                <td>
+                    <span style="font-size: 1em"> <span class="bi-house-fill"></span>&nbsp;<span style="font-size: 1em; color:Highlight; font-weight: bold">장기수선충당금 부과·적립 상세</span></span>
+                </td>
+                <td>
+                </td>
+                <td align="right">
+                    <button type="button" class="btn btn-primary btn-sm" @onclick="btnPrint"><span class="bi-box-arrow-in-right"> &nbsp; 인쇄</span></button>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div class="card-body">
+        @if (ann.Count == 0)
+        {
+            <p style="text-align:center">
+                <img src="/images/loader.gif" height="70" />
+            </p>
+        }
+        else if (ann == null)
+        {
+            <p style="text-align:center">
+                정보가 없습니다.
+            </p>
+        }
+        else
+        {
+
+        }
+        </div>
+</div>

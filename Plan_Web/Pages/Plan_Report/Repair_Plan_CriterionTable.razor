@@ -1,0 +1,672 @@
+﻿@page "/Plan_Report/Repair_Plan_CriterionTable"
+@using Microsoft.AspNetCore.ProtectedBrowserStorage
+@inject ProtectedSessionStorage ProtectedSessionStore
+
+<div class="card">
+    <div class="card-header">
+        <table width="100%">
+            <tr>
+                <td>
+                    <span style="font-size: 1em"> <span class="bi-house-fill"></span>&nbsp;<span style="font-size: 1em; color:Highlight; font-weight: bold">장기수선계획 기준표</span></span>
+                </td>
+                <td>
+                </td>
+                <td align="right">
+                    <button type="button" class="btn btn-primary btn-sm" @onclick="btnPrint"><span class="bi-box-arrow-in-right"> &nbsp; 인쇄</span></button>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div class="card-body">
+        @if (ann1.Count == 0)
+        {
+            <p style="text-align:center">
+                <img src="/images/loader.gif" height="70" />
+            </p>
+        }
+        else if (ann1 == null)
+        {
+            <p style="text-align:center">
+                정보가 없습니다.
+            </p>
+        }
+        else
+        {
+            <img src="/images/sub/icon_con_tit.png" alt="" /> <span style="font-size: 0.9em; font-weight:bold"> 1. 건물외부 (@ann1.Count<span>개</span>)</span>
+            <table class="table table-sm" style="font-size: 0.8em">
+                <thead>
+                    <tr style="background-color:whitesmoke">
+                        <th style="text-align:center">
+                            시설물 분류
+                        </th>
+                        <th style="text-align:center">
+                            수선항목 명
+                        </th>
+                        <th style="text-align:center" title="법정주기, 설정주기, 첫 주기, 전체수선예정년도 순으로 표시됩니다.">
+                            전체 수선 주기
+                        </th>
+                        <th style="text-align:center" title="법정주기, 설정주기, 첫 주기, 부분수선예정년도 순으로 표시됩니다.">
+                            부분수선주기
+                        </th>
+                        <th style="text-align:center">
+                            수선율
+                        </th>
+                        <th style="text-align:center">
+                            수량(면적)
+                        </th>
+                        <th style="text-align:center">
+                            수선금액(1회)(전체/부분)
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var st in ann1)
+                    {
+                        <tr>
+                            <td style="text-align: center">
+                                @st.Sort_B_Name <span class="bi-chevron-double-right"></span> @st.Sort_C_Name
+                            </td>
+                            <td style="text-align: center">
+                                @st.Repair_Article_Name
+                            </td>
+                            <td style="text-align: center">
+                                <span style="color: blue">
+                                    @st.Law_Repair_Cycle_All
+                                </span><span>년</span> <span class="bi-chevron-double-right"></span> <span>
+                                    @st.All_Cycle
+                                </span><span>년</span> <span class="bi-chevron-double-right"></span> <span style="color: green">
+                                    @st.Set_Repair_Cycle_All
+                                </span><span>년</span> <span class="bi-chevron-double-right"></span><span style="color: red">
+                                    @st.Repair_Plan_Year_All
+                                </span><span>년</span>
+                            </td>
+                            <td style="text-align: center">
+                                <span style="color: blue">
+                                    @st.Law_Repair_Cycle_Part
+                                </span><span>년</span>
+                                <span class="bi-chevron-double-right"></span>
+                                <span>
+                                    @st.Part_Cycle
+                                </span><span>년</span>
+                                <span class="bi-chevron-double-right"></span>
+                                <span style="color: green">
+                                    @st.Set_Repair_Cycle_Part
+                                </span><span>년</span>
+                                <span class="bi-chevron-double-right"></span>
+                                <span style="color: red">
+                                    @st.Repair_Plan_Year_Part
+                                </span><span>년</span>
+                            </td>
+                            <td style="text-align: center">
+                                <span style="color: blue">
+                                    @st.Law_Repair_Cycle_Part
+                                </span><span>%</span>
+                                <span class="bi-chevron-double-right"></span>
+                                <span style="color: green">
+                                    @st.Part_Cycle
+                                </span><span>%</span>
+                            </td>
+                            <td style="text-align: center">
+                                @string.Format("{0: ###,###.#}", st.Amount)<span>@st.Unit</span>
+                            </td>
+                            <td style="text-align: center">
+                                <span style="color: blue">
+                                    @if (st.Repair_All_Cost > 0)
+                                    {
+                                        @string.Format("{0: ###,###.#}", st.Repair_All_Cost)
+                                    }
+                                    else
+                                    {
+                                        <span>0</span>
+                                    }
+                                </span><span>원</span>
+                                <span class="bi-chevron-double-right"></span>
+                                <span style="color: green">
+                                    @if (st.Repair_Part_Cost > 0)
+                                    {
+                                        @string.Format("{0: ###,###.#}", st.Repair_Part_Cost)
+                                    }
+                                    else
+                                    {
+                                        <span>0</span>
+                                    }
+                                </span><span>원</span>
+                            </td>
+                        </tr>
+                    }
+
+                </tbody>
+            </table>
+
+            <img src="/images/sub/icon_con_tit.png" alt="" /> <span style="font-size: 0.9em; font-weight:bold"> 2. 건물내부 (@ann2.Count<span>개</span>)</span>
+            <table class="table table-sm" style="font-size: 0.8em">
+                <thead>
+                    <tr style="background-color:whitesmoke">
+                        <th style="text-align:center">
+                            시설물 분류
+                        </th>
+                        <th style="text-align:center">
+                            수선항목 명
+                        </th>
+                        <th style="text-align:center" title="법정주기, 설정주기, 첫 주기, 전체수선예정년도 순으로 표시됩니다.">
+                            전체 수선 주기
+                        </th>
+                        <th style="text-align:center" title="법정주기, 설정주기, 첫 주기, 부분수선예정년도 순으로 표시됩니다.">
+                            부분수선주기
+                        </th>
+                        <th style="text-align:center">
+                            수선율
+                        </th>
+                        <th style="text-align:center">
+                            수량(면적)
+                        </th>
+                        <th style="text-align:center">
+                            수선금액(1회)(전체/부분)
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var st in ann2)
+                    {
+                        <tr>
+                            <td style="text-align: center">
+                                @st.Sort_B_Name <span class="bi-chevron-double-right"></span> @st.Sort_C_Name
+                            </td>
+                            <td style="text-align: center">
+                                @st.Repair_Article_Name
+                            </td>
+                            <td style="text-align: center">
+                                <span style="color: blue">
+                                    @st.Law_Repair_Cycle_All
+                                </span><span>년</span> <span class="bi-chevron-double-right"></span> <span>
+                                    @st.All_Cycle
+                                </span><span>년</span> <span class="bi-chevron-double-right"></span> <span style="color: green">
+                                    @st.Set_Repair_Cycle_All
+                                </span><span>년</span> <span class="bi-chevron-double-right"></span><span style="color: red">
+                                    @st.Repair_Plan_Year_All
+                                </span><span>년</span>
+                            </td>
+                            <td style="text-align: center">
+                                <span style="color: blue">
+                                    @st.Law_Repair_Cycle_Part
+                                </span><span>년</span>
+                                <span class="bi-chevron-double-right"></span>
+                                <span>
+                                    @st.Part_Cycle
+                                </span><span>년</span>
+                                <span class="bi-chevron-double-right"></span>
+                                <span style="color: green">
+                                    @st.Set_Repair_Cycle_Part
+                                </span><span>년</span>
+                                <span class="bi-chevron-double-right"></span>
+                                <span style="color: red">
+                                    @st.Repair_Plan_Year_Part
+                                </span><span>년</span>
+                            </td>
+                            <td style="text-align: center">
+                                <span style="color: blue">
+                                    @st.Law_Repair_Cycle_Part
+                                </span><span>%</span>
+                                <span class="bi-chevron-double-right"></span>
+                                <span style="color: green">
+                                    @st.Part_Cycle
+                                </span><span>%</span>
+                            </td>
+                            <td style="text-align: center">
+                                @string.Format("{0: ###,###.#}", st.Amount)<span>@st.Unit</span>
+                            </td>
+                            <td style="text-align: center">
+                                <span style="color: blue">
+                                    @if (st.Repair_All_Cost > 0)
+                                    {
+                                        @string.Format("{0: ###,###.#}", st.Repair_All_Cost)
+                                    }
+                                    else
+                                    {
+                                        <span>0</span>
+                                    }
+                                </span><span>원</span>
+                                <span class="bi-chevron-double-right"></span>
+                                <span style="color: green">
+                                    @if (st.Repair_Part_Cost > 0)
+                                    {
+                                        @string.Format("{0: ###,###.#}", st.Repair_Part_Cost)
+                                    }
+                                    else
+                                    {
+                                        <span>0</span>
+                                    }
+                                </span><span>원</span>
+                            </td>
+                        </tr>
+                    }
+
+                </tbody>
+            </table>
+
+            <img src="/images/sub/icon_con_tit.png" alt="" /> <span style="font-size: 0.9em; font-weight:bold"> 3. 전기·소화·승강기 및 지능형 홈네트워크 설비 (@ann3.Count<span>개</span>)</span>
+            <table class="table table-sm" style="font-size: 0.8em">
+                <thead>
+                    <tr style="background-color:whitesmoke">
+                        <th style="text-align:center">
+                            시설물 분류
+                        </th>
+                        <th style="text-align:center">
+                            수선항목 명
+                        </th>
+                        <th style="text-align:center" title="법정주기, 설정주기, 첫 주기, 전체수선예정년도 순으로 표시됩니다.">
+                            전체 수선 주기
+                        </th>
+                        <th style="text-align:center" title="법정주기, 설정주기, 첫 주기, 부분수선예정년도 순으로 표시됩니다.">
+                            부분수선주기
+                        </th>
+                        <th style="text-align:center">
+                            수선율
+                        </th>
+                        <th style="text-align:center">
+                            수량(면적)
+                        </th>
+                        <th style="text-align:center">
+                            수선금액(1회)(전체/부분)
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var st in ann3)
+                    {
+                        <tr>
+                            <td style="text-align: center">
+                                @st.Sort_B_Name <span class="bi-chevron-double-right"></span> @st.Sort_C_Name
+                            </td>
+                            <td style="text-align: center">
+                                @st.Repair_Article_Name
+                            </td>
+                            <td style="text-align: center">
+                                <span style="color: blue">
+                                    @st.Law_Repair_Cycle_All
+                                </span><span>년</span> <span class="bi-chevron-double-right"></span> <span>
+                                    @st.All_Cycle
+                                </span><span>년</span> <span class="bi-chevron-double-right"></span> <span style="color: green">
+                                    @st.Set_Repair_Cycle_All
+                                </span><span>년</span> <span class="bi-chevron-double-right"></span><span style="color: red">
+                                    @st.Repair_Plan_Year_All
+                                </span><span>년</span>
+                            </td>
+                            <td style="text-align: center">
+                                <span style="color: blue">
+                                    @st.Law_Repair_Cycle_Part
+                                </span><span>년</span>
+                                <span class="bi-chevron-double-right"></span>
+                                <span>
+                                    @st.Part_Cycle
+                                </span><span>년</span>
+                                <span class="bi-chevron-double-right"></span>
+                                <span style="color: green">
+                                    @st.Set_Repair_Cycle_Part
+                                </span><span>년</span>
+                                <span class="bi-chevron-double-right"></span>
+                                <span style="color: red">
+                                    @st.Repair_Plan_Year_Part
+                                </span><span>년</span>
+                            </td>
+                            <td style="text-align: center">
+                                <span style="color: blue">
+                                    @st.Law_Repair_Cycle_Part
+                                </span><span>%</span>
+                                <span class="bi-chevron-double-right"></span>
+                                <span style="color: green">
+                                    @st.Part_Cycle
+                                </span><span>%</span>
+                            </td>
+                            <td style="text-align: center">
+                                @string.Format("{0: ###,###.#}", st.Amount)<span>@st.Unit</span>
+                            </td>
+                            <td style="text-align: center">
+                                <span style="color: blue">
+                                    @if (st.Repair_All_Cost > 0)
+                                    {
+                                        @string.Format("{0: ###,###.#}", st.Repair_All_Cost)
+                                    }
+                                    else
+                                    {
+                                        <span>0</span>
+                                    }
+                                </span><span>원</span>
+                                <span class="bi-chevron-double-right"></span>
+                                <span style="color: green">
+                                    @if (st.Repair_Part_Cost > 0)
+                                    {
+                                        @string.Format("{0: ###,###.#}", st.Repair_Part_Cost)
+                                    }
+                                    else
+                                    {
+                                        <span>0</span>
+                                    }
+                                </span><span>원</span>
+                            </td>
+                        </tr>
+                    }
+
+                </tbody>
+            </table>
+
+            <img src="/images/sub/icon_con_tit.png" alt="" /> <span style="font-size: 0.9em; font-weight:bold"> 4. 급수·배수 및 환기설비 (@ann4.Count<span>개</span>)</span>
+            <table class="table table-sm" style="font-size: 0.8em">
+                <thead>
+                    <tr style="background-color:whitesmoke">
+                        <th style="text-align:center">
+                            시설물 분류
+                        </th>
+                        <th style="text-align:center">
+                            수선항목 명
+                        </th>
+                        <th style="text-align:center" title="법정주기, 설정주기, 첫 주기, 전체수선예정년도 순으로 표시됩니다.">
+                            전체 수선 주기
+                        </th>
+                        <th style="text-align:center" title="법정주기, 설정주기, 첫 주기, 부분수선예정년도 순으로 표시됩니다.">
+                            부분수선주기
+                        </th>
+                        <th style="text-align:center">
+                            수선율
+                        </th>
+                        <th style="text-align:center">
+                            수량(면적)
+                        </th>
+                        <th style="text-align:center">
+                            수선금액(1회)(전체/부분)
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var st in ann4)
+                    {
+                        <tr>
+                            <td style="text-align: center">
+                                @st.Sort_B_Name <span class="bi-chevron-double-right"></span> @st.Sort_C_Name
+                            </td>
+                            <td style="text-align: center">
+                                @st.Repair_Article_Name
+                            </td>
+                            <td style="text-align: center">
+                                <span style="color: blue">
+                                    @st.Law_Repair_Cycle_All
+                                </span><span>년</span> <span class="bi-chevron-double-right"></span> <span>
+                                    @st.All_Cycle
+                                </span><span>년</span> <span class="bi-chevron-double-right"></span> <span style="color: green">
+                                    @st.Set_Repair_Cycle_All
+                                </span><span>년</span> <span class="bi-chevron-double-right"></span><span style="color: red">
+                                    @st.Repair_Plan_Year_All
+                                </span><span>년</span>
+                            </td>
+                            <td style="text-align: center">
+                                <span style="color: blue">
+                                    @st.Law_Repair_Cycle_Part
+                                </span><span>년</span>
+                                <span class="bi-chevron-double-right"></span>
+                                <span>
+                                    @st.Part_Cycle
+                                </span><span>년</span>
+                                <span class="bi-chevron-double-right"></span>
+                                <span style="color: green">
+                                    @st.Set_Repair_Cycle_Part
+                                </span><span>년</span>
+                                <span class="bi-chevron-double-right"></span>
+                                <span style="color: red">
+                                    @st.Repair_Plan_Year_Part
+                                </span><span>년</span>
+                            </td>
+                            <td style="text-align: center">
+                                <span style="color: blue">
+                                    @st.Law_Repair_Cycle_Part
+                                </span><span>%</span>
+                                <span class="bi-chevron-double-right"></span>
+                                <span style="color: green">
+                                    @st.Part_Cycle
+                                </span><span>%</span>
+                            </td>
+                            <td style="text-align: center">
+                                @string.Format("{0: ###,###.#}", st.Amount)<span>@st.Unit</span>
+                            </td>
+                            <td style="text-align: center">
+                                <span style="color: blue">
+                                    @if (st.Repair_All_Cost > 0)
+                                    {
+                                        @string.Format("{0: ###,###.#}", st.Repair_All_Cost)
+                                    }
+                                    else
+                                    {
+                                        <span>0</span>
+                                    }
+                                </span><span>원</span>
+                                <span class="bi-chevron-double-right"></span>
+                                <span style="color: green">
+                                    @if (st.Repair_Part_Cost > 0)
+                                    {
+                                        @string.Format("{0: ###,###.#}", st.Repair_Part_Cost)
+                                    }
+                                    else
+                                    {
+                                        <span>0</span>
+                                    }
+                                </span><span>원</span>
+                            </td>
+                        </tr>
+                    }
+
+                </tbody>
+            </table>
+
+            <img src="/images/sub/icon_con_tit.png" alt="" /> <span style="font-size: 0.9em; font-weight:bold"> 5. 난방 및 급탕설비 (@ann5.Count<span>개</span>)</span>
+            <table class="table table-sm" style="font-size: 0.8em">
+                <thead>
+                    <tr style="background-color:whitesmoke">
+                        <th style="text-align:center">
+                            시설물 분류
+                        </th>
+                        <th style="text-align:center">
+                            수선항목 명
+                        </th>
+                        <th style="text-align:center" title="법정주기, 설정주기, 첫 주기, 전체수선예정년도 순으로 표시됩니다.">
+                            전체 수선 주기
+                        </th>
+                        <th style="text-align:center" title="법정주기, 설정주기, 첫 주기, 부분수선예정년도 순으로 표시됩니다.">
+                            부분수선주기
+                        </th>
+                        <th style="text-align:center">
+                            수선율
+                        </th>
+                        <th style="text-align:center">
+                            수량(면적)
+                        </th>
+                        <th style="text-align:center">
+                            수선금액(1회)(전체/부분)
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var st in ann5)
+                    {
+                        <tr>
+                            <td style="text-align: center">
+                                @st.Sort_B_Name <span class="bi-chevron-double-right"></span> @st.Sort_C_Name
+                            </td>
+                            <td style="text-align: center">
+                                @st.Repair_Article_Name
+                            </td>
+                            <td style="text-align: center">
+                                <span style="color: blue">
+                                    @st.Law_Repair_Cycle_All
+                                </span><span>년</span> <span class="bi-chevron-double-right"></span> <span>
+                                    @st.All_Cycle
+                                </span><span>년</span> <span class="bi-chevron-double-right"></span> <span style="color: green">
+                                    @st.Set_Repair_Cycle_All
+                                </span><span>년</span> <span class="bi-chevron-double-right"></span><span style="color: red">
+                                    @st.Repair_Plan_Year_All
+                                </span><span>년</span>
+                            </td>
+                            <td style="text-align: center">
+                                <span style="color: blue">
+                                    @st.Law_Repair_Cycle_Part
+                                </span><span>년</span>
+                                <span class="bi-chevron-double-right"></span>
+                                <span>
+                                    @st.Part_Cycle
+                                </span><span>년</span>
+                                <span class="bi-chevron-double-right"></span>
+                                <span style="color: green">
+                                    @st.Set_Repair_Cycle_Part
+                                </span><span>년</span>
+                                <span class="bi-chevron-double-right"></span>
+                                <span style="color: red">
+                                    @st.Repair_Plan_Year_Part
+                                </span><span>년</span>
+                            </td>
+                            <td style="text-align: center">
+                                <span style="color: blue">
+                                    @st.Law_Repair_Cycle_Part
+                                </span><span>%</span>
+                                <span class="bi-chevron-double-right"></span>
+                                <span style="color: green">
+                                    @st.Part_Cycle
+                                </span><span>%</span>
+                            </td>
+                            <td style="text-align: center">
+                                @string.Format("{0: ###,###.#}", st.Amount)<span>@st.Unit</span>
+                            </td>
+                            <td style="text-align: center">
+                                <span style="color: blue">
+                                    @if (st.Repair_All_Cost > 0)
+                                    {
+                                        @string.Format("{0: ###,###.#}", st.Repair_All_Cost)
+                                    }
+                                    else
+                                    {
+                                        <span>0</span>
+                                    }
+                                </span><span>원</span>
+                                <span class="bi-chevron-double-right"></span>
+                                <span style="color: green">
+                                    @if (st.Repair_Part_Cost > 0)
+                                    {
+                                        @string.Format("{0: ###,###.#}", st.Repair_Part_Cost)
+                                    }
+                                    else
+                                    {
+                                        <span>0</span>
+                                    }
+                                </span><span>원</span>
+                            </td>
+                        </tr>
+                    }
+
+                </tbody>
+            </table>
+
+            <img src="/images/sub/icon_con_tit.png" alt="" /> <span style="font-size: 0.9em; font-weight:bold"> 6. 옥외 복리시설 및 옥외 부대시설 (@ann6.Count<span>개</span>)</span>
+            <table class="table table-sm" style="font-size: 0.8em">
+                <thead>
+                    <tr style="background-color:whitesmoke">
+                        <th style="text-align:center">
+                            시설물 분류
+                        </th>
+                        <th style="text-align:center">
+                            수선항목 명
+                        </th>
+                        <th style="text-align:center" title="법정주기, 설정주기, 첫 주기, 전체수선예정년도 순으로 표시됩니다.">
+                            전체 수선 주기
+                        </th>
+                        <th style="text-align:center" title="법정주기, 설정주기, 첫 주기, 부분수선예정년도 순으로 표시됩니다.">
+                            부분수선주기
+                        </th>
+                        <th style="text-align:center">
+                            수선율
+                        </th>
+                        <th style="text-align:center">
+                            수량(면적)
+                        </th>
+                        <th style="text-align:center">
+                            수선금액(1회)(전체/부분)
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var st in ann6)
+                    {
+                        <tr>
+                            <td style="text-align: center">
+                                @st.Sort_B_Name <span class="bi-chevron-double-right"></span> @st.Sort_C_Name
+                            </td>
+                            <td style="text-align: center">
+                                @st.Repair_Article_Name
+                            </td>
+                            <td style="text-align: center">
+                                <span style="color: blue">
+                                    @st.Law_Repair_Cycle_All
+                                </span><span>년</span> <span class="bi-chevron-double-right"></span> <span>
+                                    @st.All_Cycle
+                                </span><span>년</span> <span class="bi-chevron-double-right"></span> <span style="color: green">
+                                    @st.Set_Repair_Cycle_All
+                                </span><span>년</span> <span class="bi-chevron-double-right"></span><span style="color: red">
+                                    @st.Repair_Plan_Year_All
+                                </span><span>년</span>
+                            </td>
+                            <td style="text-align: center">
+                                <span style="color: blue">
+                                    @st.Law_Repair_Cycle_Part
+                                </span><span>년</span>
+                                <span class="bi-chevron-double-right"></span>
+                                <span>
+                                    @st.Part_Cycle
+                                </span><span>년</span>
+                                <span class="bi-chevron-double-right"></span>
+                                <span style="color: green">
+                                    @st.Set_Repair_Cycle_Part
+                                </span><span>년</span>
+                                <span class="bi-chevron-double-right"></span>
+                                <span style="color: red">
+                                    @st.Repair_Plan_Year_Part
+                                </span><span>년</span>
+                            </td>
+                            <td style="text-align: center">
+                                <span style="color: blue">
+                                    @st.Law_Repair_Cycle_Part
+                                </span><span>%</span>
+                                <span class="bi-chevron-double-right"></span>
+                                <span style="color: green">
+                                    @st.Part_Cycle
+                                </span><span>%</span>
+                            </td>
+                            <td style="text-align: center">
+                                @string.Format("{0: ###,###.#}", st.Amount)<span>@st.Unit</span>
+                            </td>
+                            <td style="text-align: center">
+                                <span style="color: blue">
+                                    @if (st.Repair_All_Cost > 0)
+                                    {
+                                        @string.Format("{0: ###,###.#}", st.Repair_All_Cost)
+                                    }
+                                    else
+                                    {
+                                        <span>0</span>
+                                    }
+                                </span><span>원</span>
+                                <span class="bi-chevron-double-right"></span>
+                                <span style="color: green">
+                                    @if (st.Repair_Part_Cost > 0)
+                                    {
+                                        @string.Format("{0: ###,###.#}", st.Repair_Part_Cost)
+                                    }
+                                    else
+                                    {
+                                        <span>0</span>
+                                    }
+                                </span><span>원</span>
+                            </td>
+                        </tr>
+                    }
+
+                </tbody>
+            </table>
+        }
+        </div>
+</div>

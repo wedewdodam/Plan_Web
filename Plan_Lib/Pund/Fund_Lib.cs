@@ -27,7 +27,7 @@ namespace Plan_Lib.Pund
         /// <returns>입력된 값</returns>
         public async Task<Repair_Saving_Using_Pund_Entity> Add(Repair_Saving_Using_Pund_Entity sup)
         {
-            var sql = "Insert Into Repair_Using_Saving_Fund (Apt_Code, Apt_Name, Staff_Name, Founding_Date, Adjust_Date, Report_Date, Report_Year, Family_Num, Adress, Plan_Funds, Saving_Funds, Using_Funds_ago, Using_Funds_now, Using_Funds, Balance_Funds, Need_Funds, Unit_Price, Month_Impose, Supply_Area, Etc, PostIP, Staff_Code) Values (@Apt_Code, @Apt_Name, @Staff_Name, @Founding_Date, @Adjust_Date, @Report_Date, @Report_Year, @Family_Num, @Adress, @Plan_Funds, @Saving_Funds, @Using_Funds_ago, @Using_Funds_now, @Using_Funds, @Balance_Funds, @Need_Funds, @Unit_Price, @Month_Impose, @Supply_Area, @Etc, @PostIP, @Staff_Code)";
+            var sql = "Insert Into Repair_Using_Saving_Fund (Apt_Code, Apt_Name, Staff_Name, Founding_Date, Adjust_Date, Report_Date, Report_Year, Family_Num, Adress, Plan_Funds, Saving_Funds, Using_Funds_ago, Using_Funds_now, Using_Funds, Balance_Funds, Real_Balance_Funds, Need_Funds, Unit_Price, Month_Impose, Supply_Area, Etc, PostIP, Staff_Code) Values (@Apt_Code, @Apt_Name, @Staff_Name, @Founding_Date, @Adjust_Date, @Report_Date, @Report_Year, @Family_Num, @Adress, @Plan_Funds, @Saving_Funds, @Using_Funds_ago, @Using_Funds_now, @Using_Funds, @Balance_Funds, @Real_Balance_Funds, @Need_Funds, @Unit_Price, @Month_Impose, @Supply_Area, @Etc, @PostIP, @Staff_Code)";
             using var db = new SqlConnection(_db.GetConnectionString("Khmais_db_Connection"));
             await db.ExecuteAsync(sql, sup);
             return sup;
@@ -40,7 +40,7 @@ namespace Plan_Lib.Pund
         /// <returns>디비 수정</returns>
         public async Task<Repair_Saving_Using_Pund_Entity> Edit(Repair_Saving_Using_Pund_Entity sup)
         {
-            var sql = "Update Repair_Using_Saving_Fund Set Adjust_Date = @Adjust_Date, Report_Date = @Report_Date, Report_Year = @Report_Year, Family_Num = @Family_Num, Adress = @Adress, Plan_Funds = @Plan_Funds, Saving_Funds = @Saving_Funds, Using_Funds_ago = @Using_Funds_ago, Using_Funds_now = @Using_Funds_now, Using_Funds = @Using_Funds, Balance_Funds = @Balance_Funds, Need_Funds = @Need_Funds, Unit_Price = @Unit_Price, Month_Impose = @Month_Impose, Supply_Area = @Supply_Area, Etc = @Etc, PostIP = @PostIP, Staff_Code = @Staff_Code Where Aid = @Aid";
+            var sql = "Update Repair_Using_Saving_Fund Set Adjust_Date = @Adjust_Date, Report_Date = @Report_Date, Report_Year = @Report_Year, Family_Num = @Family_Num, Adress = @Adress, Plan_Funds = @Plan_Funds, Saving_Funds = @Saving_Funds, Using_Funds_ago = @Using_Funds_ago, Using_Funds_now = @Using_Funds_now, Using_Funds = @Using_Funds, Balance_Funds = @Balance_Funds, Real_Balance_Funds = @Real_Balance_Funds, Need_Funds = @Need_Funds, Unit_Price = @Unit_Price, Month_Impose = @Month_Impose, Supply_Area = @Supply_Area, Etc = @Etc, PostIP = @PostIP, Staff_Code = @Staff_Code Where Aid = @Aid";
             using var db = new SqlConnection(_db.GetConnectionString("Khmais_db_Connection"));
             await db.ExecuteAsync(sql, sup);
             return sup;

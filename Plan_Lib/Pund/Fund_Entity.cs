@@ -88,6 +88,11 @@ namespace Plan_Lib.Pund
         public double Balance_Funds { get; set; }
 
         /// <summary>
+        /// 실재잔액
+        /// </summary>
+        public double Real_Balance_Funds { get; set; }
+
+        /// <summary>
         /// 필요액
         /// </summary>
         public double Need_Funds { get; set; }

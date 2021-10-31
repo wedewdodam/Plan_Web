@@ -1,0 +1,607 @@
+﻿@page "/Plan_Report/Repair_Plan_GeneralTable"
+@using Microsoft.AspNetCore.ProtectedBrowserStorage
+@inject ProtectedSessionStorage ProtectedSessionStore
+
+<div class="card">
+    <div class="card-header">
+        <table width="100%">
+            <tr>
+                <td>
+                    <span style="font-size: 1em"> <span class="bi-house-fill"></span>&nbsp;<span style="font-size: 1em; color:Highlight; font-weight: bold">장기수선계획 총괄표</span></span>
+                </td>
+                <td>
+                </td>
+                <td align="right">
+                    <button type="button" class="btn btn-success btn-sm" @onclick="btnFoundation"><span class="bi-box-arrow-in-right"> &nbsp; 공동주택단지 정보</span></button>
+                    <button type="button" class="btn btn-success btn-sm" @onclick="btnDongInfor"><span class="bi-box-arrow-in-right"> &nbsp; 공동주택단지 동정보</span></button>
+                    <button type="button" class="btn btn-success btn-sm" @onclick="btnLawInfor"><span class="bi-box-arrow-in-right"> &nbsp; 장기수선관련 법령정보</span></button>
+                    <button type="button" class="btn btn-success btn-sm" @onclick="btnPlanInfor"><span class="bi-box-arrow-in-right"> &nbsp; 장기수선계획 기본정보</span></button>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div class="card-body">
+
+        @if (AptInfor == "A")
+        {
+            <img src="/images/sub/icon_con_tit.png" alt="" /> <span style="font-size: 0.9em; font-weight:bold"> 공동주택 기본정보</span>
+            <table class="table table-sm" style="font-size: 0.8em; margin-bottom: 10px">
+                <tbody>
+                    <tr>
+                        <th style="text-align: center; font-weight: bold; background-color: whitesmoke">
+                            공동주택
+                        </th>
+                        <td>
+                            @Apt_Name
+                        </td>
+                        <th style="text-align: center; font-weight: bold; background-color: whitesmoke">
+                            지역
+                        </th>
+                        <td>
+                            @bnn.Apt_Adress_Sido @bnn.Apt_Adress_Gun
+                        </td>
+                        <th style="text-align: center; font-weight: bold; background-color: whitesmoke">
+                            사용검사일
+                        </th>
+                        <td>
+                            @BuildDate
+                        </td>
+                    </tr>
+                    <tr>
+                        <th style="text-align: center; font-weight: bold; background-color: whitesmoke">
+                            시행사
+                        </th>
+                        <td>
+                            @ann.Developer
+                        </td>
+                        <th style="text-align: center; font-weight: bold; background-color: whitesmoke">
+                            시공사
+                        </th>
+                        <td>
+                            @ann.Builder
+                        </td>
+                        <th style="text-align: center; font-weight: bold; background-color: whitesmoke">
+                            장기수선계획일
+                        </th>
+                        <td>
+                            @rpn.Adjustment_Date.ToShortDateString()
+                        </td>
+                    </tr>
+                    <tr>
+                        <th style="text-align: center; font-weight: bold; background-color: whitesmoke">
+                            관리방식
+                        </th>
+                        <td>
+                            @ann.Management_Way
+                        </td>
+                        <th style="text-align: center; font-weight: bold; background-color: whitesmoke">
+                            승강기 수
+                        </th>
+                        <td>
+                            @ann.Builder
+                        </td>
+                        <th style="text-align: center; font-weight: bold; background-color: whitesmoke">
+                            관리형식
+                        </th>
+                        <td>
+                            @ann.Joint_Management
+                        </td>
+                    </tr>
+                    <tr>
+                        <th style="text-align: center; font-weight: bold; background-color: whitesmoke">
+                            대지면적(㎡)
+                        </th>
+                        <td>
+                            @string.Format("{0: ###,###.#}", ann.Site_Area)<span>㎡</span>
+                        </td>
+                        <th style="text-align: center; font-weight: bold; background-color: whitesmoke">
+                            건축면적(㎡)
+                        </th>
+                        <td>
+                            @string.Format("{0: ###,###.#}", ann.Build_Area)<span>㎡</span>
+                        </td>
+                        <th style="text-align: center; font-weight: bold; background-color: whitesmoke">
+                            연면적(㎡)
+                        </th>
+                        <td>
+                            @string.Format("{0: ###,###.#}", ann.FloorTotal_Area)<span>㎡</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th style="text-align: center; font-weight: bold; background-color: whitesmoke">
+                            공급면적(㎡)
+                        </th>
+                        <td>
+                            @string.Format("{0: ###,###.#}", ann.Supply_Area)<span>㎡</span>
+                        </td>
+                        <th style="text-align: center; font-weight: bold; background-color: whitesmoke">
+                            용적률(%)
+                        </th>
+                        <td>
+                            @string.Format("{0: ###,###.#}", ann.FloorArea_Ratio)<span>%</span>
+                        </td>
+                        <th style="text-align: center; font-weight: bold; background-color: whitesmoke">
+                            건폐률(%)
+                        </th>
+                        <td>
+                            @string.Format("{0: ###,###.#}", ann.BuildingCoverage_Ratio)<span>%</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th style="text-align: center; font-weight: bold; background-color: whitesmoke">
+                            수전용량
+                        </th>
+                        <td>
+                            @string.Format("{0: ###,###.#}", ann.Electric_Supply_Capacity)<span>KVA</span>
+                        </td>
+                        <th style="text-align: center; font-weight: bold; background-color: whitesmoke">
+                            저수량(톤)
+                        </th>
+                        <td>
+                            @string.Format("{0: ###,###.#}", ann.Water_Quantity)<span>톤</span>
+                        </td>
+                        <th style="text-align: center; font-weight: bold; background-color: whitesmoke">
+                            주차대수
+                        </th>
+                        <td>
+                            @string.Format("{0: ###,###.#}", ann.Park_Car_Count)<span>대</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th style="text-align: center; font-weight: bold; background-color: whitesmoke">
+                            최고높이(m)
+                        </th>
+                        <td>
+                            @ann.Heighest<span>m</span>
+                        </td>
+                        <th style="text-align: center; font-weight: bold; background-color: whitesmoke">
+                            난방방식
+                        </th>
+                        <td>
+                            @ann.Heating_Way
+                        </td>
+                        <th style="text-align: center; font-weight: bold; background-color: whitesmoke">
+                            급수방식
+                        </th>
+                        <td>
+                            @ann.WaterSupply_Way
+                        </td>
+                    </tr>
+                    <tr>
+                        <th style="text-align: center; font-weight: bold; background-color: whitesmoke">
+                            연락처
+                        </th>
+                        <td>
+                            @ann.Telephone
+                        </td>
+                        <th style="text-align: center; font-weight: bold; background-color: whitesmoke">
+                            팩스
+                        </th>
+                        <td>
+                            @ann.Fax
+                        </td>
+                        <th style="text-align: center; font-weight: bold; background-color: whitesmoke">
+                            이메일
+                        </th>
+                        <td>
+                            @ann.Email
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <table class="table table-sm" style="font-size: 0.8em; margin-bottom: 0px; margin-top: 10px">
+                <tr>
+                    <th style="width: 50%; text-align:center; background-color: whitesmoke">
+                        부대시설 정보
+                    </th>
+                    <th style="width: 50%; text-align:center; background-color: whitesmoke;">
+                        복리시설 정보
+                    </th>
+                </tr>
+                <tr style="background-color: whitesmoke">
+                    <td>
+                        <table class="table table-sm" style="margin-bottom: 0px; background-color: white">
+                            <thead>
+                                <tr style="background-color: whitesmoke">
+                                    <th style="text-align: center; vertical-align:middle">
+                                        시설명
+                                    </th>
+                                    <th style="text-align: center; vertical-align:middle">
+                                        위치
+                                    </th>
+                                    <th style="text-align: center; vertical-align:middle">
+                                        수량/면적
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var st in awListA)
+                                {
+                                    <tr>
+                                        <td style="text-align: center; vertical-align:middle">
+                                            @st.Facility_Name
+                                        </td>
+                                        <td style="text-align: center; vertical-align:middle">
+                                            @st.Facility_Position
+                                        </td>
+                                        <td style="text-align: center; vertical-align:middle">
+                                            @string.Format("{0: ###,###.#}", st.Quantity)@st.Unit
+                                        </td>
+                                    </tr>
+                                }
+
+                            </tbody>
+                        </table>
+                    </td>
+                    <td>
+                        <table class="table table-sm" style="margin-bottom: 0px; background-color: white">
+                            <thead>
+                                <tr style="background-color: whitesmoke">
+                                    <th style="text-align: center; vertical-align:middle">
+                                        시설명
+                                    </th>
+                                    <th style="text-align: center; vertical-align:middle">
+                                        위치
+                                    </th>
+                                    <th style="text-align: center; vertical-align:middle">
+                                        수량/면적
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var st in awListB)
+                                {
+                                    <tr>
+                                        <td style="text-align: center; vertical-align:middle">
+                                            @st.Facility_Name
+                                        </td>
+                                        <td style="text-align: center; vertical-align:middle">
+                                            @st.Facility_Position
+                                        </td>
+                                        <td style="text-align: center; vertical-align:middle">
+                                            @string.Format("{0: ###,###.#}", st.Quantity)@st.Unit
+                                        </td>
+                                    </tr>
+                                }
+
+                            </tbody>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+        }
+
+
+
+        @if (DongInfor == "A")
+        {
+            <hr />
+            <img src="/images/sub/icon_con_tit.png" alt="" /> <span style="font-size: 0.9em; font-weight:bold"> 공동주택 단지 동현황 및 면적 정보</span>
+            <table class="table table-sm" style="font-size: 0.8em; margin-bottom: 10px">
+                <thead>
+                    <tr style="background-color: whitesmoke">
+                        <th class="text-center">
+                            동명
+                        </th>
+                        <th class="text-center">
+                            세대수
+                        </th>
+                        <th class="text-center">
+                            층수
+                        </th>
+                        <th class="text-center">
+                            복도형태
+                        </th>
+                        <th class="text-center">
+                            라인 수
+                        </th>
+                        <th class="text-center">
+                            승강기 수
+                        </th>
+                        <th class="text-center">
+                            통로 수
+                        </th>
+                        <th class="text-center">
+                            지붕형태
+                        </th>
+                        <th class="text-center">
+                            동면적
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var st in doList)
+                    {
+                        <tr>
+                            <td style="text-align: center; vertical-align:middle">
+                                @st.Dong_Name<span>동</span>
+                            </td>
+                            <td style="text-align: center; vertical-align:middle">
+                                @st.Family_Num<span>세대</span>
+                            </td>
+                            <td style="text-align: center; vertical-align:middle">
+                                @st.Floor_Num<span>층</span>
+                            </td>
+                            <td style="text-align: center; vertical-align:middle">
+                                @st.Hall_Form
+                            </td>
+                            <td style="text-align: center; vertical-align:middle">
+                                @st.Line_Num<span>개</span>
+                            </td>
+
+                            <td style="text-align: center; vertical-align:middle">
+                                @st.Elevator_Num<span>대</span>
+                            </td>
+                            <td style="text-align: center; vertical-align:middle">
+                                @st.Exit_Num<span>개</span>
+                            </td>
+                            <td style="text-align: center; vertical-align:middle">
+                                @st.Roof_Form
+                            </td>
+                            <td style="text-align: center; vertical-align:middle">
+                                @string.Format("{0: ###,###.#}", st.Dong_Area)<span>㎡</span>
+                            </td>
+                        </tr>
+
+                    }
+                </tbody>
+            </table>
+            <table class="table table-sm" style="font-size: 0.8em; margin-bottom: 10px">
+                <thead>
+                    <tr style="background-color: whitesmoke">
+                        <th class="text-center">
+                            평형
+                        </th>
+                        <th class="text-center">
+                            공급면적
+                        </th>
+                        <th class="text-center">
+                            세대수
+                        </th>
+                        <th class="text-center">
+                            합 계(㎡)
+                        </th>
+                        <th class="text-center">
+                            단가
+                        </th>
+                        <th class="text-center">
+                            적립율
+                        </th>
+                        <th class="text-center">
+                            부과금액
+                        </th>
+
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var st in dcList)
+                    {
+                        <tr>
+                            <td style="text-align: center; vertical-align:middle">
+                                @string.Format("{0: ###,###}", (st.Supply_Area / 3.3))<span>평(3.3㎡)</span>
+                            </td>
+                            <td style="text-align: center; vertical-align:middle">
+                                @st.Supply_Area<span>㎡</span>
+                            </td>
+                            <td style="text-align: center; vertical-align:middle">
+                                @st.Area_Family_Num<span>세대</span>
+                            </td>
+                            <td style="text-align: center; vertical-align:middle">
+                                @string.Format("{0: ###,###}", st.Total_Area)<span>㎡</span>
+                            </td>
+                            <td style="text-align: center; vertical-align:middle">
+                                @upn.Unit_Price<span>원</span>
+                            </td>
+                            <td style="text-align: center; vertical-align:middle">
+                                @upn.Levy_Rate<span>%</span>
+                            </td>
+                            <td style="text-align: center; vertical-align:middle">
+                                @string.Format("{0: ###,###}", st.Total_Area * upn.Unit_Price)<span>원</span>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+
+
+
+
+        @if (LawInfor == "A")
+        {
+            <hr />
+            <img src="/images/sub/icon_con_tit.png" alt="" /> <span style="font-size: 0.9em; font-weight:bold"> 장기수선관련 법령정보</span>
+            <table class="table table-sm table-bordered" style="font-size: 0.8em">
+                <thead>
+                    <tr style="background-color: whitesmoke">
+                        <th class="text-center" style="width: 180px">
+                            법령명
+                        </th>
+                        <th class="text-center">
+                            법령 내용
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var st in rll)
+                    {
+                        <tr>
+                            <td class="text-center" style="background-color: whitesmoke">
+                                <br />
+                                @st.Law_Name
+                                <br />
+                                공포일 : @st.Enforce_Date.ToShortDateString()
+                            </td>
+                            <td>
+                                @((MarkupString)st.Law_Article_Detail)
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+
+
+        @if (PlanInfor == "A")
+        {
+            <hr />
+            <img src="/images/sub/icon_con_tit.png" alt="" /> <span style="font-size: 0.9em; font-weight:bold"> 장기수선계획 기본정보</span>
+            <table class="table table-sm" style="font-size: 0.8em; margin-bottom: 5px">
+                <thead>
+                    <tr style="background-color: whitesmoke">
+                        <th class="text-center"> 최초수립일</th>
+                        <th class="text-center"> 수립주체</th>
+                        <th class="text-center"> 이전 조정일</th>
+                        <th class="text-center"> 조정일자</th>
+                        <th class="text-center"> 계획기간</th>
+                        <th class="text-center"> 수선비 총액</th>
+                        <th class="text-center"> 주택공급면적</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td style="text-align:center">
+                            @rpn.Founding_Date.ToShortDateString()
+                        </td>
+                        <td style="text-align:center">
+                            @rpn.Founding_man
+                        </td>
+                        <td style="text-align:center">
+                            @rpn.LastAdjustment_Date.ToShortDateString()
+                        </td>
+                        <td style="text-align:center">
+                            @rpn.Adjustment_Date.ToShortDateString()
+                        </td>
+                        <td style="text-align:center">
+                            @rpn.Plan_Period<span>년간</span>
+                        </td>
+                        <td style="text-align:center">
+                            @string.Format("{0: ###,###}", upn.plan_total_sum)<span>원</span>
+                        </td>
+                        <td style="text-align:center">
+                            @string.Format("{0: ###,###}", upn.supply_total_Area)<span>㎡</span>
+                        </td>
+                    </tr>
+                </tbody>
+                <thead>
+                    <tr style="background-color: whitesmoke">
+                        <th class="text-center"> 조정구분</th>
+                        <th class="text-center"> 조정차수</th>
+                        <th class="text-center"> 수립 및 조정자</th>
+                        <th class="text-center"> 검토일</th>
+                        <th class="text-center"> 소액지출범위</th>
+                        <th class="text-center"> 충당금 잔액</th>
+                        <th class="text-center"> 총 세대수</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td style="text-align:center">
+                            @rpn.Adjustment_Division
+                        </td>
+                        <td style="text-align:center">
+                            @rpn.Adjustment_Num<span>차</span>
+                        </td>
+                        <td style="text-align:center">
+                            @rpn.Adjustment_Man
+                        </td>
+                        <td style="text-align:center">
+                            @rpn.Plan_Review_Date.ToShortDateString()
+                        </td>
+                        <td style="text-align:center">
+                            @rpn.SmallSum_Unit @string.Format("{0: ###,###}", rpn.Small_Sum)<span>원</span>
+                        </td>
+                        <td style="text-align:center">
+                            @string.Format("{0: ###,###}", upn.Balance_sum)<span>원</span>
+                        </td>
+                        <td style="text-align:center">
+                            @string.Format("{0: ###,###}", upn.HouseHold)<span>세대</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="text-align:center; width: 13%; background-color: whitesmoke">
+                            비고
+                        </td>
+                        <td colspan="6">
+                            @((MarkupString)rpn.Repair_Plan_Etc)
+                        </td>
+
+                    </tr>
+                </tbody>
+            </table>
+            <table class="table table-sm table-bordered" style="font-size: 0.8em;">
+                <tr style="border-top:thick">
+                    <td style="width:10%; background-color: whitesmoke; vertical-align: middle; text-align: center">
+                        긴급지출 근거
+                    </td>
+                    <td style="width:40%">
+                        @((MarkupString)rpn.Emergency_Basis)
+                    </td>
+                    <td style="width: 10%; background-color: whitesmoke; vertical-align: middle; text-align: center">
+                        소액지출 근거
+                    </td>
+                    <td style="width:40%">
+                        @((MarkupString)rpn.SmallSum_Basis)
+                    </td>
+                </tr>
+                <tr>
+                    <td style="width:10%; background-color: whitesmoke; vertical-align: middle; text-align: center">
+                        긴급 및 소액지출 요건
+                    </td>
+                    <td style="width:40%; vertical-align:top">
+                        <table class="table table-sm" style="margin-bottom: 0px">
+                            <thead>
+                                <tr style="background-color: whitesmoke">
+                                    <th class="text-center">
+                                        소액지출 요건
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var st in srse)
+                                {
+                                    <tr>
+                                        <td>
+                                            @st.SmallSum_Requirement_Content
+                                        </td>
+                                    </tr>
+                                }
+
+                            </tbody>
+                        </table>
+                    </td>
+                    <td style="width: 10%; background-color: whitesmoke; vertical-align: middle; text-align: center">
+                        긴급 및 소액지출 대상
+                    </td>
+                    <td style="width:40%; vertical-align: top">
+                        <table class="table table-sm" style="margin-bottom: 0px">
+                            <thead>
+                                <tr style="background-color: whitesmoke">
+                                    <th class="text-center">
+                                        소액지출 요건
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var st in sose)
+                                {
+                                    <tr>
+                                        <td>
+                                            @st.SmallSum_Object_Content
+                                        </td>
+                                    </tr>
+                                }
+
+                            </tbody>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+        }
+
+
+
+    </div>
+
+</div>

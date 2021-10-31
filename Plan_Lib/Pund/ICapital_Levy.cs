@@ -60,6 +60,21 @@ namespace Plan_Lib.Pund
         /// 년간합계(월 기준)
         /// </summary>
        double _Year_Month_Sum(string Apt_Code, int Levy_Year, int Levy_Month);
+
+        /// <summary>
+        /// 부과징수액(년간)
+        /// </summary>
+        Task<double> _Year_Plan_Sum(string Apt_Code, int Year, string Account);
+
+        /// <summary>
+        /// 잉여금 등 합계액(년간)
+        /// </summary>
+        Task<double> _Year_Etc_Sum(string Apt_Code, int Year, string Account);
+
+        /// <summary>
+        /// 해당 년도, 월, 계정과목 중복확인
+        /// </summary>
+        Task<int> being_Capital_Levy(string Apt_Code, int Levy_Year, int Levy_Month, string Levy_Account);
     }
 
     public interface ILevy_Rate_Lib
@@ -209,6 +224,11 @@ namespace Plan_Lib.Pund
         /// <param name="Apt_Code"></param>
         /// <returns></returns>
         Task<double> BalanceSum(string Apt_Code);
+
+        /// <summary>
+        /// 해당년도 말 잔액 만들기
+        /// </summary>
+       Task<Useing_Saving_Report_Entity> BalanceSum_Year(string Apt_Code, int Year);
     }
 
     /// <summary>

@@ -79,7 +79,7 @@ namespace Plan_Lib
         public async Task<List<Relation_Law_Entity>> GetList(string Apt_Code, string Repair_Plan_Code)
         {
             using var db = new SqlConnection(_db.GetConnectionString("Khmais_db_Connection"));
-            var lst = await db.QueryAsync<Relation_Law_Entity>("Select * From Relation_Law Where Apt_Code = @Apt_Code And Repair_Plan_Code = @Repair_Plan_Code Order By Relation_Index Asc", new { Apt_Code, Repair_Plan_Code });
+            var lst = await db.QueryAsync<Relation_Law_Entity>("Select * From Relation_Law Where Apt_Code = @Apt_Code Order By Relation_Index Asc", new { Apt_Code, Repair_Plan_Code });
             return lst.ToList();
         }
 

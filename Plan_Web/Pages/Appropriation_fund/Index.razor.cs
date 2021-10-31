@@ -242,7 +242,7 @@ namespace Plan_Web.Pages.Appropriation_fund
             {
                 bnn.Levy_Start_Year = rpn.Founding_Date.Year - 1;
                 bnn.Levy_Start_Month = rpn.Founding_Date.Month;
-                bnn.Levy_End_Month = rpn.Founding_Date.Month;
+                bnn.Levy_End_Month = 12;
                 bnn.Levy_End_Year = DateTime.Now.Year;
                 int aa = 13 - bnn.Levy_Start_Month;
                 int yy = bnn.Levy_End_Year - bnn.Levy_Start_Year;

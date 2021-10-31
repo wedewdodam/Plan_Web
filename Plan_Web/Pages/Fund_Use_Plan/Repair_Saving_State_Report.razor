@@ -2,113 +2,110 @@
 @using Microsoft.AspNetCore.ProtectedBrowserStorage
 @inject ProtectedSessionStorage ProtectedSessionStore
 
-    <div class="card">
-        <div class="card-header">
-            <table width="100%">
-                <tr>
-                    <td><span style="font-size: 1.1em; color:Highlight"> <span class="bi-house-fill"></span>&nbsp;<span>장기수선충당금 사용 및 적립 현황 정보</span></span></td>
-                    <td style="width:200px">
-                        <select id="Levy_Year" style="font-size: 0.9em" class="custom-select" value="@Work_Year" @onchange="OnByYearSelect">
-                            <option value="">==선택==</option>
-                            <option value="2016">2016</option>
-                            <option value="2017">2017</option>
-                            <option value="2018">2018</option>
-                            <option value="2019">2019</option>
-                            <option value="2020">2020</option>
-                            <option value="2021">2021</option>
-                            <option value="2022">2022</option>
-                            <option value="2023">2023</option>
-                            <option value="2024">2024</option>
-                            <option value="2025">2025</option>
-                            <option value="2026">2026</option>
-                            <option value="2027">2027</option>
-                            <option value="2028">2028</option>
-                            <option value="2029">2029</option>
-                            <option value="2030">2030</option>
-                            <option value="2031">2031</option>
-                            <option value="2032">2032</option>
-                            <option value="2033">2033</option>
-                            <option value="2034">2034</option>
-                            <option value="2035">2035</option>
-                            <option value="2036">2036</option>
-                            <option value="2037">2037</option>
-                            <option value="2038">2038</option>
-                            <option value="2039">2039</option>
-                            <option value="2040">2040</option>
-                            <option value="2041">2041</option>
-                            <option value="2042">2042</option>
-                            <option value="2043">2043</option>
-                            <option value="2044">2044</option>
-                            <option value="2045">2045</option>
-                            <option value="2046">2046</option>
-                            <option value="2047">2047</option>
-                            <option value="2048">2048</option>
-                            <option value="2049">2049</option>
-                            <option value="2050">2050</option>
-                        </select>
-                    </td>
-                    <td>
-                        
-                    </td>
-                    <td>
-                        
-                    </td>
-                    <td>
-                       
-                    </td>
-                    <td align="right">
-                        <button type="button" class="btn btn-primary btn-sm" @onclick="btnOpen"><span class="bi-box-arrow-right">&nbsp;새로등록</span></button>
-                    </td>
+<div class="card">
+    <div class="card-header">
+        <table width="100%">
+            <tr>
+                <td><span style="font-size: 1.1em; color:Highlight"> <span class="bi-house-fill"></span>&nbsp;<span>장기수선충당금 사용 및 적립 현황 정보</span></span></td>
+                <td style="width:200px">
+                    <select id="Levy_Year" style="font-size: 0.9em" class="custom-select text-center" value="@Work_Year" @onchange="OnByYearSelect" title="장기수선충당금 사용 및 적립햔황 공지 년도">
+                        <option value="">==선택==</option>
+                        <option value="2016">2016</option>
+                        <option value="2017">2017</option>
+                        <option value="2018">2018</option>
+                        <option value="2019">2019</option>
+                        <option value="2020">2020</option>
+                        <option value="2021">2021</option>
+                        <option value="2022">2022</option>
+                        <option value="2023">2023</option>
+                        <option value="2024">2024</option>
+                        <option value="2025">2025</option>
+                        <option value="2026">2026</option>
+                        <option value="2027">2027</option>
+                        <option value="2028">2028</option>
+                        <option value="2029">2029</option>
+                        <option value="2030">2030</option>
+                        <option value="2031">2031</option>
+                        <option value="2032">2032</option>
+                        <option value="2033">2033</option>
+                        <option value="2034">2034</option>
+                        <option value="2035">2035</option>
+                        <option value="2036">2036</option>
+                        <option value="2037">2037</option>
+                        <option value="2038">2038</option>
+                        <option value="2039">2039</option>
+                        <option value="2040">2040</option>
+                        <option value="2041">2041</option>
+                        <option value="2042">2042</option>
+                        <option value="2043">2043</option>
+                        <option value="2044">2044</option>
+                        <option value="2045">2045</option>
+                        <option value="2046">2046</option>
+                        <option value="2047">2047</option>
+                        <option value="2048">2048</option>
+                        <option value="2049">2049</option>
+                        <option value="2050">2050</option>
+                    </select>
+                </td>
+                <td>
+                </td>
+                <td>
+                </td>
+                <td>
+                </td>
+                <td align="right">
+                    <button type="button" class="btn btn-primary btn-sm" @onclick="btnOpen"><span class="bi-box-arrow-right">&nbsp;새로등록</span></button>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div class="card-body">
+        <table class="table table-sm" style="font-size: 0.9em">
+            <thead>
+                <tr style="background-color:whitesmoke">
+                    <th style="text-align:center">
+                        기준년도
+                    </th>
+                    <th style="text-align:center">
+                        월적립금
+                    </th>
+                    <th style="text-align:center">
+                        수선비 총액
+                    </th>
+                    <th style="text-align:center">
+                        적립율에 의한 적립액
+                    </th>
+                    <th style="text-align:center">
+                        잔액
+                    </th>
+                    <th style="text-align:center">
+                        필요액
+                    </th>
+                    <th style="text-align:center">
+                        버튼
+                    </th>
                 </tr>
-            </table>
-        </div>
-        <div class="card-body">
-            <table class="table table-sm" style="font-size: 0.9em">
-                <thead>
-                    <tr style="background-color:whitesmoke">
-                        <th style="text-align:center">
-                            기준년도
-                        </th>
-                        <th style="text-align:center">
-                            월적립금
-                        </th>
-                        <th style="text-align:center">
-                            수선비 총액
-                        </th>
-                        <th style="text-align:center">
-                            적립율에 의한 적립액
-                        </th>
-                        <th style="text-align:center">
-                            잔액
-                        </th>
-                        <th style="text-align:center">
-                            필요액
-                        </th>
-                        <th style="text-align:center">
-                            버튼
-                        </th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var st in ann)
-                    {
+            </thead>
+            <tbody>
+                @foreach (var st in ann)
+                {
                     <tr>
-                        <td style="text-align:center; vertical-align:middle">
+                        <td style="text-align:center; vertical-align:middle" @onclick="() => OnByAid(st)">
                             @st.Report_Year<span>년</span>
                         </td>
-                        <td style="text-align:center; vertical-align:middle">
+                        <td style="text-align:center; vertical-align:middle" @onclick="() => OnByAid(st)">
                             @string.Format("{0: ###,###.#}", st.Month_Impose)<span>원</span>
                         </td>
-                        <td style="text-align:center; vertical-align:middle">
+                        <td style="text-align:center; vertical-align:middle" @onclick="() => OnByAid(st)">
                             @string.Format("{0: ###,###.#}", st.Plan_Funds)<span>원</span>
                         </td>
-                        <td style="text-align:center; vertical-align:middle">
+                        <td style="text-align:center; vertical-align:middle" @onclick="() => OnByAid(st)">
                             @string.Format("{0: ###,###.#}", st.Saving_Funds)<span>원</span>
                         </td>
-                        <td style="text-align:center; vertical-align:middle">
+                        <td style="text-align:center; vertical-align:middle" @onclick="() => OnByAid(st)">
                             @string.Format("{0: ###,###.#}", st.Balance_Funds)<span>원</span>
                         </td>
-                        <td style="text-align:center; vertical-align:middle">
+                        <td style="text-align:center; vertical-align:middle" @onclick="() => OnByAid(st)">
                             @string.Format("{0: ###,###.#}", st.Need_Funds)<span>원</span>
                         </td>
                         <td style="text-align:center; vertical-align:middle">
@@ -116,9 +113,705 @@
                             <button @onclick="() => OnByRemove(st.Aid)" class="btn btn-link btn-sm">삭제</button>
                         </td>
                     </tr>
-                    }
+                }
 
-                </tbody>
-                </table>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+@*적립 및 사용정보 입력 모달*@
+@if (InsertViews == "B")
+{
+    <div class="modal fade show d-block" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header" style="background-color: burlywood; color: white; height: 50px; vertical-align: middle">
+                    <h6 class="modal-title"><span class="bi-house-door"></span>&nbsp; 장기수선충당금 사용 및 적립현황 @strTitle</h6>
+
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" @onclick="btnClose">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+
+                <div class="modal-body">
+                    <table class="table table-sm" style="font-size: 0.9em">
+                        <thead>
+                            <tr style="background-color: whitesmoke; font-size: 0.9em" title="장기수선계획서에 표시된 계획기간 중 수선비 총액 즉, 사용검시일 이후 계획기간 종료일까지 필요한 수선비 총액">
+                                <th class="text-center" colspan="2">
+                                    장기수선계획에 따른 장기수선충당금
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr title="장기수선계획서에 표시된 계획기간 중 수선비 총액 즉, 사용검시일 이후 계획기간 종료일까지 필요한 수선비 총액">
+                                <td style="vertical-align:middle;">
+                                    <div class="input-group">
+                                        <div class="input-group-prepend"><span class="input-group-text" style="font-size: 0.9em"><span class="bi-pencil-square"></span>&nbsp;총액</span></div>
+                                        <input id="Plan_Funds" name="Plan_Funds" placeholder="수선비 총액" style="font-size: 0.9em; text-align: right" class="form-control" maxlength="13" type="number" value="@dnn.Plan_Funds" @onchange="OnPlanFunds" />
+                                        <div class="input-group-append">
+                                            <span class="input-group-text" style="font-size: 0.9em">원</span>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td style="vertical-align:middle; text-align:right; width: 35%">
+                                    @string.Format("{0: ###,###}", (dnn.Plan_Funds))<span>원</span>
+                                </td>
+                            </tr>
+                        </tbody>
+
+                        <thead>
+                            <tr style="background-color: whitesmoke; font-size: 0.9em" title="전년도까지 관리규약 적립율에 따라 부과하여야 할 장기수선충당금 총액">
+                                <th class="text-center" colspan="2">
+                                    적립율에 따른 장기수선충당금
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr title="전년도까지 관리규약 적립율에 따라 부과하여야 할 장기수선충당금 총액">
+                                <td style="vertical-align:middle; text-align:center">
+                                    <div class="input-group">
+                                        <div class="input-group-prepend"><span class="input-group-text" style="font-size: 0.9em"><span class="bi-pencil-square"></span>&nbsp;적립율</span></div>
+                                        <input id="Saving_Funds" name="Saving_Funds" placeholder="부과된 총액" style="font-size: 0.9em; text-align: right" class="form-control" maxlength="13" type="number" value="@dnn.Saving_Funds" @onchange="OnSavingFunds" />
+                                        <div class="input-group-append">
+                                            <span class="input-group-text" style="font-size: 0.9em">원</span>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td style="vertical-align:middle; text-align:right">
+                                    @string.Format("{0: ###,###}", (dnn.Saving_Funds))<span>원</span>
+                                </td>
+                            </tr>
+                        </tbody>
+                        <thead>
+                            <tr style="background-color: whitesmoke; font-size: 0.9em">
+                                <th class="text-center" colspan="2">
+                                    사용액(공사명 및 지출금액 등)
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr title="초기화 사용액 포함 전전년도까지 사용한 총액">
+                                <td style="vertical-align:middle; text-align:center">
+                                    <div class="input-group">
+                                        <div class="input-group-prepend"><span class="input-group-text" style="font-size: 0.9em"><span class="bi-pencil-square"></span>&nbsp;전전사용총액</span></div>
+                                        <input id="Using_Funds_ago" name="Using_Funds_ago" placeholder="전전년도까지 사용액" style="font-size: 0.9em; text-align: right" class="form-control" maxlength="13" type="number" value="@dnn.Using_Funds_ago" @onchange="OnUsingFundsAgo" title="전전년도까지 사용 총액" />
+                                        <div class="input-group-append">
+                                            <span class="input-group-text" style="font-size: 0.9em" title="전전년도가지 사용 총액">원</span>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td style="vertical-align:middle; text-align:right">
+                                    @string.Format("{0: ###,###}", (dnn.Using_Funds_ago))<span>원</span>
+                                </td>
+                            </tr>
+                            <tr title="전년도에 사용한 합계">
+                                <td style="vertical-align:middle; text-align:center">
+                                    <div class="input-group">
+                                        <div class="input-group-prepend"><span class="input-group-text" style="font-size: 0.9em"><span class="bi-pencil-square"></span>&nbsp;전년도 사용액</span></div>
+                                        <input id="Using_Funds_now" name="Using_Funds_now" placeholder="수선비 총액" style="font-size: 0.9em; text-align: right" class="form-control" maxlength="13" type="number" value="@dnn.Using_Funds_now" @onchange="OnUsingFundsNow" />
+                                        <div class="input-group-append">
+                                            <span class="input-group-text" style="font-size: 0.9em">원</span>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td style="vertical-align:middle; text-align:right">
+                                    @string.Format("{0: ###,###}", (dnn.Using_Funds_now))<span>원</span>
+                                </td>
+                            </tr>
+                            <tr title="초기화 사용액 포함 전년도까지 사용한 합계액">
+                                <td style="vertical-align:middle; text-align:center">
+                                    <div class="input-group">
+                                        <div class="input-group-prepend"><span class="input-group-text" style="font-size: 0.9em"><span class="bi-pencil-square"></span>&nbsp;사용 합계액</span></div>
+                                        <input id="Using_Funds" name="Using_Funds" placeholder="사용 합계액" style="font-size: 0.9em; text-align: right" class="form-control" maxlength="13" type="number" @bind="dnn.Using_Funds" title="초기화 사용에 전년도까지 사용한 합계" readonly="readonly" />
+                                        <div class="input-group-append">
+                                            <span class="input-group-text" style="font-size: 0.9em" title="초기화 사용에 전년도까지 사용한 합계">원</span>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td style="vertical-align:middle; text-align:right">
+                                    @string.Format("{0: ###,###}", (dnn.Using_Funds))<span>원</span>
+                                </td>
+                            </tr>
+                        </tbody>
+                        <thead>
+                            <tr style="background-color: whitesmoke; font-size: 0.9em" title="초기화 전액과 초기화 이후 징수적립한 금액을 합산하고, 최기화 이후 사용액을 뺀 금액을 말함">
+                                <th class="text-center" colspan="2">
+                                    잔액(② - ③)
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr title="초기화 전액과 초기화 이후 징수적립한 금액을 합산하고, 최기화 이후 사용액을 뺀 금액을 말함">
+                                <td style="vertical-align:middle; text-align:center">
+                                    <div class="input-group">
+                                        <div class="input-group-prepend"><span class="input-group-text" style="font-size: 0.9em"><span class="bi-pencil-square"></span>&nbsp;충당금 잔액</span></div>
+                                        <input id="Balance_Funds" name="Balance_Funds" placeholder="월 적립액" style="font-size: 0.9em; text-align: right" class="form-control" maxlength="13" type="number" @bind="dnn.Balance_Funds" />
+                                        <div class="input-group-append">
+                                            <span class="input-group-text" style="font-size: 0.9em">원</span>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td style="vertical-align:middle; text-align:right">
+                                    @string.Format("{0: ###,###}", (dnn.Balance_Funds))<span>원</span>
+                                </td>
+                            </tr>
+                            <tr title="장기수선충당금 통장에 남아있는 잔액증명서 상의 전년도 잔액">
+                                <td style="vertical-align:middle; text-align:center">
+                                    <div class="input-group">
+                                        <div class="input-group-prepend"><span class="input-group-text" style="font-size: 0.9em"><span class="bi-pencil-square"></span>&nbsp;실재 잔액</span></div>
+                                        <input id="Balance_Funds" name="Balance_Funds" placeholder="월 적립액" style="font-size: 0.9em; text-align: right" class="form-control" maxlength="13" type="number" @bind="dnn.Real_Balance_Funds" />
+                                        <div class="input-group-append">
+                                            <span class="input-group-text" style="font-size: 0.9em">원</span>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td style="vertical-align:middle; text-align:right">
+                                    @string.Format("{0: ###,###}", (dnn.Real_Balance_Funds))<span>원</span>
+                                </td>
+                            </tr>
+                        </tbody>
+                        <thead>
+                            <tr style="background-color: whitesmoke; font-size: 0.9em" title="계획기간 중 수선비 총액에서 전년도 말까지 부과된 총액을 뺀 나머지 금액">
+                                <th class="text-center" colspan="2">
+                                    적립필요액(① - ②)
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr title="계획기간 중 수선비 총액에서 전년도 말까지 부과된 총액을 뺀 나머지 금액">
+                                <td style="vertical-align:middle; text-align:center">
+                                    <div class="input-group">
+                                        <div class="input-group-prepend"><span class="input-group-text" style="font-size: 0.9em"><span class="bi-pencil-square"></span>&nbsp;적립 필요액</span></div>
+                                        <input id="Need_Funds" name="Need_Funds" placeholder="적립 필요액" style="font-size: 0.9em; text-align: right" class="form-control" maxlength="13" type="number" @bind="dnn.Need_Funds" readonly="readonly" />
+                                        <div class="input-group-append">
+                                            <span class="input-group-text" style="font-size: 0.9em">원</span>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td style="vertical-align:middle; text-align:right">
+                                    @string.Format("{0: ###,###}", (dnn.Need_Funds))<span>원</span>
+                                </td>
+                            </tr>
+                        </tbody>
+                        <thead>
+                            <tr style="background-color: whitesmoke; font-size: 0.9em">
+                                <th class="text-center" colspan="2">
+                                    산정방법
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td style="vertical-align:middle; text-align:center">
+                                    <div class="input-group">
+                                        <div class="input-group-prepend"><span class="input-group-text" style="font-size: 0.9em"><span class="bi-pencil-square"></span>&nbsp;월간 적립액</span></div>
+                                        <input id="Month_Impose" name="Month_Impose" style="font-size: 0.9em; text-align: right" class="form-control" maxlength="13" type="number" @bind="dnn.Month_Impose" />
+                                        <div class="input-group-append">
+                                            <span class="input-group-text" style="font-size: 0.9em">원</span>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td style="vertical-align:middle; text-align:right">
+                                    @string.Format("{0: ###,###}", (dnn.Month_Impose))<span>원</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="vertical-align:middle; text-align:center">
+                                    <div class="input-group">
+                                        <div class="input-group-prepend"><span class="input-group-text" style="font-size: 0.9em"><span class="bi-pencil-square"></span>&nbsp;적립단가(㎡)</span></div>
+                                        <input id="Unit_Price" name="Unit_Price" placeholder="수선비 총액" style="font-size: 0.9em; text-align: right" class="form-control" maxlength="13" type="number" @bind="dnn.Unit_Price" />
+                                        <div class="input-group-append">
+                                            <span class="input-group-text" style="font-size: 0.9em">원</span>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td style="vertical-align:middle; text-align:right">
+                                    @string.Format("{0: ###,###.##}", (dnn.Unit_Price))<span>원</span>
+                                </td>
+                            </tr>
+
+                        </tbody>
+                    </table>
+
+                </div>
+
+                <div class="modal-footer">
+
+                    <button type="button" class="btn btn-primary btn-sm" @onclick="btnSave"><span class="bi-save-fill">&nbsp;저장</span></button> &nbsp; &nbsp; &nbsp;
+                    <button type="button" class="btn btn-secondary btn-sm" @onclick="btnClose"><span class="bi-x-square">&nbsp;닫기</span></button>
+                </div>
+
+            </div>
         </div>
     </div>
+    <div class="modal-backdrop show"></div>
+}
+
+@*적립 및 사용정보 상세보기 모달*@
+@if (DataViews == "B")
+{
+    <div class="modal fade show d-block" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header" style="background-color: burlywood; color: white; height: 50px; vertical-align: middle">
+                    <h6 class="modal-title"><span class="bi-house-door"></span>&nbsp; 장기수선충당금 사용 및 적립현황 @strTitle</h6>
+
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" @onclick="btnCloseV">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+
+                <div class="modal-body">
+                    <div style="height: 500px; overflow-y:scroll">
+                        <table class="table table-sm table-bordered" style="font-size: 0.9em">
+                            <tr>
+                                <td colspan="7" style="text-align:center; font-size: 1.2em; font-weight: bold">
+                                    장기수선충당금 적립 및 사용현황
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="7">
+                                    &nbsp; &nbsp; ◦ 단 지 명 : @dnn.Apt_Name<span>아파트</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="7">
+                                    &nbsp; &nbsp; ◦ 세 대 수 : @string.Format("{0: ###,###.#}", dnn.Family_Num)<span>세대</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="6">
+                                    &nbsp; &nbsp; ◦ 기 준 일 : @dnn.Report_Year<span>년</span> @dnn.Report_Date.Month<span>월</span> @dnn.Report_Date.Day<span>일</span> <span>현재</span>
+                                </td>
+                                <td>
+                                    (단위 : 원)
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="2" style="text-align:center; vertical-align:middle" rowspan="2">
+                                    구     분
+                                </td>
+                                <td style="text-align:center">
+                                    ①
+                                </td>
+                                <td style="text-align:center">
+                                    ②
+                                </td>
+                                <td style="text-align:center">
+                                    ③
+                                </td>
+                                <td style="text-align:center">
+                                    ④
+                                </td>
+                                <td style="text-align:center">
+                                    ⑤
+                                </td>
+                            </tr>
+                            <tr>
+
+                                <td style="text-align:center">
+                                    장기수선계획에 따른<br />
+                                    장기수선충당금 총액
+                                </td>
+                                <td style="text-align:center">
+                                    적립요율에 따른 <br />
+                                    장기수선충당금
+                                </td>
+                                <td style="text-align:center">
+                                    장기수선충당금 <br />
+                                    사 용 총 액
+                                </td>
+                                <td style="text-align:center">
+                                    잔  &nbsp; &nbsp;   액 <br />
+                                    ( ② <span> - </span> ③ )
+                                </td>
+                                <td style="text-align:center">
+                                    적립 필요액<br />
+                                    ( ① <span> - </span> ② )
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="2" style="text-align:center">
+                                    @if (fnn.Report_Year > 0)
+                                    {
+                                        @fnn.Report_Year<span>년도</span>
+                                    }
+                                    else
+                                    {
+                                        <span>없음</span>
+                                    }
+
+                                </td>
+                                <td style="text-align:right">
+                                    @if (fnn.Plan_Funds > 0)
+                                    {
+                                        @string.Format("{0: ###,###.#}", fnn.Plan_Funds)
+                                    }
+                                    else
+                                    {
+                                        <span>000,000</span>
+                                    }
+                                </td>
+                                <td style="text-align: right">
+                                    @if (fnn.Saving_Funds > 0)
+                                    {
+                                        @string.Format("{0: ###,###.#}", fnn.Saving_Funds)
+                                    }
+                                    else
+                                    {
+                                        <span>000,000</span>
+                                    }
+                                </td>
+                                <td style="text-align: right">
+                                    @if (fnn.Using_Funds > 0)
+                                    {
+                                        @string.Format("{0: ###,###.#}", fnn.Using_Funds)
+                                    }
+                                    else
+                                    {
+                                        <span>000,000</span>
+                                    }
+                                </td>
+                                <td style="text-align: right">
+                                    @if (fnn.Balance_Funds > 0)
+                                    {
+                                        @string.Format("{0: ###,###.#}", fnn.Balance_Funds)
+                                    }
+                                    else
+                                    {
+                                        <span>000,000</span>
+                                    }
+                                </td>
+                                <td style="text-align: right">
+                                    @if (fnn.Need_Funds > 0)
+                                    {
+                                        @string.Format("{0: ###,###.#}", fnn.Need_Funds)
+                                    }
+                                    else
+                                    {
+                                        <span>000,000</span>
+                                    }
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="2" style="text-align:center">
+                                    @if (dnn.Report_Year > 0)
+                                    {
+                                        @dnn.Report_Year<span>년도</span>
+                                    }
+                                    else
+                                    {
+                                        <span>없음</span>
+                                    }
+
+                                </td>
+                                <td style="text-align: right">
+                                    @if (dnn.Plan_Funds > 0)
+                                    {
+                                        @string.Format("{0: ###,###.#}", dnn.Plan_Funds)
+                                    }
+                                    else
+                                    {
+                                        <span>000,000</span>
+                                    }
+                                </td>
+                                <td style="text-align: right">
+                                    @if (dnn.Saving_Funds > 0)
+                                    {
+                                        @string.Format("{0: ###,###.#}", dnn.Saving_Funds)
+                                    }
+                                    else
+                                    {
+                                        <span>000,000</span>
+                                    }
+                                </td>
+                                <td style="text-align: right">
+                                    @if (dnn.Using_Funds > 0)
+                                    {
+                                        @string.Format("{0: ###,###.#}", dnn.Using_Funds)
+                                    }
+                                    else
+                                    {
+                                        <span>000,000</span>
+                                    }
+                                </td>
+                                <td style="text-align: right">
+                                    @if (dnn.Balance_Funds > 0)
+                                    {
+                                        @string.Format("{0: ###,###.#}", dnn.Balance_Funds)
+                                    }
+                                    else
+                                    {
+                                        <span>000,000</span>
+                                    }
+                                </td>
+                                <td style="text-align: right">
+                                    @if (dnn.Need_Funds > 0)
+                                    {
+                                        @string.Format("{0: ###,###.#}", dnn.Need_Funds)
+                                    }
+                                    else
+                                    {
+                                        <span>000,000</span>
+                                    }
+                                </td>
+                            </tr>
+
+
+
+
+                            <tr>
+                                <td class="text-center" style="width: 30px; vertical-align:middle" rowspan="5">
+                                    적립내역
+                                </td>
+                                <td style="text-align:center">
+                                    부과 징수
+                                </td>
+                                <td style="text-align: right">
+                                </td>
+                                <td style="text-align: right">
+                                    @if (dbPlanSaveSum > 0)
+                                    {
+                                        @string.Format("{0: ###,###.#}", dbPlanSaveSum)
+                                    }
+                                    else
+                                    {
+                                        <span>000,000</span>
+                                    }
+                                </td>
+                                <td style="text-align: right">
+                                </td>
+                                <td rowspan="2" colspan="2" style="text-align: center; vertical-align:middle">
+                                    실 제 보 유 액
+                                    <br />( 잔고증명서 기준 )
+                                </td>
+
+                            </tr>
+
+                            <tr>
+
+                                <td style="text-align:center">
+                                    잉여금
+                                </td>
+                                <td style="text-align: right">
+                                </td>
+                                <td style="text-align: right">
+                                    @if (dbEtcSaveSum > 0)
+                                    {
+                                        @string.Format("{0: ###,###.#}", dbEtcSaveSum)
+                                    }
+                                    else
+                                    {
+                                        <span>000,000</span>
+                                    }
+                                </td>
+                                <td style="text-align: right">
+                                </td>
+
+                            </tr>
+
+                            <tr>
+
+                                <td style="text-align:center">
+                                    이자 수입
+                                </td>
+                                <td style="text-align: right">
+                                </td>
+                                <td style="text-align: right">
+                                    @if (dbInterestSaveSum > 0)
+                                    {
+                                        @string.Format("{0: ###,###.#}", dbInterestSaveSum) 
+                                    }
+                                    else
+                                    {
+                                        <span>000,000</span>
+                                    }
+                                </td>
+                                <td style="text-align: right">
+                                </td>
+                                <td style="text-align:center">
+                                    실제보유총액
+                                </td>
+                                <td style="text-align: right">
+                                    @if (dnn.Real_Balance_Funds > 0)
+                                    {
+                                        @string.Format("{0: ###,###.#}", dnn.Real_Balance_Funds)
+                                    }
+                                    else
+                                    {
+                                        <span>000,000</span>
+                                    }
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td style="text-align:center">
+                                    잔 <span> &nbsp; &nbsp; </span> 액
+                                </td>
+                                <td style="text-align: right">
+                                </td>
+                                <td style="text-align: right">
+                                    @if (usr.dbBalanceAgoAgoSum > 0)
+                                    {
+                                        @string.Format("{0: ###,###.#}", usr.dbBalanceAgoAgoSum)
+                                    }
+                                    else
+                                    {
+                                        <span>000,000</span>
+                                    }
+                                </td>
+                                <td></td>
+                                <td style="text-align:center" colspan="2">
+                                   부족한 잔액
+                                </td>
+                               
+                            </tr>
+
+                            <tr>
+                                <td style="text-align:center">
+                                    합 <span> &nbsp; &nbsp; </span> 계
+                                </td>
+                                <td style="text-align: right">
+                                </td>
+                                <td style="text-align: right">
+                                    @if (dnn.Balance_Funds > 0)
+                                    {
+                                        @string.Format("{0: ###,###.#}", (usr.dbLavyNowCapital + usr.dbBalanceAgoAgoSum))
+                                    }
+                                    else
+                                    {
+                                        <span>000,000</span>
+                                    }
+                                </td>
+                                <td style="text-align: right">
+                                </td>
+                                <td class="text-center">
+                                    보유부족분
+                                </td>
+                                <td style="text-align: right">
+                                    @if (dnn.Saving_Funds > 0)
+                                    {
+                                        @string.Format("{0: ###,###.#}", (dnn.Balance_Funds - dnn.Real_Balance_Funds))
+                                    }
+                                    else
+                                    {
+                                        <span>000,000</span>
+                                    }
+                                </td>
+
+                            </tr>
+
+
+                            <tr>
+                                <td class="text-center" style="width: 30px; vertical-align:middle">
+                                    당기 <br /><br />
+                                    사용내용
+                                </td>
+                                <td style="text-align:center" colspan="4">
+
+                                    <table class="table table-sm" style="font-size: 0.9em; margin-bottom: 0px">
+                                        <thead>
+                                            <tr style="background-color: whitesmoke">
+                                                <th class="text-center" style="width: 100px">
+                                                    시행일
+                                                </th>
+                                                <th class="text-center">
+                                                    공사명
+                                                </th>
+                                                <th class="text-center" style="width: 120px">
+                                                    금액
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @if (rnn.Count > 0)
+                                            {
+                                                @foreach (var st in rnn)
+                                                {
+                                                    <tr>
+                                                        <td style="text-align:center; vertical-align:middle">
+                                                            @st.Repair_End_Date.ToShortDateString()
+                                                        </td>
+                                                        <td style="text-align:center; vertical-align:middle">
+                                                            @st.Sort_B_Name > @st.Sort_C_Name > @st.Repair_Article_Name
+                                                        </td>
+                                                        <td style="text-align:right; vertical-align:middle">
+                                                            @string.Format("{0: ###,###.#}", st.Repair_Cost_Complete)
+                                                        </td>
+                                                    </tr>
+                                                }
+                                            }
+                                            else
+                                            {
+                                                <tr>
+                                                    <td colspan="3">
+                                                        <span style="color: red">사용 정보 없음</span>
+                                                    </td>
+                                                </tr>
+                                            }
+                                            <tr>
+                                                <td style="text-align:center">
+                                                    합 계
+                                                </td>
+                                                <td style="text-align:center">
+                                                </td>
+                                                <td style="text-align:right">
+                                                    @string.Format("{0: ###,###.#}", dnn.Using_Funds_now)
+                                                </td>
+                                            </tr>
+
+                                        </tbody>
+                                    </table>
+
+
+
+
+                                </td>
+
+                                <td style="text-align: center" colspan="2">
+                                    장기수선계획 수립·조정내역
+                                </td>
+
+                            </tr>
+
+
+
+
+
+
+                            <tr>
+                                <td style="text-align:center; vertical-align:middle" colspan="2">
+                                    산정방법
+                                </td>
+                                <td style="text-align: left" colspan="5">
+                                    ◦ 매월 적립금액 : @string.Format("{0: ###,###.#}", dnn.Month_Impose)<span>원</span> <br />
+                                    = 월간 적립 단가 @string.Format("{0: ###,###.#}", dnn.Unit_Price)<span>원</span>/㎡  ×  총 주택공급면적  @string.Format("{0: ###,###.####}", Convert.ToDouble(dnn.Supply_Area))<span>㎡</span>
+                                </td>
+
+                            </tr>
+
+                            <tr>
+                                <td style="text-align:center" colspan="7">
+                                    20   &nbsp; &nbsp;  년    &nbsp; &nbsp; &nbsp; &nbsp;  월    &nbsp; &nbsp; &nbsp; &nbsp;  일 <br /><br />
+                                    <span style="font-size: 1.4em; font-weight: bold"> @dnn.Apt_Name 아파트</span>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+
+
+                </div>
+
+                <div class="modal-footer">
+
+                    <button type="button" class="btn btn-primary btn-sm" @onclick="() => OnByEdit(dnn)"><span class="bi-save-fill">&nbsp;저장</span></button> &nbsp; &nbsp; &nbsp;
+                    <button type="button" class="btn btn-secondary btn-sm" @onclick="btnCloseV"><span class="bi-x-square">&nbsp;닫기</span></button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <div class="modal-backdrop show"></div>
+}
