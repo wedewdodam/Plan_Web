@@ -101,7 +101,7 @@
                         </NavLink>
                     </li>
                     <li class="nav-item px-3">
-                        <NavLink class="nav-link" href="/Admin/Contract_Sort">
+                        <NavLink class="nav-link" href="/Record_Infor">
                             <span class="bi bi-journal-bookmark-fill" aria-hidden="true"></span><span style="font-size: 0.8em"> &nbsp; 3-2. 장기수선이력등록</span>
                         </NavLink>
                     </li>
@@ -182,17 +182,17 @@
                         </NavLink>
                     </li>
                     <li class="nav-item px-3">
-                        <NavLink class="nav-link" href="/Admin/Contract_Sort">
+                        <NavLink class="nav-link" href="/Plan_Report/Repair_Plan_Review_Content">
                             <span class="bi bi-list-check" aria-hidden="true"></span><span style="font-size: 0.8em"> &nbsp; 5.7 장기수선검토보고서</span>
                         </NavLink>
                     </li>
                     <li class="nav-item px-3">
-                        <NavLink class="nav-link" href="/Admin/Contract_Sort">
+                        <NavLink class="nav-link" href="/Plan_Report/Fund_Accomulation">
                             <span class="bi bi-list-check" aria-hidden="true"></span><span style="font-size: 0.8em"> &nbsp; 5.8 충당금 징수·적립정보</span>
                         </NavLink>
                     </li>
                     <li class="nav-item px-3">
-                        <NavLink class="nav-link" href="/Admin/Contract_Sort">
+                        <NavLink class="nav-link" href="/Plan_Report/Repair_Record_Infor">
                             <span class="bi bi-list-check" aria-hidden="true"></span><span style="font-size: 0.8em"> &nbsp; 5.9 충당금 사용현황표</span>
                         </NavLink>
                     </li>
@@ -211,20 +211,36 @@
             </NavLink>
             @if (expandSubMenuF)
             {
-                <ul class="nav flex-column">
+        <ul class="nav flex-column">
 
-                    <li class="nav-item px-3">
-                        <NavLink class="nav-link" href="/Appeal_Sort_List">
-                            <span class="bi bi-file-post-fill" aria-hidden="true"></span> &nbsp;  민원분류
-                        </NavLink>
-                    </li>
+            <li class="nav-item px-3">
+                <NavLink class="nav-link" href="/Appeal_Sort_List">
+                    <span class="bi bi-file-post-fill" aria-hidden="true"></span> &nbsp; 6.1 공지사항
+                </NavLink>
+            </li>
 
-                    <li class="nav-item px-3">
-                        <NavLink class="nav-link" href="/Admin/Contract_Sort">
-                            <span class="bi bi-file-post-fill" aria-hidden="true"></span> &nbsp;  계약분류 관리
-                        </NavLink>
-                    </li>
-                </ul>
+            <li class="nav-item px-3">
+                <NavLink class="nav-link" href="/Admin/Contract_Sort">
+                    <span class="bi bi-file-post-fill" aria-hidden="true"></span> &nbsp; 6.2 자주 묻는 질문
+                </NavLink>
+            </li>
+            <li class="nav-item px-3">
+                <NavLink class="nav-link" href="/Admin/Contract_Sort">
+                    <span class="bi bi-file-post-fill" aria-hidden="true"></span> &nbsp; 6.3 질문과 답변
+                </NavLink>
+            </li>
+            <li class="nav-item px-3">
+                <NavLink class="nav-link" href="/Admin/Contract_Sort">
+                    <span class="bi bi-file-post-fill" aria-hidden="true"></span> &nbsp; 6.4 질의회신 및 법령해석
+                </NavLink>
+            </li>
+            <li class="nav-item px-3">
+                <NavLink class="nav-link" href="/Admin/Contract_Sort">
+                    <span class="bi bi-file-post-fill" aria-hidden="true"></span> &nbsp; 6.5 장기수선 자료실
+                </NavLink>
+            </li>
+
+        </ul>
             }
         </li>
     </ul>

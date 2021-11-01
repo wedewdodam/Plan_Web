@@ -80,8 +80,8 @@ namespace Plan_Web.Pages.Repair_Plan
         public string strYear { get; set; }
         public string strYearA { get; set; }
         public int required { get; set; } = 0;
-
         public int intCode { get; set; }
+        public string strCode { get; set; }
         #endregion 변수
 
         protected override async Task OnInitializedAsync()
@@ -116,6 +116,7 @@ namespace Plan_Web.Pages.Repair_Plan
                 upn = await unit_Price_Lib.Detail_Unit_Price_New(Apt_Code, rpn.Repair_Plan_Code, upsn.Levy_Rate, upsn.Levy_Period); //단가 관련 정보 가져오기
                 srse = await smallSum_Repuirement_Selection_Lib.GetList_RSRS(rpn.Repair_Plan_Code);
                 sose = await repair_Object_Selection_Lib.GetList_RSOS(rpn.Repair_Plan_Code, "A");
+                await ProtectedSessionStore.SetAsync("Plan_Code", rpn.Repair_Plan_Code);
             }
             else
             {
@@ -357,7 +358,10 @@ namespace Plan_Web.Pages.Repair_Plan
                     int intBe = await repair_Plan_Lib.Repeat_Code(Apt_Code, rpn.Repair_Plan_Code);
                     if (intBe < 1)
                     {
-                        await repair_Plan_Lib.Add_Repair_Plan_Add(rpn); 
+                        await repair_Plan_Lib.Add_Repair_Plan_Add(rpn);
+
+                        strCode = rpn.Repair_Plan_Code;
+                        await ProtectedSessionStore.SetAsync("Plan_Code", strCode);
                     }
                 }
                 else

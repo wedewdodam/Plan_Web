@@ -47,6 +47,11 @@ namespace Plan_Blazor_Lib.Review
         Task<List<Plan_Review_Plan_Entity>> GetList_Apt_Page(int Page, string Apt_Code);
 
         Task<int> GetList_Apt_Page_Count(string Apt_Code);
+
+        /// <summary>
+        /// 검토코드 및 검토일 불러오기
+        /// </summary>
+       Task<List<Plan_Review_Entity>> Review_Infor(string Repair_Plan_Code);
     }
 
     public interface IReview_Content_Lib

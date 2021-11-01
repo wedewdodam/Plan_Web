@@ -3,17 +3,15 @@ using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.JSInterop;
 using Plan_Apt_Lib;
 using Plan_Blazor_Lib;
-using Plan_Blazor_Lib.Cost;
-using Plan_Blazor_Lib.Cycle;
 using Plan_Blazor_Lib.Plan;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Plan_Web.Pages.Plan_Report
+namespace Plan_Web.Pages.Manager
 {
-    public partial class Year_Practice_Report
+    public partial class Index
     {
         [CascadingParameter] public Task<AuthenticationState> AuthenticationStateRef { get; set; }
         [Parameter] public string Aid { get; set; }
@@ -22,8 +20,6 @@ namespace Plan_Web.Pages.Plan_Report
         [Inject] public IAptInfor_Lib aptInfor_Lib { get; set; }
         [Inject] public IRepair_Plan_Lib repair_Plan_Lib { get; set; }
         [Inject] public IArticle_Lib article_Lib { get; set; }
-        [Inject] public ICycle_Lib cycle_Lib { get; set; }
-        [Inject] public ICost_Lib cost_Lib { get; set; }
 
         private Repair_Plan_Entity rpn { get; set; } = new Repair_Plan_Entity();
         List<Join_Article_Cycle_Cost_EntityA> ann { get; set; } = new List<Join_Article_Cycle_Cost_EntityA>();
@@ -33,10 +29,10 @@ namespace Plan_Web.Pages.Plan_Report
         public string Apt_Name { get; private set; }
         public string User_Name { get; private set; }
         public string BuildDate { get; private set; }
+        public int LevelCount { get; private set; }
         public string strCode { get; private set; }
         public string strStartYear { get; set; }
         public string strEndYear { get; set; }
-
         protected override async Task OnInitializedAsync()
         {
             var authState = await AuthenticationStateRef;
@@ -48,19 +44,15 @@ namespace Plan_Web.Pages.Plan_Report
                 Apt_Name = authState.User.Claims.FirstOrDefault(c => c.Type == "AptName")?.Value;
                 User_Name = authState.User.Claims.FirstOrDefault(c => c.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name")?.Value;
                 BuildDate = authState.User.Claims.FirstOrDefault(c => c.Type == "BuildDate")?.Value;
-
-                strCode = await ProtectedSessionStore.GetAsync<string>("Plan_Code");
-
-                if (strCode != null)
+                LevelCount = Convert.ToInt32(authState.User.Claims.FirstOrDefault(c => c.Type == "LevelCount")?.Value);
+                if (LevelCount >= 10)
                 {
-                    strStartYear = DateTime.Now.Year.ToString();
-                    strEndYear = (DateTime.Now.Year + 2).ToString();
-                    await DetailsView(strStartYear, strEndYear);
+                    
                 }
                 else
                 {
-                    await JSRuntime.InvokeVoidAsync("exampleJsFunctions.ShowMsg", "장기수선계획을 선택되지 않았습니다. \n 선택으로 돌아갑니다..");
-                    MyNav.NavigateTo("/Repair_Plan/List");
+                    await JSRuntime.InvokeVoidAsync("exampleJsFunctions.ShowMsg", "권한이 없습니다. \n 처음으로 돌아갑니다..");
+                    MyNav.NavigateTo("/");
                 }
             }
             else
@@ -68,48 +60,6 @@ namespace Plan_Web.Pages.Plan_Report
                 await JSRuntime.InvokeVoidAsync("exampleJsFunctions.ShowMsg", "로그인하지 않았습니다.");
                 MyNav.NavigateTo("/");
             }
-        }
-
-        /// <summary>
-        /// 연차별 계획 정보 불러오기
-        /// </summary>
-        private async Task DetailsView(string Now_Year, string Future_Year)
-        {
-            strStartYear = Now_Year;
-            strEndYear = Future_Year;
-            rpn = await repair_Plan_Lib.Detail_Repair_Plan(Apt_Code, strCode);
-            ann = await repair_Plan_Lib.Year_Plan_practice(Apt_Code, strCode, Now_Year, Future_Year);            
-            rpp = await repair_Plan_Lib.Year_Plan_Cost_Totay(Apt_Code, strCode, Now_Year, Future_Year);
-        }
-
-        private async Task OnSelect(ChangeEventArgs a)
-        {
-            if (a.Value == null || a.Value.ToString() == "Z")
-            {
-                await DetailsView(strStartYear, strEndYear);
-            }
-            else
-            {
-                int year = Convert.ToInt32(a.Value);
-                int ResultYear = year - Convert.ToInt32(strStartYear);
-                if (ResultYear <= 5 && ResultYear > 0)
-                {
-                    await DetailsView(strStartYear, year.ToString());
-                }
-                else
-                {
-                    strEndYear = (Convert.ToInt32(strStartYear) + 2).ToString();
-                    await JSRuntime.InvokeVoidAsync("exampleJsFunctions.ShowMsg", "시작년도 보다 5년 이상을 선택할 수 없습니다.");
-                }                
-            }
-        }
-
-        /// <summary>
-        /// 인쇄로 이동
-        /// </summary>
-        private void btnPrint()
-        {
-
         }
     }
 }

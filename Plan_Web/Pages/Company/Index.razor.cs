@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.JSInterop;
 using Plan_Apt_Lib;
 using Plan_Blazor_Lib;
-using Plan_Blazor_Lib.Article;
 using Plan_Blazor_Lib.Plan;
 using Plan_Blazor_Lib.Record;
 using Plan_Lib.Company;
@@ -237,7 +236,7 @@ namespace Plan_Web.Pages.Company
                 sidos = await sido_Lib.GetList(ar.Cor_Sido);
                 cnn.Cor_Gun = ar.Cor_Gun;
                 strCorporRate_Number = cnr(ar.CorporRate_Number);
-               
+
                 bnn = await company_Lib.Detail_Company_Detail(ar.Company_Code);
                 cnn = await company_Etc_Lib.Detail_Company_Detail(ar.Company_Code);
                 InsertViews = "B";
@@ -287,7 +286,7 @@ namespace Plan_Web.Pages.Company
                 strSortA = a.Value.ToString();
                 CsnnB = await companySort_Lib.GetList_CompanySort(strSortA);
                 pager.RecordCount = await company_Lib.List_Page_Company_Count_Search("SortA_Code", strSortA);
-                ann = await company_Lib.List_Page_Company_Search(pager.PageIndex, "SortA_Code", strSortA); 
+                ann = await company_Lib.List_Page_Company_Search(pager.PageIndex, "SortA_Code", strSortA);
             }
         }
 
@@ -535,10 +534,11 @@ namespace Plan_Web.Pages.Company
             }
             else
             {
-                int intBe = await company_Lib.CorporRate_Number(bnn.CorporRate_Number);
-                if (intBe < 1)
+
+                if (bnn.Aid < 1)
                 {
-                    if (bnn.Aid < 1)
+                    int intBe = await company_Lib.CorporRate_Number(bnn.CorporRate_Number);
+                    if (intBe < 1)
                     {
                         await company_Lib.Add_Company(bnn);
                         cnn.Company_Code = bnn.Company_Code;
@@ -548,19 +548,20 @@ namespace Plan_Web.Pages.Company
                     }
                     else
                     {
-                        await company_Lib.Edit_Company(bnn);
-                        cnn.Cor_Etc = bnn.Company_Etc;
-
-                        await company_Etc_Lib.Edit_CompanyEtc(cnn);
+                        await JSRuntime.InvokeVoidAsync("exampleJsFunctions.ShowMsg", "이미 입력된 사업자 번호를 입력하려 했습니다.");
                     }
-                    await DatailsView(Work_Year);
-                    strCorporRate_Number = bnn.CorporRate_Number;
-                    InsertViews = "A";
                 }
                 else
                 {
-                    await JSRuntime.InvokeVoidAsync("exampleJsFunctions.ShowMsg", "이미 입력된 사업자 번호를 입력하려 했습니다.");
+                    await company_Lib.Edit_Company(bnn);
+                    cnn.Cor_Etc = bnn.Company_Etc;
+
+                    await company_Etc_Lib.Edit_CompanyEtc(cnn);
                 }
+                await DatailsView(Work_Year);
+                strCorporRate_Number = bnn.CorporRate_Number;
+                InsertViews = "A";
+
             }
         }
         #endregion
@@ -609,7 +610,7 @@ namespace Plan_Web.Pages.Company
                 }
                 else if (ar.Cor_Sido == "세종특별자치시")
                 {
-                    Sido_Code = "I";
+                    Sido_Code = "R";
                 }
                 else if (ar.Cor_Sido == "충청남도")
                 {

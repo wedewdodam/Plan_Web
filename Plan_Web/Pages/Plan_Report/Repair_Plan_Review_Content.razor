@@ -1,0 +1,602 @@
+﻿@page "/Plan_Report/Repair_Plan_Review_Content"
+@using Microsoft.AspNetCore.ProtectedBrowserStorage
+@inject ProtectedSessionStorage ProtectedSessionStore
+
+<div class="card">
+    <div class="card-header">
+        <table width="100%">
+            <tr>
+                <td>
+                    <span style="font-size: 1em"> <span class="bi-house-fill"></span>&nbsp;<span style="font-size: 1em; color:Highlight; font-weight: bold">장기수선충당금 부과·적립 상세</span></span>
+                </td>
+                <td>
+                </td>
+                <td align="right">
+                    <button type="button" class="btn btn-primary btn-sm" @onclick="btnPrint"><span class="bi-box-arrow-in-right"> &nbsp; 인쇄</span></button> @*<a href="/Reports/Index">이동</a>*@
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div class="card-body">
+        @if (bnnA.Count == 0)
+        {
+            <p style="text-align:center">
+                <span>검토 내용이 없습니다.</span>
+                @*<img src="/images/loader.gif" height="70" />*@
+            </p>
+        }
+        else if (bnnA == null)
+        {
+            <p style="text-align:center">
+                <img src="/images/loader.gif" height="70" />
+            </p>
+        }
+        else
+        {
+            <table width="100%">
+                <tr>
+                    <td width="50%"></td>
+                    <td>
+                        <div class="input-group">
+                            <div class="input-group-prepend"><span class="input-group-text" style="font-size: 0.8em"><span class="bi-pencil-square"></span>&nbsp;조정년도</span></div>
+                            <select id="strPlan_Year" class="custom-select" value="@strPlan_Year" style="font-size: 0.8em" @onchange="onYear">
+                                <option value="Z">=조정년도선택=</option>
+                                @foreach (var it in rnn)
+                                {
+                                    <option value="@it.Adjustment_Year">@it.Adjustment_Year</option>
+                                }
+                            </select>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="input-group">
+                            <div class="input-group-prepend"><span class="input-group-text" style="font-size: 0.8em"><span class="bi-pencil-square"></span>&nbsp;조정일</span></div>
+                            <select id="Sort_A_Code" class="custom-select" value="@strPlan_Code" style="font-size: 0.8em" @onchange="onCode" required>
+                                <option value="Z">=조정일선택=</option>
+                                @foreach (var it in rnnA)
+                                {
+                                    <option value="@it.Repair_Plan_Code">@it.Adjustment_Date.ToShortDateString()</option>
+                                }
+                            </select>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="input-group">
+                            <div class="input-group-prepend"><span class="input-group-text" style="font-size: 0.8em"><span class="bi-pencil-square"></span>&nbsp;검토코드</span></div>
+                            <select id="strReview_Code" class="custom-select" value="@strReview_Code" style="font-size: 0.8em" @onchange="OnSelect" required>
+                                <option value="Z">=검토선택=</option>
+                                @foreach (var it in prnn)
+                                {
+                                    <option value="@it.Plan_Review_Code">@it.PlanReview_Date.ToShortDateString()</option>
+                                }
+                            </select>
+                        </div>
+                    </td>
+                </tr>
+            </table>
+
+
+            @if (ann == null)
+            {
+                <span style="font-size: 1em; color : red">입력된 검토가 없습니다.</span>
+            }
+            else
+            {
+                <table class="table" style="font-size: 0.8em">
+                    <tr>
+                        <td style="vertical-align:middle">
+                            <span style="font-weight: bold; color:Highlight"> 계획기간 :</span>
+                        </td>
+                        <td style="vertical-align:middle">
+                            @epn.Plan_Period<span>년</span> <span class="bi-chevron-right" style="color:cadetblue"></span> @ann.Plan_Period<span>년</span>
+                        </td>
+                        <td style="vertical-align:middle">
+                            <span style="font-weight: bold; color:Highlight"> 적립잔액 :</span>
+                        </td>
+                        <td style="vertical-align:middle">
+                            @string.Format("{0: ###,###.#}", dbBalance)<span>원</span> <span class="bi-chevron-right" style="color:cadetblue"></span> @ann.Saving_Cost
+                        </td>
+                        <td style="vertical-align:middle">
+                            <span style="font-weight: bold; color:Highlight"> 부과금액 :</span>
+                        </td>
+                        <td style="vertical-align:middle">
+                            @string.Format("{0: ###,###.#}", upn.Unit_Price)<span>원</span> <span class="bi-chevron-right" style="color:cadetblue"></span> @ann.Levy_Sum
+                        </td>
+                        <td style="vertical-align:middle">
+                            <span style="font-weight: bold; color:Highlight"> 검토완료일 :</span>
+                        </td>
+                        <td style="vertical-align:middle">
+                            @ann.PlanReview_Date.ToShortDateString()
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="vertical-align:middle">
+                            <span style="font-weight: bold; color:Highlight"> 소액지출 :</span>
+                        </td>
+                        <td style="vertical-align:middle">
+                            @epn.SmallSum_Unit @epn.Small_Sum<span>원</span> <span class="bi-chevron-right" style="color:cadetblue"></span> @ann.SmallSum_Expense
+                        </td>
+                        <td style="vertical-align:middle">
+                            <span style="font-weight: bold; color:Highlight"> 긴급지출 :</span>
+                        </td>
+                        <td style="vertical-align:middle">
+                            @ann.Emergency_Expense
+                        </td>
+                        <td style="vertical-align:middle">
+                            <span style="font-weight: bold; color:Highlight"> 검토구분 :</span>
+                        </td>
+                        <td style="vertical-align:middle">
+                            @ann.PlanReview_Division
+                        </td>
+                        <td style="vertical-align:middle">
+                            <span style="font-weight: bold; color:Highlight"> 완료여부 :</span>
+                        </td>
+                        <td style="vertical-align:middle">
+                            @ann.PlanReview_Complete
+                        </td>
+                    </tr>
+                    <tr style="border-bottom:thin">
+                        <td style="vertical-align:middle">
+                            <span style="font-weight: bold; color:Highlight"> 검 토 자 :</span>
+                        </td>
+                        <td style="vertical-align:middle">
+                            @ann.Plan_Reviewer
+                        </td>
+                        <td style="vertical-align:middle">
+                            <span style="font-weight: bold; color:Highlight"> 검토의견 :</span>
+                        </td>
+                        <td colspan="5" style="vertical-align:middle">
+                            @((MarkupString)Dul.HtmlUtility.EncodeWithTabAndSpace(ann.PlanReview_Opinion))
+                        </td>
+                    </tr>
+                </table>
+
+
+
+                <img src="/images/sub/board_tit_bullet.png" alt="" /> <span style="font-size: 0.9em; font-weight: bold; color: Highlight">1. 건물외부 검토 내용</span> <span style="font-size: 0.8em">&nbsp; &nbsp; &nbsp; 검토 개수 : @bnnA.Count <span>개</span></span><br />
+                @if (bnnA == null || bnnA.Count < 1)
+                {
+                    <span style="font-size: 1em; color : red">입력된 검토가 없습니다.</span><br /><br />
+                }
+                else
+                {
+                    <table class="table table-sm" style="font-size: 0.8em">
+                        <thead>
+                            <tr style="background-color: ghostwhite">
+                                <th class="text-center">
+                                    수선 항목
+                                </th>
+                                <th class="text-center">
+                                    수선 항목 검토
+                                </th>
+                                <th class="text-center">
+                                    수선 주기 검토
+                                </th>
+                                <th class="text-center">
+                                    부분 및 수선율 검토
+                                </th>
+                                <th class="text-center">
+                                    수선금액 검토
+                                </th>
+                                <th class="text-center">
+                                    검토 메모
+                                </th>
+                                <th class="text-center">
+                                    검토일
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var st in bnnA)
+                            {
+                                <tr>
+                                    <td style="text-align: center; vertical-align: middle; width: 15%">
+                                        @st.Repair_Article_Name
+                                    </td>
+                                    <td style="text-align: center; vertical-align: middle">
+                                        @st.Repair_Article_Review
+                                    </td>
+                                    <td style="text-align: center; vertical-align: middle">
+                                        @st.Repair_Cycle_Review
+                                    </td>
+                                    <td style="text-align: center; vertical-align: middle">
+                                        @st.Repair_Part_Rate_Review
+                                    </td>
+                                    <td style="text-align: center; vertical-align: middle">
+                                        @st.Repair_Cost_Review
+                                    </td>
+                                    <td style="text-align: center; vertical-align: middle">
+                                        @if (st.Review_Content == null || st.Review_Content == "")
+                                        {
+                                            <span>기재하지 않음</span>
+                                        }
+                                        else
+                                        {
+                                            <span title="@st.Review_Content">@Dul.StringLibrary.CutString(st.Review_Content, 20)</span>
+                                        }
+                                    </td>
+                                    <td style="text-align: center; vertical-align: middle">
+                                        @st.PostDate.ToShortDateString()
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                }
+
+                <img src="/images/sub/board_tit_bullet.png" alt="" /><span style="font-size: 0.9em; font-weight: bold; color:Highlight">2. 건물내부 검토 내용</span><span style="font-size: 0.8em">&nbsp; &nbsp; &nbsp; 검토 개수 : @bnnB.Count <span>개</span></span><br />
+
+                @if (bnnB == null || bnnB.Count < 1)
+                {
+                    <span style="font-size: 1em; color : red">입력된 검토가 없습니다.</span><br /><br />
+                }
+                else
+                {
+                    <table class="table table-sm" style="font-size: 0.8em">
+                        <thead>
+                            <tr style="background-color: ghostwhite">
+                                <th class="text-center">
+                                    수선 항목
+                                </th>
+                                <th class="text-center">
+                                    수선 항목 검토
+                                </th>
+                                <th class="text-center">
+                                    수선 주기 검토
+                                </th>
+                                <th class="text-center">
+                                    부분 및 수선율 검토
+                                </th>
+                                <th class="text-center">
+                                    수선금액 검토
+                                </th>
+                                <th class="text-center">
+                                    검토 메모
+                                </th>
+                                <th class="text-center">
+                                    검토일
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var st in bnnB)
+                            {
+                                <tr>
+                                    <td style="text-align: center; vertical-align: middle">
+                                        @st.Repair_Article_Name
+                                    </td>
+                                    <td style="text-align: center; vertical-align: middle">
+                                        @st.Repair_Article_Review
+                                    </td>
+                                    <td style="text-align: center; vertical-align: middle">
+                                        @st.Repair_Cycle_Review
+                                    </td>
+                                    <td style="text-align: center; vertical-align: middle">
+                                        @st.Repair_Part_Rate_Review
+                                    </td>
+                                    <td style="text-align: center; vertical-align: middle">
+                                        @st.Repair_Cost_Review
+                                    </td>
+                                    <td style="text-align: center; vertical-align: middle">
+                                        @if (st.Review_Content == null || st.Review_Content == "")
+                                        {
+                                            <span>기재하지 않음</span>
+                                        }
+                                        else
+                                        {
+                                            <span title="@st.Review_Content">@Dul.StringLibrary.CutString(st.Review_Content, 20)</span>
+                                        }
+                                    </td>
+                                    <td style="text-align: center; vertical-align: middle">
+                                        @st.PostDate.ToShortDateString()
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                }
+
+                <img src="/images/sub/board_tit_bullet.png" alt="" /><span style="font-size: 0.9em; font-weight: bold; color:Highlight">
+                    3. 전기·소화·승강기 및 지능형 홈네트워크 설비 검토 내용
+                </span><span style="font-size: 0.8em">&nbsp; &nbsp; &nbsp; 검토 개수 : @bnnC.Count <span>개</span></span><br />
+
+                @if (bnnC == null || bnnC.Count < 1)
+                {
+                    <span style="font-size: 1em; color : red">입력된 검토가 없습니다.</span><br /><br />
+                }
+                else
+                {
+                    <table class="table table-sm" style="font-size: 0.8em">
+                        <thead>
+                            <tr style="background-color: ghostwhite">
+                                <th class="text-center">
+                                    수선 항목
+                                </th>
+                                <th class="text-center">
+                                    수선 항목 검토
+                                </th>
+                                <th class="text-center">
+                                    수선 주기 검토
+                                </th>
+                                <th class="text-center">
+                                    부분 및 수선율 검토
+                                </th>
+                                <th class="text-center">
+                                    수선금액 검토
+                                </th>
+                                <th class="text-center">
+                                    검토 메모
+                                </th>
+                                <th class="text-center">
+                                    검토일
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var st in bnnC)
+                            {
+                                <tr>
+                                    <td style="text-align: center; vertical-align: middle">
+                                        @st.Repair_Article_Name
+                                    </td>
+                                    <td style="text-align: center; vertical-align: middle">
+                                        @st.Repair_Article_Review
+                                    </td>
+                                    <td style="text-align: center; vertical-align: middle">
+                                        @st.Repair_Cycle_Review
+                                    </td>
+                                    <td style="text-align: center; vertical-align: middle">
+                                        @st.Repair_Part_Rate_Review
+                                    </td>
+                                    <td style="text-align: center; vertical-align: middle">
+                                        @st.Repair_Cost_Review
+                                    </td>
+                                    <td style="text-align: center; vertical-align: middle">
+                                        @if (st.Review_Content == null || st.Review_Content == "")
+                                        {
+                                            <span>기재하지 않음</span>
+                                        }
+                                        else
+                                        {
+                                            <span title="@st.Review_Content">@Dul.StringLibrary.CutString(st.Review_Content, 20)</span>
+                                        }
+                                    </td>
+                                    <td style="text-align: center; vertical-align: middle">
+                                        @st.PostDate.ToShortDateString()
+                                    </td>
+
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                }
+
+                <img src="/images/sub/board_tit_bullet.png" alt="" /><span style="font-size: 0.9em; font-weight: bold; color:Highlight">
+                    4. 급수·배수 및 환기설비 검토 내용
+                </span><span style="font-size: 0.8em">&nbsp; &nbsp; &nbsp; 검토 개수 : @bnnD.Count <span>개</span></span><br />
+
+                @if (bnnD == null || bnnD.Count < 1)
+                {
+                    <span style="font-size: 1em; color : red">입력된 검토가 없습니다.</span><br /><br />
+                }
+                else
+                {
+                    <table class="table table-sm" style="font-size: 0.8em">
+                        <thead>
+                            <tr style="background-color: ghostwhite">
+                                <th class="text-center">
+                                    수선 항목
+                                </th>
+                                <th class="text-center">
+                                    수선 항목 검토
+                                </th>
+                                <th class="text-center">
+                                    수선 주기 검토
+                                </th>
+                                <th class="text-center">
+                                    부분 및 수선율 검토
+                                </th>
+                                <th class="text-center">
+                                    수선금액 검토
+                                </th>
+                                <th class="text-center">
+                                    검토 메모
+                                </th>
+                                <th class="text-center">
+                                    검토일
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var st in bnnD)
+                            {
+                                <tr>
+                                    <td style="text-align: center; vertical-align: middle">
+                                        @st.Repair_Article_Name
+                                    </td>
+                                    <td style="text-align: center; vertical-align: middle">
+                                        @st.Repair_Article_Review
+                                    </td>
+                                    <td style="text-align: center; vertical-align: middle">
+                                        @st.Repair_Cycle_Review
+                                    </td>
+                                    <td style="text-align: center; vertical-align: middle">
+                                        @st.Repair_Part_Rate_Review
+                                    </td>
+                                    <td style="text-align: center; vertical-align: middle">
+                                        @st.Repair_Cost_Review
+                                    </td>
+                                    <td style="text-align: center; vertical-align: middle">
+                                        @if (st.Review_Content == null || st.Review_Content == "")
+                                        {
+                                            <span>기재하지 않음</span>
+                                        }
+                                        else
+                                        {
+                                            <span title="@st.Review_Content">@Dul.StringLibrary.CutString(st.Review_Content, 20)</span>
+                                        }
+                                    </td>
+                                    <td style="text-align: center; vertical-align: middle">
+                                        @st.PostDate.ToShortDateString()
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                }
+
+                <img src="/images/sub/board_tit_bullet.png" alt="" /> <span style="font-size: 0.9em; font-weight: bold; color: Highlight">
+                    5. 급수·배수 및 환기설비 검토 내용
+                </span><span style="font-size: 0.8em">&nbsp; &nbsp; &nbsp; 검토 개수 : @bnnE.Count <span>개</span></span><br />
+
+                @if (bnnE == null || bnnE.Count < 1)
+                {
+                    <span style="font-size: 1em; color : red">입력된 검토가 없습니다.</span><br /><br />
+                }
+                else
+                {
+                    <table class="table table-sm" style="font-size: 0.8em">
+                        <thead>
+                            <tr style="background-color: ghostwhite">
+                                <th class="text-center">
+                                    수선 항목
+                                </th>
+                                <th class="text-center">
+                                    수선 항목 검토
+                                </th>
+                                <th class="text-center">
+                                    수선 주기 검토
+                                </th>
+                                <th class="text-center">
+                                    부분 및 수선율 검토
+                                </th>
+                                <th class="text-center">
+                                    수선금액 검토
+                                </th>
+                                <th class="text-center">
+                                    검토 메모
+                                </th>
+                                <th class="text-center">
+                                    검토일
+                                </th>
+
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var st in bnnE)
+                            {
+                                <tr>
+                                    <td style="text-align: center; vertical-align: middle">
+                                        @st.Repair_Article_Name
+                                    </td>
+                                    <td style="text-align: center; vertical-align: middle">
+                                        @st.Repair_Article_Review
+                                    </td>
+                                    <td style="text-align: center; vertical-align: middle">
+                                        @st.Repair_Cycle_Review
+                                    </td>
+                                    <td style="text-align: center; vertical-align: middle">
+                                        @st.Repair_Part_Rate_Review
+                                    </td>
+                                    <td style="text-align: center; vertical-align: middle">
+                                        @st.Repair_Cost_Review
+                                    </td>
+                                    <td style="text-align: center; vertical-align: middle">
+                                        @if (st.Review_Content == null || st.Review_Content == "")
+                                        {
+                                            <span>기재하지 않음</span>
+                                        }
+                                        else
+                                        {
+                                            <span title="@st.Review_Content">@Dul.StringLibrary.CutString(st.Review_Content, 20)</span>
+                                        }
+                                    </td>
+                                    <td style="text-align: center; vertical-align: middle">
+                                        @st.PostDate.ToShortDateString()
+                                    </td>
+
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                }
+
+                <img src="/images/sub/board_tit_bullet.png" alt="" /><span style="font-size: 0.9em; font-weight: bold; color:Highlight">
+                    6. 옥외 복리시설 및 옥외 부대시설 검토 내용
+                </span> <span style="font-size: 0.8em">&nbsp; &nbsp; &nbsp; 검토 개수 : @bnnF.Count <span>개</span></span><br />
+
+                @if (bnnF == null || bnnF.Count < 1)
+                {
+                    <span style="font-size: 1em; color : red">입력된 검토가 없습니다.</span><br /><br />
+                }
+                else
+                {
+                    <table class="table table-sm" style="font-size: 0.8em">
+                        <thead>
+                            <tr style="background-color: ghostwhite">
+                                <th class="text-center">
+                                    수선 항목
+                                </th>
+                                <th class="text-center">
+                                    수선 항목 검토
+                                </th>
+                                <th class="text-center">
+                                    수선 주기 검토
+                                </th>
+                                <th class="text-center">
+                                    부분 및 수선율 검토
+                                </th>
+                                <th class="text-center">
+                                    수선금액 검토
+                                </th>
+                                <th class="text-center">
+                                    검토 메모
+                                </th>
+                                <th class="text-center">
+                                    검토일
+                                </th>
+
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var st in bnnF)
+                            {
+                                <tr>
+                                    <td style="text-align: center; vertical-align: middle">
+                                        @st.Repair_Article_Name
+                                    </td>
+                                    <td style="text-align: center; vertical-align: middle">
+                                        @st.Repair_Article_Review
+                                    </td>
+                                    <td style="text-align: center; vertical-align: middle">
+                                        @st.Repair_Cycle_Review
+                                    </td>
+                                    <td style="text-align: center; vertical-align: middle">
+                                        @st.Repair_Part_Rate_Review
+                                    </td>
+                                    <td style="text-align: center; vertical-align: middle">
+                                        @st.Repair_Cost_Review
+                                    </td>
+                                    <td style="text-align: center; vertical-align: middle">
+                                        @if (st.Review_Content == null || st.Review_Content == "")
+                                        {
+                                            <span>기재하지 않음</span>
+                                        }
+                                        else
+                                        {
+                                            <span title="@st.Review_Content">@Dul.StringLibrary.CutString(st.Review_Content, 20)</span>
+                                        }
+                                    </td>
+                                    <td style="text-align: center; vertical-align: middle">
+                                        @st.PostDate.ToShortDateString()
+                                    </td>
+
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                }
+            }
+        }
+    </div>
+</div>

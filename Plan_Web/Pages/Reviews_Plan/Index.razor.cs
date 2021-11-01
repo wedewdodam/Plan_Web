@@ -491,33 +491,49 @@ namespace Plan_Web.Pages.Reviews_Plan
             bnn.PostIP = myIPAddress;
             #endregion 아이피 입력
 
-
-
-            if (bnn.Plan_Review_Content_Code < 1)
+            if (bnn.Repair_Article_Review == "" || bnn.Repair_Article_Review == null)
             {
-                bnn.Apt_Code = Apt_Code;
-                bnn.Plan_Review_Code = ann.Plan_Review_Code.ToString();
-                bnn.Sort_A_Code = jacc.Sort_A_Code;
-                bnn.Sort_B_Code = jacc.Sort_B_Code;
-                bnn.Sort_C_Code = jacc.Sort_C_Code;
-                bnn.Repair_Article_Code = jacc.Aid.ToString();
-                bnn.Staff_Code = User_Code;
-
-                await review_Content_Lib.Add_Review_Content(bnn);
-                //InsertViewsA = "A";
+                await JSRuntime.InvokeVoidAsync("exampleJsFunctions.ShowMsg", "수선항목 검토 내용을 선택하지 않았습니다.");
+            }
+            else if (bnn.Repair_Cost_Review == "" || bnn.Repair_Cost_Review == null)
+            {
+                await JSRuntime.InvokeVoidAsync("exampleJsFunctions.ShowMsg", "수선금액 검토 내용을 선택하지 않았습니다.");
+            }
+            else if (bnn.Repair_Cycle_Review == "" || bnn.Repair_Cycle_Review == null)
+            {
+                await JSRuntime.InvokeVoidAsync("exampleJsFunctions.ShowMsg", "수선주기 검토 내용을 선택하지 않았습니다.");
+            }
+            else if (bnn.Repair_Part_Rate_Review == "" || bnn.Repair_Part_Rate_Review == null)
+            {
+                await JSRuntime.InvokeVoidAsync("exampleJsFunctions.ShowMsg", "수선율 검토 내용을 선택하지 않았습니다.");
             }
             else
             {
-                bnn.Staff_Code = User_Code;
-                await review_Content_Lib.Edit_Review_Content(bnn);
-                InsertViewsB = "A";
+                if (bnn.Plan_Review_Content_Code < 1)
+                {
+                    bnn.Apt_Code = Apt_Code;
+                    bnn.Plan_Review_Code = ann.Plan_Review_Code.ToString();
+                    bnn.Sort_A_Code = jacc.Sort_A_Code;
+                    bnn.Sort_B_Code = jacc.Sort_B_Code;
+                    bnn.Sort_C_Code = jacc.Sort_C_Code;
+                    bnn.Repair_Article_Code = jacc.Aid.ToString();
+                    bnn.Staff_Code = User_Code;
+
+                    await review_Content_Lib.Add_Review_Content(bnn);
+                    //InsertViewsA = "A";
+                }
+                else
+                {
+                    bnn.Staff_Code = User_Code;
+                    await review_Content_Lib.Edit_Review_Content(bnn);
+                    InsertViewsB = "A";
+                }
+
+                await DetailsView(ann.Plan_Review_Code);
+
+                jacc = new Join_Article_Cycle_Cost_Entity();
+                bnn = new Review_Content_Entity();
             }
-
-            await DetailsView(ann.Plan_Review_Code);
-
-            jacc = new Join_Article_Cycle_Cost_Entity();
-            bnn = new Review_Content_Entity();
-
         }
 
         /// <summary>

@@ -1,4 +1,9 @@
 ﻿@page "/Repair_Plan/New/"
+@using Microsoft.AspNetCore.ProtectedBrowserStorage
+@inject ProtectedSessionStorage ProtectedSessionStore
+
+
+
 <table width="100%" style="margin-bottom: 10px">
     <tr>
         <td style="width: 15%"> <button class="btn btn-success btn-block" @onclick="OnPlanUrl"><img src="/images/sub/icon_step01_on.png" height="25" alt="" /> <span style="font-weight: bold"> 수선계획 총론 수립</span></button></td>

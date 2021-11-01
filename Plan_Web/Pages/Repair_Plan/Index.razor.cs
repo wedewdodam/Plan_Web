@@ -82,7 +82,7 @@ namespace Plan_Web.Pages.Repair_Plan
         public int Article_Count { get; set; }
         public double dbBalance { get; set; } = 0;
         public string NewOpen { get; set; } = "A";
-
+        public string strCode { get; set; }
         public string Plan_Review_Code { get; set; }
         public string strYear { get; set; }
         public string strYearA { get; set; }
@@ -450,7 +450,9 @@ namespace Plan_Web.Pages.Repair_Plan
                     {
                         int a = await repair_Plan_Lib.Add_Repair_Plan_Add(rpn);
                         string strCode = await repair_Plan_Lib.Last_Apt_Code(Apt_Code);
-                        await article_Lib.All_Insert_Code(Apt_Code, strCode, rpn.Repair_Plan_Code, User_Code, rpn.PostIP);    
+                        await article_Lib.All_Insert_Code(Apt_Code, strCode, rpn.Repair_Plan_Code, User_Code, rpn.PostIP);
+
+                        await ProtectedSessionStore.SetAsync("Plan_Code", rpn.Repair_Plan_Code);
                     }                 
                 }
                 else

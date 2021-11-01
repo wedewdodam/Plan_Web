@@ -268,11 +268,19 @@ namespace Plan_Blazor_Lib.Review
         /// <returns></returns>
         public async Task<int> Non_Complete(string Apt_Code)
         {
-            using (var ctx = new SqlConnection(_db.GetConnectionString("Khmais_db_Connection")))
-            {
-                return await ctx.QuerySingleOrDefaultAsync<int>("SELECT COUNT(*) FROM Plan_Review WHERE (Apt_Code = @Apt_Code) AND (PlanReview_Complete <> '검토 완료')", new { Apt_Code }, commandType: CommandType.Text);
-            }
+            using var ctx = new SqlConnection(_db.GetConnectionString("Khmais_db_Connection"));
+            return await ctx.QuerySingleOrDefaultAsync<int>("SELECT COUNT(*) FROM Plan_Review WHERE (Apt_Code = @Apt_Code) AND (PlanReview_Complete <> '검토 완료')", new { Apt_Code }, commandType: CommandType.Text);
             //return dn.ctx.Query<int>("SELECT COUNT(*) FROM Plan_Review WHERE (Apt_Code = @Apt_Code) AND (PlanReview_Complete <> '검토 완료')", new { Apt_Code }).SingleOrDefault();
+        }
+
+        /// <summary>
+        /// 검토코드 및 검토일 불러오기
+        /// </summary>
+        public async Task<List<Plan_Review_Entity>> Review_Infor(string Repair_Plan_Code)
+        {
+            using var db = new SqlConnection(_db.GetConnectionString("Khmais_db_Connection"));
+            var lst = await db.QueryAsync<Plan_Review_Entity>("Plan_Review_Year", new { Repair_Plan_Code }, commandType: CommandType.StoredProcedure);
+            return lst.ToList();
         }
     }
 
